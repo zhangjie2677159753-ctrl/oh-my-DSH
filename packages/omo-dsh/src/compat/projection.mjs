@@ -16,6 +16,13 @@ export function derivePhase(work) {
 }
 
 export function buildSessionProjection({ roleState, work = null, activeChildren = 0, continuation = {}, latestVerification = null, phaseOverride = null }) {
+  // Inputs must be owned DTOs: a live handle passed as context must fail here
+  // instead of being silently dropped from the projection.
+  for (const [label, value] of [["roleState", roleState], ["work", work], ["continuation", continuation], ["latestVerification", latestVerification]]) {
+    if (value !== null && value !== undefined && !isLosslessJsonValue(value)) {
+      throw new TypeError(`buildSessionProjection: ${label} must be an owned lossless-JSON DTO`)
+    }
+  }
   // undefined-valued keys are not lossless JSON — omit them instead.
   const projection = {
     role: { name: roleState.role, revision: roleState.revision },
