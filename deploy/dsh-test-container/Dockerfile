@@ -11,16 +11,24 @@ ENV HTTP_PROXY=${HTTP_PROXY} \
     NO_PROXY=localhost,127.0.0.1 \
     COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 
-RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates \
+RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates python3 make g++ \
     && rm -rf /var/lib/apt/lists/*
 
 RUN corepack enable && corepack prepare pnpm@11.7.0 --activate
 
 WORKDIR /dsh
-COPY . .
+COPY src/ .
+
+# lefthook's postinstall requires a git repository (rev-parse); init one so
+# lifecycle scripts succeed without touching any real repo.
+RUN git init -q -b main \
+    && git config user.email "build@local" \
+    && git config user.name "build"
 
 RUN pnpm install --frozen-lockfile --prefer-offline
 RUN pnpm run build:lib
+# the web profile requires the frontend dist bundle
+RUN pnpm run build:web
 
 EXPOSE 3080
 ENTRYPOINT ["node", "apps/cli/lib/bin.js"]

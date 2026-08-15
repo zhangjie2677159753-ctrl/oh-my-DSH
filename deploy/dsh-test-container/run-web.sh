@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Boot the controlled DSH web container with a FRESH DSH_HOME containing only
-# our OMO preset. Host port 3090 (the running deployment keeps 3080).
-# Stops with Ctrl-C; no host state is touched.
+# our OMO preset. Uses host networking on host port 3090 (the running
+# deployment keeps 3080): the app binds 127.0.0.1 inside the container, which
+# docker-proxy port publishing cannot reach. Stops with Ctrl-C; no host state
+# or credentials are touched.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -17,7 +19,7 @@ echo "DSH test home: $TMP_HOME"
 echo "Web UI: http://127.0.0.1:3090"
 
 docker run --rm -it \
-  -p 127.0.0.1:3090:3080 \
+  --network=host \
   -e DSH_HOME=/home/node/.dsh \
   -v "$TMP_HOME:/home/node/.dsh" \
-  omo-dsh-test web --port 3080
+  omo-dsh-test web --port 3090
