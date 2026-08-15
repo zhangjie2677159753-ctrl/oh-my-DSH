@@ -703,12 +703,31 @@ all tasks checked → verifying → final wave evidence → approve → Boulder 
 
 ## Epic E23 — Memory
 
+### OMO-2301 Memory Domain 与隐私
+
 - scope：repo/user/session；
 - consent、retention、redaction、delete；
 - retrieval evidence；
 - cross-session isolation；
-- fork/reflection cost routing；
 - 不把 secret 写长期记忆。
+
+### OMO-2302 Reflection/Dream Worker Least Privilege
+
+以 Senpi `prepareReflectionForkSpawn` 为 High-risk fixture：context/prefix inheritance 与 capability inheritance 必须分离。定义 MemoryWorkerPolicy revision，明确只读 context envelope、允许的 memory read/write/commit operations、workspace boundary 和结果 schema；默认拒绝 task/delegation、task controls、Team、OpenClaw、credential/settings、privileged extensions、任意 skills/context-file discovery、parent role tools 与无关 filesystem/network tools。限制必须同时作用于 Prompt catalog 和 execution guard，不能只靠 `SENPI_MEMORY_REFLECTION` sentinel。
+
+### OMO-2303 Cache-vs-Isolation Route
+
+fork/reflection cost routing 必须先检查 `canNarrowCapabilitiesWhileReusingPrefix` capability。若 Provider/DSH child 无法证明 fork 后使用新的 allowlist/guard，就强制 isolated quick/reflection child 并记录 `cacheSacrificedForIsolation=true`；禁止为省 token 自动继承父 authority。兼容性 escape hatch 默认为 off，需要安全批准、可观察 warning 与独立风险登记。
+
+### OMO-2304 Memory Worker Negative/Recovery Tests
+
+- fork child 尝试 `task`、send/cancel、Team、extension tool、credential、parent business write：全部执行层拒绝；
+- 父 Prompt/tool catalog 含 privileged tool 时 child 不可见且不可按 guessed name 执行；
+- sentinel 只能阻止 recursive memory registration，移除/伪造 sentinel 不改变授权；
+- parent cwd/symlink/path traversal 不扩大 workspace boundary；
+- cache route 与 isolated route 产生等价 memory artifact/result schema；
+- cancel/crash/timeout 不留 worker、worktree、lock、partial privileged side effect；
+- fork/resume/replay 不恢复 parent capability snapshot。
 
 ## Epic E24 — Team/Worktree
 

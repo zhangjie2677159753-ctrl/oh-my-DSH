@@ -470,6 +470,7 @@ interface OmoContinuationStateV1 {
 - Hashline：复用 Core 解析/校验，stale/ambiguous 必须 fail closed；
 - Comment Checker：post-execute + final verification；不自动修改源码；
 - Memory：明确 repo/user/session scope、consent、redaction、retention、delete；
+- Memory worker 安全边界：fork/context prefix inheritance 只传 OMO-owned 最小上下文，不传 parent live Session/tool catalog。reflection/dream child 必须由 child persona + explicit tool allowlist + execution guard 重新授权，默认拒绝 task/delegation、Team/control、privileged extensions、credentials、任意 Skills/AGENTS/rules 和 parent write authority；`SENPI_MEMORY_REFLECTION` 类 sentinel 只能防递归，不能作为授权。Provider 若不能在 cache-preserving fork 中缩权，则选隔离 child 并放弃 cache；
 - Compaction resume：注入 current role、work、plan revision、next task、recent evidence 与 blockers 的最小快照。
 
 ## 13. Team、Worktree、OpenClaw、Monitor

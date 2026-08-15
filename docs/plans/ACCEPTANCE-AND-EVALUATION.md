@@ -156,7 +156,19 @@ Completion latch 必须用真实 state store（不能只用不复刻副作用的
 - toolFilter visibility 与 execution 不一致；
 - multimodal route 到 text-only。
 
-### 5.4 Context/Filesystem
+### 5.4 Memory Worker Authority
+
+- 父 Session 同时拥有 task/delegation、Team、credential、extension、write/edit 和自定义 Skills；fork reflection/dream child 不可见且不能按名称执行这些能力；
+- child 只得到最小 owned context envelope；不得读取 parent live Session/tool objects 或继承 parent role policy；
+- `SENPI_MEMORY_REFLECTION` 等 sentinel 的有无/伪造只影响 recursive memory registration，不影响 tool authorization；
+- cache-preserving fork 若不能证明 capability narrowing，route 必须降级 isolated child 并记录原因；
+- cache fork 与 isolated route 对同一 fixture 生成语义等价的 memory artifact/result；
+- parent cwd 中的 symlink、nested rules/AGENTS、extensions、skills 不能扩大 worker 权限；
+- child cancel/crash/timeout 后无 orphan/lock/worktree/partial privileged effect；
+- restart/resume/fork 不恢复 parent capability snapshot；
+- escape hatch 默认关闭，开启时需要批准、warning、telemetry redaction 和 release blocker review。
+
+### 5.5 Context/Filesystem
 
 - path traversal/symlink escape；
 - nested malicious AGENTS/rules 提权；
@@ -407,6 +419,7 @@ during final verification
 - external provider allowlist；
 - vision/attachment provider policy；
 - memory consent/delete；
+- fork memory worker least-privilege：context inheritance 不得隐含 capability inheritance；
 - OpenClaw malicious response；
 - Team member forged completion；
 - Remote/Slot authority；

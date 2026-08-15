@@ -242,7 +242,13 @@ OMO 还有 Atlas 专用 Boulder continuation；不能只搬普通 Todo enforcer�
 
 这些是静态源码审计发现；审计环境无 Bun（exit 127），实施时仍需在具备 Bun 的固定 revision 环境运行原测试和新增回归套件。
 
-### 4.9 许可证
+### 4.9 Senpi Fork Memory Worker 权限扩张风险
+
+固定 SHA 的 `packages/omo-senpi/src/components/memory/worker/spawn-payload.ts:prepareReflectionForkSpawn` 为命中 Provider prefix cache 使用 `--fork`、父 Session file 和 parent cwd，并刻意不传普通 reflection path 的 `--tools bash,edit`、`--no-extensions`、`--no-skills`、`--no-prompt-templates`、`--no-context-files`。因此它不仅恢复父上下文，也可能恢复父工具目录、task/delegation 和 privileged extensions。`SENPI_MEMORY_REFLECTION=1` 只阻止 memory component 递归注册，不是一般权限边界。
+
+`runner-fork-spawn.test.ts` 当前只证明 prefix-breaking flags 缺失，甚至明确期待它们缺失；没有 runtime guard 或负测试证明 fork worker 不能调用 task/delegation/privileged extension。这是 High-risk upstream behavior。OMO for DSH 不应为了 cache parity 盲目继承 authority：必须把 context/prefix inheritance 与 capability inheritance 分开；Memory reflection/dream child 使用显式最小权限 persona/tool allowlist 和 execution guard，且不能继承 parent role、Team、task control、credential、extension 或 filesystem authority。若 DSH Provider 无法在保留 prefix/cache 的同时缩窄工具，则优先牺牲 cache、走隔离 child；任何兼容开关允许 parent capability inheritance 都必须默认为 off，并作为安全偏差接受单独审查。
+
+### 4.10 许可证
 
 根 `LICENSE.md` 为 Sustainable Use License 1.0：允许内部业务用途或非商业/个人用途；分发限制、notice 和 modified notice 均需遵守。实施前必须确定：
 

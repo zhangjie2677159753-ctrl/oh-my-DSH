@@ -82,6 +82,7 @@
 | PAR-HASH-001 | read annotation + stale edit | hashline-core | tool enhancer/guard | stale/ambiguous fail | not-started |
 | PAR-COMMENT-001 | comment checker all edit paths | core/hook tests | post-execute/final gate | apply patch/lazy init | not-started |
 | PAR-MEM-001 | durable memory | memory-core | Host service | scope/delete/privacy | not-started |
+| PAR-MEM-002 | Senpi fork reflection 继承 parent prefix/cwd 且省略 tool/extension/context restrictions，存在 authority expansion | `prepareReflectionForkSpawn`、`runner-fork-spawn.test.ts` | context inheritance 与 capability re-authorization 分离；isolated fallback | task/Team/extension/credential/parent-write denial；cache/isolation output equivalence；no leak | verified-contract |
 | PAR-TEAM-001 | teams/tasks/mailboxes/worktree | team-core | Host + child backend | no dual authority | not-started |
 | PAR-OPENCLAW-001 | gateway/hooks/replies | openclaw-core/schema | optional Host integration | credential/outage/malicious input | not-started |
 | PAR-MON-001 | monitor lifecycle/tools/status | monitor source/tests | Host observer + projection | no authority mutation | not-started |
