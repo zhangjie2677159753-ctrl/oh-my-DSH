@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "source": "OMO packages/omo-opencode/src",
+  "generatedAt": "2026-08-15T14:15:19.429Z",
+  "expectedConfigurable": 56,
+  "configurableCount": 56,
+  "configurable": [
+    "todo-continuation-enforcer",
+    "session-notification",
+    "comment-checker",
+    "tool-output-truncator",
+    "question-label-truncator",
+    "directory-agents-injector",
+    "directory-readme-injector",
+    "empty-task-response-detector",
+    "think-mode",
+    "model-fallback",
+    "anthropic-context-window-limit-recovery",
+    "preemptive-compaction",
+    "rules-injector",
+    "background-notification",
+    "auto-update-checker",
+    "codegraph-bootstrap",
+    "ast-grep-sg-provision",
+    "startup-toast",
+    "keyword-detector",
+    "agent-usage-reminder",
+    "non-interactive-env",
+    "interactive-bash-session",
+    "tool-pair-validator",
+    "monitor-status-injector",
+    "goal",
+    "category-skill-reminder",
+    "compaction-context-injector",
+    "compaction-todo-preserver",
+    "claude-code-hooks",
+    "auto-slash-command",
+    "edit-error-recovery",
+    "json-error-recovery",
+    "delegate-task-retry",
+    "prometheus-md-only",
+    "sisyphus-junior-notepad",
+    "team-tool-gating",
+    "no-sisyphus-gpt",
+    "no-hephaestus-non-gpt",
+    "hephaestus-agents-md-injector",
+    "start-work",
+    "atlas",
+    "unstable-agent-babysitter",
+    "task-resume-info",
+    "stop-continuation-guard",
+    "tasks-todowrite-disabler",
+    "runtime-fallback",
+    "write-existing-file-guard",
+    "notepad-write-guard",
+    "bash-file-read-guard",
+    "hashline-read-enhancer",
+    "read-image-resizer",
+    "todo-description-override",
+    "webfetch-redirect-guard",
+    "fsync-skip-warning",
+    "plan-format-validator",
+    "legacy-plugin-toast"
+  ],
+  "constructed": {
+    "create-session-hooks": {
+      "file": "plugin/hooks/create-session-hooks.ts",
+      "names": [
+        "agent-usage-reminder",
+        "anthropic-context-window-limit-recovery",
+        "ast-grep-sg-provision",
+        "auto-update-checker",
+        "codegraph-bootstrap",
+        "delegate-task-retry",
+        "edit-error-recovery",
+        "goal",
+        "hephaestus-agents-md-injector",
+        "interactive-bash-session",
+        "legacy-plugin-toast",
+        "model-fallback",
+        "no-hephaestus-non-gpt",
+        "no-sisyphus-gpt",
+        "non-interactive-env",
+        "preemptive-compaction",
+        "prometheus-md-only",
+        "question-label-truncator",
+        "runtime-fallback",
+        "session-notification",
+        "sisyphus-junior-notepad",
+        "start-work",
+        "task-resume-info",
+        "think-mode"
+      ],
+      "count": 24
+    },
+    "create-tool-guard-hooks": {
+      "file": "plugin/hooks/create-tool-guard-hooks.ts",
+      "names": [
+        "bash-file-read-guard",
+        "comment-checker",
+        "directory-agents-injector",
+        "directory-readme-injector",
+        "empty-task-response-detector",
+        "fsync-skip-warning",
+        "hashline-read-enhancer",
+        "json-error-recovery",
+        "notepad-write-guard",
+        "plan-format-validator",
+        "read-image-resizer",
+        "rules-injector",
+        "tasks-todowrite-disabler",
+        "team-tool-gating",
+        "todo-description-override",
+        "tool-output-truncator",
+        "webfetch-redirect-guard",
+        "write-existing-file-guard"
+      ],
+      "count": 18
+    },
+    "create-transform-hooks": {
+      "file": "plugin/hooks/create-transform-hooks.ts",
+      "names": [
+        "claude-code-hooks",
+        "context-injector-messages-transform",
+        "keyword-detector",
+        "monitor-status-injector",
+        "team-mailbox-injector",
+        "team-mode-status-injector",
+        "tool-pair-validator"
+      ],
+      "count": 7
+    },
+    "create-continuation-hooks": {
+      "file": "plugin/hooks/create-continuation-hooks.ts",
+      "names": [
+        "atlas",
+        "background-notification",
+        "compaction-context-injector",
+        "compaction-todo-preserver",
+        "stop-continuation-guard",
+        "todo-continuation-enforcer",
+        "unstable-agent-babysitter"
+      ],
+      "count": 7
+    },
+    "create-skill-hooks": {
+      "file": "plugin/hooks/create-skill-hooks.ts",
+      "names": [
+        "auto-slash-command",
+        "category-skill-reminder"
+      ],
+      "count": 2
+    }
+  },
+  "totalConstructed": 58,
+  "exceptions": [
+    {
+      "id": "team-mode-status-injector",
+      "kind": "bypasses-disabled-hooks",
+      "reason": "gated by team_mode.enabled, not present in HookNameSchema",
+      "source": "plugin/hooks/create-transform-hooks.ts:75-81"
+    },
+    {
+      "id": "team-mailbox-injector",
+      "kind": "bypasses-disabled-hooks",
+      "reason": "gated by team_mode.enabled, not present in HookNameSchema",
+      "source": "plugin/hooks/create-transform-hooks.ts:83-89"
+    },
+    {
+      "id": "context-injector-messages-transform",
+      "kind": "unconditional",
+      "reason": "constructed without an isHookEnabled gate",
+      "source": "plugin/hooks/create-transform-hooks.ts:70-71"
+    },
+    {
+      "id": "startup-toast",
+      "kind": "nested-toggle",
+      "reason": "passed as showStartupToast option into auto-update-checker",
+      "source": "plugin/hooks/create-session-hooks.ts:139"
+    }
+  ]
+}
