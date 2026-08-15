@@ -41,6 +41,11 @@ done
 
 cp "$ROOT/deploy/dsh-test-container/Dockerfile" "$STAGE/Dockerfile"
 
+# Bake the OMO role plugin into the image so its bare @deepseek-ai/* imports
+# resolve through the install's real node_modules.
+mkdir -p "$STAGE/omo-plugin"
+cp "$ROOT/packages/omo-dsh/src/dsh-plugin/omo-role-plugin.mjs" "$STAGE/omo-plugin/"
+
 echo "Building image omo-dsh-test (proxy: 127.0.0.1:7890) ..."
 docker build \
   --network=host \

@@ -58,9 +58,11 @@ function walkSchema(node, path, errors) {
 
 // Safety net over raw source text: catches illegal quoted `type:` literals before
 // any runtime executes, exactly like the incident grep check but structured.
-// `json`/`text` values are flagged anywhere (the outage classes); other
-// non-whitelisted values are flagged only in schema-looking lines, because
-// ordinary data objects legitimately carry `type: "omo/role"` event tags.
+// `json` is flagged anywhere (no legitimate plugin usage). Other non-whitelisted
+// values — including `text` (legitimate in render-part type tags) and event
+// data tags such as "omo/role" — are flagged only in lines that also carry a
+// JSON-SCHEMA keyword; the structural walker (validateParameterSchema) remains
+// the authority for actual parameter schemas.
 const SCHEMA_CONTEXT_RE = /(parameters|properties|items|anyOf|additionalProperties|schema)/i
 
 export function scanSourceText(text) {
@@ -70,7 +72,7 @@ export function scanSourceText(text) {
     for (const m of line.matchAll(/\btype\s*:\s*["']([^"']+)["']/g)) {
       const value = m[1]
       const error = lintTypeString(value)
-      if (value === "json" || value === "text" || (error && SCHEMA_CONTEXT_RE.test(line))) {
+      if (value === "json" || (error && SCHEMA_CONTEXT_RE.test(line))) {
         violations.push({ line: index + 1, type: value, error })
       }
     }

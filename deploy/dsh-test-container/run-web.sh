@@ -11,8 +11,9 @@ TMP_HOME="$(mktemp -d)"
 trap 'rm -rf "$TMP_HOME"' EXIT
 
 mkdir -p "$TMP_HOME/.agent-presets/omo"
-cp "$ROOT/packages/omo-dsh/agent-presets/omo/preset.yml" \
-   "$ROOT/packages/omo-dsh/agent-presets/omo/agent.cordis.yml" \
+cp "$ROOT"/packages/omo-dsh/agent-presets/omo/preset.yml \
+   "$ROOT"/packages/omo-dsh/agent-presets/omo/agent.cordis.yml \
+   "$ROOT"/packages/omo-dsh/agent-presets/omo/omo-role-plugin.mjs \
    "$TMP_HOME/.agent-presets/omo/"
 
 echo "DSH test home: $TMP_HOME"

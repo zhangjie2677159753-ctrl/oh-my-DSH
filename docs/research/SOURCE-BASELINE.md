@@ -331,6 +331,24 @@ One-shot start 支持的能力由 provider 显式声明：`outputSchema`、`dept
 - `turn/end` 不代表已 flush；重要状态切换后必须显式 durability checkpoint；
 - Compaction 追加 surface replacement，不删除 canonical events；服务可选且不保证修复任意 oversized context。
 
+### 5.6 自定义 Session 事件的运行时限制（R16）
+
+DSH 运行时对 `Session.append` 不检查 `KNOWN_SESSION_EVENT_TYPES`（live append 任意 type 均可写，data 需 lossless JSON），但 **persistence read 路径**（`packages/session/session-persistence/src/coordinator.ts:1061-1066`）拒绝 restore 含未知 type 且未标记 `ignorable` 的事件；而 `Session.append` 的 API 没有设置 `ignorable` 的入口（opts 仅 surface metadata）。`known-event-types.ts` 明确说 out-of-repo 插件事件的注册面尚未实现。
+
+因此当前固定 SHA 上，`omo/role` 事件可以 live append 并在进程内被 OMO fold 读取，但含该事件的 Session 无法被 stock harness 恢复（restore 报 unsupported event type）。迁移策略：
+
+- OMO 语义层（`compat/session.mjs`）继续把 `omo/role` 当 known+required 折叠；
+- DSH 侧持久化回退：Boulder 镜像（work/agent 字段）+ OMO-owned 恢复记录承担跨重启 authority；恢复时先试 Session Log，被 DSH 拒绝时按镜像 reconciliation 恢复并在矩阵记录该 deviation；
+- 跟踪上游注册面（event-type registration surface）作为 P1 blocker；获得注册面前不宣称跨重启角色恢复的 stock parity。
+
+### 5.7 容器内已实测的集成事实
+
+- 镜像按固定 SHA 构建（pnpm install/build:lib/build:web 全绿；三个本地未提交改动在快照内被 HEAD 中和）；
+- `dsh web` 在宿主 3090 健康启动（host 网络，容器内绑定 127.0.0.1 导致 -p 发布不可达）；
+- roster discovery 返回 `{"id":"omo","broken":false}`；
+- file-backed preset 行（`name: ./omo-role-plugin.mjs`）由 include loader 接受；
+- 插件模块在容器内可加载：exports `name/inject/apply/Config`；裸导入通过 `omo-plugin/node_modules/@deepseek-ai/*` 真实 entry symlink 解决（整目录 symlink 不行，entry symlink 可以）。
+
 ## 6. 目标设计与有意增强
 
 以下是本项目决定，不是现行 OMO 的逐字事实：

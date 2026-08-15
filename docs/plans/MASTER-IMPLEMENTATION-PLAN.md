@@ -945,6 +945,7 @@ Differential/model eval 从早期持续积累，但只有 E00-E27 完成才进�
 | R13 | scope 无边界膨胀 | High | parity rows/gates，不完成行不得称 GA |
 | R14 | UI SPI 猜错 | Medium | implementation-time Inspect + adapter |
 | R15 | 旧文档误导 | High | source/test priority + differential fixtures |
+| R16 | DSH persistence restore 拒绝未标记 ignorable 的未知 Session 事件；append 无 ignorable 入口 | High | Boulder 镜像 reconciliation；跟踪上游 event-type 注册面；未解决前不宣称 stock 跨重启恢复 parity |
 
 # 8. 最终交付物
 

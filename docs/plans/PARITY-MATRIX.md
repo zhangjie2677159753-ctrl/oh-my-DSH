@@ -79,7 +79,7 @@
 | PAR-VERIFY-001 | task evidence | Atlas/current tests | evidence store | stale/failed rejected | not-started |
 | PAR-VERIFY-002 | Final Verification Wave | Boulder/Atlas tests | verification state | complete only after F tasks | verified-contract |
 | PAR-STATE-001 | Todo single Session snapshot | DSH todo/write | projection only | not project authority | verified-contract |
-| PAR-STATE-002 | Session Log replay/audit | DSH session | OMO events | crash recovery | verified-contract |
+| PAR-STATE-002 | Session Log replay/audit；`omo/role` 可 live append 但 stock persistence restore 拒绝未标记 ignorable 的未知事件，append 无 ignorable 入口（R16） | DSH session + session-persistence coordinator | OMO fold + Boulder 镜像 reconciliation | live fold 权威；crash recovery 走镜像 fallback；跟踪上游注册面 | verified-contract |
 | PAR-STATE-003 | Boulder project authority | Core | file/repository | cross Session/worktree | verified-contract |
 | PAR-GOAL-001 | durable goal event + process-local activation | DSH goal | auxiliary status | replay/fork/start remain disarmed；only direct top-level human resume may rearm；OMO driver forbidden | not-started |
 | PAR-RULE-001 | rules discovery/security | rules-engine | context resolver | precedence/path traversal | not-started |

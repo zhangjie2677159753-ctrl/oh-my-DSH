@@ -35,15 +35,16 @@ test("nested illegal type fails structurally", () => {
   assert.ok(errors.some((e) => e.includes("illegal type")))
 })
 
-test("scanSourceText catches quoted literals in both quote styles", () => {
+test("scanSourceText catches json anywhere and text only in schema context", () => {
   const source = [
     `params = { type: "object", properties: { a: { type: "json" } } }`,
-    `other: { type: 'text' }`,
+    `render: () => [{ type: 'text', text: 'legit part type' }]`,
+    `schema = { type: "object", properties: { q: { type: "text" } } }`,
     `ok: { type: 'string' }`,
     `subtype: 'json'`, // word-boundary: must NOT match inside subtype
   ].join("\n")
   const violations = scanSourceText(source)
-  assert.deepEqual(violations.map((v) => v.type), ["json", "text"])
+  assert.deepEqual(violations.map((v) => [v.line, v.type]), [[1, "json"], [3, "text"]])
 })
 
 test("scanSourceText ignores event-data type tags outside schema context", () => {

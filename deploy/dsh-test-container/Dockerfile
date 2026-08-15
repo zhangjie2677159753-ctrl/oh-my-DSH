@@ -18,6 +18,14 @@ RUN corepack enable && corepack prepare pnpm@11.7.0 --activate
 
 WORKDIR /dsh
 COPY src/ .
+COPY omo-plugin/ /dsh/omo-plugin/
+# The preset plugin's bare @deepseek-ai/* imports resolve through real
+# package-entry symlinks (Node ESM follows entry symlinks, but not a wholly
+# symlinked node_modules directory; the root install does not link workspace
+# packages under /dsh/node_modules/@deepseek-ai).
+RUN mkdir -p /dsh/omo-plugin/node_modules/@deepseek-ai \
+    && ln -s /dsh/packages/core/tools /dsh/omo-plugin/node_modules/@deepseek-ai/dsh-tools \
+    && ln -s /dsh/vendor/schemastery /dsh/omo-plugin/node_modules/@deepseek-ai/schemastery
 
 # lefthook's postinstall requires a git repository (rev-parse); init one so
 # lifecycle scripts succeed without touching any real repo.
