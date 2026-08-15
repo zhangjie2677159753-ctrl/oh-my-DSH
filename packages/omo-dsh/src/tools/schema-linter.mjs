@@ -58,13 +58,21 @@ function walkSchema(node, path, errors) {
 
 // Safety net over raw source text: catches illegal quoted `type:` literals before
 // any runtime executes, exactly like the incident grep check but structured.
+// `json`/`text` values are flagged anywhere (the outage classes); other
+// non-whitelisted values are flagged only in schema-looking lines, because
+// ordinary data objects legitimately carry `type: "omo/role"` event tags.
+const SCHEMA_CONTEXT_RE = /(parameters|properties|items|anyOf|additionalProperties|schema)/i
+
 export function scanSourceText(text) {
   const violations = []
   const lines = text.split("\n")
   lines.forEach((line, index) => {
     for (const m of line.matchAll(/\btype\s*:\s*["']([^"']+)["']/g)) {
-      const error = lintTypeString(m[1])
-      if (error) violations.push({ line: index + 1, type: m[1], error })
+      const value = m[1]
+      const error = lintTypeString(value)
+      if (value === "json" || value === "text" || (error && SCHEMA_CONTEXT_RE.test(line))) {
+        violations.push({ line: index + 1, type: value, error })
+      }
     }
   })
   return violations

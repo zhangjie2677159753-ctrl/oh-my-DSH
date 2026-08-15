@@ -46,6 +46,15 @@ test("scanSourceText catches quoted literals in both quote styles", () => {
   assert.deepEqual(violations.map((v) => v.type), ["json", "text"])
 })
 
+test("scanSourceText ignores event-data type tags outside schema context", () => {
+  const source = [
+    `const event = { type: "omo/role", seq: 1, time: 2 }`,
+    `schema = { type: "object", properties: { q: { type: "any" } } }`,
+  ].join("\n")
+  const violations = scanSourceText(source)
+  assert.deepEqual(violations.map((v) => [v.line, v.type]), [[2, "any"]])
+})
+
 test("scanSourceText reports line numbers", () => {
   const violations = scanSourceText("line1\nline2: { type: 'json' }\n")
   assert.deepEqual(violations, [{ line: 2, type: "json", error: `illegal type "json"; allowed: string|number|integer|boolean|object|array|null` }])
