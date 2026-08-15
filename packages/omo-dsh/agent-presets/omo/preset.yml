@@ -1,0 +1,2 @@
+name: OMO for DSH（Batch A staging）
+description: OMO 行为对等迁移的单一 Agent Preset。Batch A 版本只挂载基础 persona 与最小工具行，用于 G1 mount/lifecycle 验证；角色切换、task()、Boulder、continuation 等运行时在后续 Epic 按 Session Log `omo/role` event 接入。

@@ -26,20 +26,24 @@ test("unknown tool name and allow∩deny conflicts fail loudly", () => {
   assert.ok(errors.some((e) => e.includes("both allowed and denied")))
 })
 
-test("atlas compat keeps call_omo_agent denied but hardened also blocks writes", () => {
+test("atlas compat: task/task_*/teammate allowed, call_omo_agent denied, writes NOT denied", () => {
   const compat = PRIMARY_ROLE_POLICIES.atlas.compat
   const hardened = PRIMARY_ROLE_POLICIES.atlas["deny-business-files"]
   assert.equal(resolveToolDecision(compat, "atlas", "task").decision, "allow")
   assert.equal(resolveToolDecision(compat, "atlas", "call_omo_agent").decision, "deny")
-  assert.equal(resolveToolDecision(compat, "atlas", "write").decision, "deny")
+  // verified: current source has no write/edit denial for atlas (compat)
+  assert.equal(resolveToolDecision(compat, "atlas", "write").decision, "allow")
+  assert.equal(resolveToolDecision(compat, "atlas", "todowrite").decision, "deny")
   assert.equal(resolveToolDecision(hardened, "atlas", "write").decision, "deny")
 })
 
-test("prometheus broad permission map + narrow .omo file guard", () => {
+test("prometheus: config-build denies bash/interactive_bash; .omo file guard narrows writes", () => {
   const policy = PRIMARY_ROLE_POLICIES.prometheus
-  assert.equal(resolveToolDecision(policy, "prometheus", "bash").decision, "allow")
+  assert.equal(resolveToolDecision(policy, "prometheus", "bash").decision, "deny")
+  assert.equal(resolveToolDecision(policy, "prometheus", "interactive_bash").decision, "deny")
   assert.equal(resolveToolDecision(policy, "prometheus", "webfetch").decision, "allow")
-  assert.equal(resolveToolDecision(policy, "prometheus", "write").decision, "deny")
+  assert.equal(resolveToolDecision(policy, "prometheus", "edit").decision, "allow")
+  assert.equal(resolveToolDecision(policy, "prometheus", "task").decision, "allow")
 
   assert.equal(prometheusFileGuard(".omo/plans/roadmap.md").allowed, true)
   assert.equal(prometheusFileGuard(".omo/plans/roadmap.md").reminder, "plan-write-workflow-reminder")
@@ -48,21 +52,26 @@ test("prometheus broad permission map + narrow .omo file guard", () => {
   assert.equal(prometheusFileGuard("").allowed, false)
 })
 
-test("metis profiles: opencode keeps task delegation, senpi denies it", () => {
+test("metis/momus: runtime task denied for BOTH profiles; opencode keeps read tools", () => {
   const opencode = CHILD_ROLE_POLICIES.metis["opencode-compat"]
   const senpi = CHILD_ROLE_POLICIES.metis["senpi-compat"]
-  assert.equal(resolveToolDecision(opencode, "metis", "task").decision, "allow")
+  assert.equal(resolveToolDecision(opencode, "metis", "task").decision, "deny")
   assert.equal(resolveToolDecision(opencode, "metis", "write").decision, "deny")
+  assert.equal(resolveToolDecision(opencode, "metis", "read").decision, "allow")
   assert.equal(resolveToolDecision(senpi, "metis", "task").decision, "deny")
-  assert.equal(resolveToolDecision(senpi, "metis", "read").decision, "allow")
+  assert.equal(resolveToolDecision(senpi, "metis", "task_send").decision, "deny")
+  assert.equal(resolveToolDecision(CHILD_ROLE_POLICIES.momus["opencode-compat"], "momus", "task").decision, "deny")
 })
 
-test("junior: writes allowed, research delegation whitelisted, team denied", () => {
+test("junior: writes allowed, task denied globally, research path is call_omo_agent", () => {
   const junior = CHILD_ROLE_POLICIES["sisyphus-junior"]
   assert.equal(resolveToolDecision(junior, "sisyphus-junior", "edit").decision, "allow")
-  assert.equal(resolveToolDecision(junior, "sisyphus-junior", "teammate").decision, "deny")
+  assert.equal(resolveToolDecision(junior, "sisyphus-junior", "task").decision, "deny")
+  assert.equal(resolveToolDecision(junior, "sisyphus-junior", "call_omo_agent").decision, "allow")
+  assert.equal(resolveToolDecision(junior, "sisyphus-junior", "todowrite").decision, "deny")
   assert.deepEqual(junior.delegation.researchWhitelist, ["explore", "librarian", "oracle"])
   assert.equal(junior.delegation.categoryImplementationRecursion, "deny")
+  assert.equal(junior.delegation.legacyPath, "call_omo_agent")
 })
 
 // --- controller ---

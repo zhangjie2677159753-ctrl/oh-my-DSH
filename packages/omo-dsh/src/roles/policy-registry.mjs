@@ -1,30 +1,59 @@
 // omo-dsh role tool policy registry (OMO-0404).
-// Verified OMO contracts at fixed SHA:
-// - Atlas compat: task/task_*/teammate allowed, call_omo_agent denied
-//   (tool-config-handler.ts); current source does NOT deny all write/edit —
-//   that is the dsh-hardened profile, reported separately.
-// - Prometheus: permission map allows edit/bash/webfetch/question; the
-//   prometheus-md-only guard narrows Write/Edit to .omo/*.md and injects a
-//   planning warning into task delegation (hook.ts BLOCKED_TOOLS).
-// - Metis/Momus (OpenCode): deny write/edit/apply_patch, keep task delegation;
-//   Senpi profile: Metis also denies delegation.
-// Startup validation fails loud on unknown tool names and allow∩deny conflicts.
+// Verified against fixed-SHA source, LAYERED contract:
+//   1. agent files (prompt-side maps, e.g. PROMETHEUS_PERMISSION)
+//   2. plugin-handlers/tool-config-handler.ts applyToolConfig() — the
+//      config-build overrides that WIN at runtime:
+//        - TASK_DENIED_SUBAGENT_KEYS = librarian/explore/oracle/
+//          multimodal-looker/metis/momus  → task:"deny"
+//        - atlas: task/task_*/teammate allow, call_omo_agent deny,
+//          todowrite/todoread deny (task system on); write/edit NOT denied
+//        - hephaestus: task/teammate allow, call_omo_agent deny,
+//          todowrite/todoread deny (no task_* line)
+//        - prometheus: task/task_*/teammate allow, call_omo_agent deny,
+//          todowrite/todoread deny, bash:deny, interactive_bash:deny
+//        - sisyphus: task/task_*/teammate allow, call_omo_agent deny,
+//          todowrite/todoread deny, question per mode
+//        - junior: task_*/teammate allow, todowrite/todoread deny;
+//          global config.permission.task:"deny" applies to junior;
+//          call_omo_agent stays at the agent-source value (allowed) — this is
+//          the research-delegation path, NOT task.
+//        - librarian: grep_app_* allow; looker: task deny, look_at deny
+//        - global: webfetch/external_directory allow, task deny
+//   3. prometheus-md-only hook narrows Write/Edit to .omo/*.md (guard layer).
+// Defaults below model OpenCode's permissive-unless-denied runtime.
+import { resolveToolDecision } from "../compat/tools.mjs"
 
 export const STAGED_TOOL_CATALOG = Object.freeze([
-  "read", "grep", "glob", "lsp_read", "webfetch", "question",
-  "write", "edit", "apply_patch", "bash", "test",
+  "read", "grep", "glob", "grep_app_*", "lsp_read", "webfetch", "question",
+  "write", "edit", "apply_patch", "bash", "interactive_bash", "test",
   "task", "task_*", "task_send", "task_cancel", "task_output",
-  "teammate", "call_omo_agent",
+  "teammate", "call_omo_agent", "look_at",
+  "todowrite", "todoread",
   "notepad_append", "plan_update", "evidence_record",
 ])
 
+const DENY_TODO = ["todowrite", "todoread"]
+
 export const PRIMARY_ROLE_POLICIES = Object.freeze({
-  sisyphus: { default: "allow" },
-  hephaestus: { default: "allow" },
-  prometheus: {
-    default: "deny",
+  sisyphus: {
+    default: "allow",
     rules: [
-      { roles: ["prometheus"], allow: ["edit", "bash", "webfetch", "question"] },
+      { roles: ["sisyphus"], deny: ["call_omo_agent", ...DENY_TODO] },
+      { roles: ["sisyphus"], allow: ["task", "task_*", "teammate"] },
+    ],
+  },
+  hephaestus: {
+    default: "allow",
+    rules: [
+      { roles: ["hephaestus"], deny: ["call_omo_agent", ...DENY_TODO] },
+      { roles: ["hephaestus"], allow: ["task", "teammate"] },
+    ],
+  },
+  prometheus: {
+    default: "allow",
+    rules: [
+      { roles: ["prometheus"], deny: ["call_omo_agent", "bash", "interactive_bash", ...DENY_TODO] },
+      { roles: ["prometheus"], allow: ["task", "task_*", "teammate", "edit", "webfetch", "question"] },
     ],
     fileGuard: {
       profile: "prometheus-md-only",
@@ -35,69 +64,65 @@ export const PRIMARY_ROLE_POLICIES = Object.freeze({
     },
   },
   atlas: {
-    default: "deny",
+    default: "allow",
     compat: {
+      default: "allow",
       rules: [
+        { roles: ["atlas"], deny: ["call_omo_agent", ...DENY_TODO] },
         { roles: ["atlas"], allow: ["task", "task_*", "teammate"] },
-        { roles: ["atlas"], deny: ["call_omo_agent"] },
       ],
     },
     "deny-business-files": {
+      default: "allow",
       rules: [
+        { roles: ["atlas"], deny: ["call_omo_agent", ...DENY_TODO, "write", "edit", "apply_patch"] },
         { roles: ["atlas"], allow: ["task", "task_*", "teammate"] },
-        { roles: ["atlas"], deny: ["call_omo_agent", "write", "edit", "apply_patch"] },
       ],
     },
   },
 })
 
 export const CHILD_ROLE_POLICIES = Object.freeze({
-  explore: { default: "deny", rules: [{ roles: ["explore"], allow: ["read", "grep", "glob", "lsp_read"] }] },
-  librarian: { default: "deny", rules: [{ roles: ["librarian"], allow: ["read", "grep", "glob", "webfetch"] }] },
-  oracle: { default: "deny", rules: [{ roles: ["oracle"], allow: ["read", "grep", "glob"] }] },
-  "multimodal-looker": { default: "deny", rules: [{ roles: ["multimodal-looker"], allow: ["read", "glob", "webfetch"] }] },
+  explore: { default: "allow", rules: [{ roles: ["explore"], deny: ["task", "write", "edit", "apply_patch", "teammate"] }] },
+  librarian: { default: "allow", rules: [{ roles: ["librarian"], deny: ["task", "write", "edit", "apply_patch", "teammate"] }, { roles: ["librarian"], allow: ["grep_app_*"] }] },
+  oracle: { default: "allow", rules: [{ roles: ["oracle"], deny: ["task", "write", "edit", "apply_patch", "teammate"] }] },
+  "multimodal-looker": { default: "allow", rules: [{ roles: ["multimodal-looker"], deny: ["task", "look_at", "write", "edit", "apply_patch", "teammate"] }] },
   metis: {
     "opencode-compat": {
-      default: "deny",
+      default: "allow",
       rules: [
-        { roles: ["metis"], allow: ["read", "grep", "glob", "task"] },
-        { roles: ["metis"], deny: ["write", "edit", "apply_patch"] },
+        // config-build layer denies task for metis; agent layer denies writes
+        { roles: ["metis"], deny: ["task", "write", "edit", "apply_patch", "teammate"] },
       ],
     },
     "senpi-compat": {
-      default: "deny",
-      rules: [
-        { roles: ["metis"], allow: ["read", "grep", "glob"] },
-        { roles: ["metis"], deny: ["write", "edit", "apply_patch", "task"] },
-      ],
+      default: "allow",
+      rules: [{ roles: ["metis"], deny: ["task", "task_send", "task_cancel", "task_output", "write", "edit", "apply_patch", "teammate"] }],
     },
   },
   momus: {
     "opencode-compat": {
-      default: "deny",
-      rules: [
-        { roles: ["momus"], allow: ["read", "grep", "glob", "task"] },
-        { roles: ["momus"], deny: ["write", "edit", "apply_patch"] },
-      ],
+      default: "allow",
+      rules: [{ roles: ["momus"], deny: ["task", "write", "edit", "apply_patch", "teammate"] }],
     },
     "senpi-compat": {
-      default: "deny",
-      rules: [
-        { roles: ["momus"], allow: ["read", "grep", "glob"] },
-        { roles: ["momus"], deny: ["write", "edit", "apply_patch"] },
-      ],
+      default: "allow",
+      rules: [{ roles: ["momus"], deny: ["task", "task_send", "task_cancel", "task_output", "write", "edit", "apply_patch", "teammate"] }],
       note: "senpi momus has a one-shot policy; invocation shape enforced at the task layer",
     },
   },
   "sisyphus-junior": {
-    default: "deny",
+    default: "allow",
     rules: [
-      { roles: ["sisyphus-junior"], allow: ["read", "grep", "glob", "lsp_read", "webfetch", "write", "edit", "apply_patch", "bash", "test", "task"] },
-      { roles: ["sisyphus-junior"], deny: ["teammate", "call_omo_agent", "task_send", "task_cancel"] },
+      // global config.permission.task:"deny" applies to junior (no task line)
+      { roles: ["sisyphus-junior"], deny: ["task", ...DENY_TODO] },
+      // agent-source call_omo_agent stays allowed → research delegation path
+      { roles: ["sisyphus-junior"], allow: ["call_omo_agent", "task_*", "teammate"] },
     ],
     delegation: {
       researchWhitelist: ["explore", "librarian", "oracle"],
       categoryImplementationRecursion: "deny",
+      legacyPath: "call_omo_agent",
     },
   },
   "plan-compiler": { default: "deny", rules: [{ roles: ["plan-compiler"], allow: [] }] },

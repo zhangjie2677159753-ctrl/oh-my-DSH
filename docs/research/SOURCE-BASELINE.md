@@ -170,26 +170,30 @@ Senpi 的 `packages/omo-senpi/src/components/task/skill-invocation-tracker.ts:cr
 
 Prometheus 的 agent permission map 本身较宽：`edit`、`bash`、`webfetch`、`question` 均为 allow。`prometheus-md-only` 只对其 `BLOCKED_TOOLS = [Write, Edit, write, edit]` 做路径限制，仅允许这些文件工具写 `.omo/*.md`；对 task/call_omo_agent 则注入 planning-only 警告。它并没有把普通 `bash` 从 permission map 中移除，因此不能错误宣称现行 OpenCode 已在执行层封死所有 shell 写入或 delegated implementation。迁移时必须保留 permission map、Write/Edit guard 和 delegation warning 的分层；若 DSH 额外禁止 state-changing shell 或硬拒绝规划委派实现，应作为显式 hardening profile/deviation 测试，不能冒充 exact parity。
 
-OpenCode 的 Metis/Momus 都拒绝 `write`、`edit`、`apply_patch`，但保留 task delegation；Senpi profile 有意不同，其中 Metis 禁止 delegation。DSH 必须按目标兼容 profile 冻结权限，不得把 OpenCode 与 Senpi 合并成一个“绝对只读/绝不委派”规则。无论 Prompt 是否提及，写入拒绝都要由 tool filter + execution guard 强制。
+OpenCode 的 Metis/Momus 在 agent 源里拒绝 `write`、`edit`、`apply_patch`，但运行时权限不止这一层：`tool-config-handler.ts` 把 `[librarian, explore, oracle, multimodal-looker, metis, momus]` 全部设为 `task: deny`（`TASK_DENIED_SUBAGENT_KEYS`）。因此**当前 OpenCode 运行时 Metis/Momus 同样没有 task delegation**；"保留 task delegation" 只在 agent 文件层成立，被 config-build 层覆盖。Senpi profile 的 Metis 同样禁止 delegation（其 Momus 另有 one-shot policy）。DSH 必须按目标兼容 profile 冻结权限，不得把 OpenCode 与 Senpi 合并成一个“绝对只读/绝不委派”规则，也不得按 agent 文件层而非运行时最终层判断权限。无论 Prompt 是否提及，写入拒绝都要由 tool filter + execution guard 强制。
 
 Canonical model candidate/fallback chains 的真源是 `packages/model-core/src/agent-model-requirements.ts` 及其测试，而不是规划文档中的营销模型例子。Prometheus 使用单一 model-independent prompt；Atlas 才按 model family 选择 prompt variant 并注入 runtime category/agent/skill context。DSH 可用 capability alias 替代具体 Provider ID，但 route differential、candidate order、variant selection 与 fallback 行为必须由固定真源 fixture 证明。
 
-`plugin-handlers/tool-config-handler.ts` 当前对 Atlas：
+`plugin-handlers/tool-config-handler.ts` 的 `applyToolConfig()` 是运行时最终权限层（覆盖 agent 源文件里的 map），完整事实：
 
-- `task: allow`
-- `task_*: allow`
-- `teammate: allow`
-- `call_omo_agent: deny`
+- `TASK_DENIED_SUBAGENT_KEYS = [librarian, explore, oracle, multimodal-looker, metis, momus]` 全部 `task: deny`；
+- Atlas：`task/task_*/teammate: allow`，`call_omo_agent: deny`，task system 开启时 `todowrite/todoread: deny`；**没有** write/edit 拒绝；
+- Hephaestus：`task/teammate: allow`，`call_omo_agent: deny`，`todowrite/todoread: deny`，没有 `task_*` 行；
+- Prometheus：`task/task_*/teammate: allow`，`call_omo_agent: deny`，`todowrite/todoread: deny`，**`bash: deny`、`interactive_bash: deny`**——与 agent 源 `PROMETHEUS_PERMISSION` 的 `bash: allow` 叠加后以 config-build 层为准；
+- Sisyphus：`task/task_*/teammate: allow`，`call_omo_agent: deny`，`todowrite/todoread: deny`，question 按模式；
+- Junior：`task_*/teammate: allow`，`todowrite/todoread: deny`；全局 `config.permission.task: "deny"` 对 Junior 生效；研究委派走 agent 源里保留的 `call_omo_agent`（legacy path），不是 `task`；
+- Multimodal-Looker：额外 `look_at: deny`；Librarian：`grep_app_*: allow`；
+- 全局：`webfetch/external_directory: allow`，`task: deny`。
 
 当前 Atlas agent config 没有在 agent 源码中直接禁止所有 write/edit。把 Atlas 强化成“只能委派、绝不写业务代码”是合理 DSH 产品硬化，但它是**有意偏差**，必须由 `atlas.directWritePolicy = "compat" | "deny-business-files"` 等开关表达并分别测试。
 
 Junior 当前并非无条件 `maxDepth=0`：
 
-- `call_omo_agent` 被允许；
+- agent 源里 `call_omo_agent` 被允许（研究委派 legacy path）；运行时 `task` 因全局 `config.permission.task: "deny"` 被拒绝——**Junior 不能通过新 task() 委派实现**；
 - GPT Junior Prompt 明确允许研究型 `explore`、`librarian`、`oracle`；
 - 禁止再次按 category 委派实现，而不是禁止一切子委派。
 
-DSH 的对等实现应以“研究委派白名单 + 禁止实现递归”为默认兼容策略，而不是简单深度 0。若启用 `strictNoDelegation`，也要作为偏差记录。
+DSH 的对等实现应以“研究委派白名单（legacy `call_omo_agent` 语义映射）+ 禁止实现递归”为默认兼容策略，而不是简单深度 0。若启用 `strictNoDelegation`，也要作为偏差记录。
 
 ### 4.6 Todo Continuation
 
