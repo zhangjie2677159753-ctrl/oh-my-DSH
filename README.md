@@ -56,10 +56,11 @@
 - [x] 推送规划基线与 `plan-v1-omo-038ed0c-dsh-47f9438` 标签；GitHub 默认分支改为 `main`。
 - [x] Batch A 治理产物：upstream locks、`parity.json`、包分类、`hook-inventory.lock.json`、compat 合同 seed。
 - [x] OMO-0102 配置 Schema 校验器 + OMO-0103 Tool Schema Linter（19 项 `node --test` 全部通过）。
-- [x] compat 纯逻辑层：session/prompt/tools/goals-todos/routing/subagents/projection 八模块 + 角色 Runtime（policy/controller/router/commands/model-binding）+ vertical slice（100 项 `node --test` 全部通过）。
+- [x] compat 纯逻辑层：session/prompt/tools/goals-todos/routing/subagents/projection 八模块 + 角色 Runtime（policy/controller/router/commands/model-binding）+ task/Boulder/并发三模块（125 项 `node --test` 全部通过）。
 - [x] 权限层按运行时真源纠偏：`tool-config-handler.ts` config-build 层覆盖 agent 源 map（六子代理 task:deny、Prometheus bash:deny、Junior 走 call_omo_agent legacy path 等）；fixture 入库。
-- [ ] 真实 DSH 部署 mount 验证（受控容器进行中：`deploy/dsh-test-container/`，宿主机 3090 隔离实例）。
-- [ ] 在本仓库 `packages/omo-dsh/` staging 完成实现（owner 已确认 staging 方案）。
-- [ ] 达到最终行为对等发布门。
+- [x] DSH 受控容器验证：镜像按固定 SHA 构建，web boot 200、preset discovery healthy、`omo-role` 插件模块容器内加载成功（`deploy/dsh-test-container/G1-EVIDENCE.md`）。
+- [ ] 真实 Session 级 mount/lifecycle 验证（部署门：需有凭据的会话或 UI/API 通道；检查单在 `G1-DEPLOYMENT-CHECKLIST.md`）。
+- [ ] 按 `task-dag.json` 完成剩余 Phase 2-9 任务。
+- [ ] 达到最终行为对等发布门（Conformance Profiles）。
 
 > 注意：本仓库不保存 API Token、密码或带凭据的远端 URL。任何在聊天、Issue 或日志中公开过的令牌都应立即撤销并重新签发。
