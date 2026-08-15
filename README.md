@@ -52,8 +52,10 @@
 - [x] 核验 DSH 关键扩展 API 与限制。
 - [x] 核验 OMO Core 数量、`/start-work`、Boulder、`task()`、Atlas/Junior 权限和续跑常量。
 - [x] 建立详细实施、验收和移交文档。
-- [ ] 完成 OMO SUL-1.0 法务/使用场景决策。
-- [ ] 在 OMO Monorepo 创建 `packages/omo-dsh/` 实现。
+- [x] 完成 OMO SUL-1.0 法务/使用场景决策（内部团队、私有分发，见 `docs/legal/USAGE-DECISION.md`）。
+- [x] 推送规划基线与 `plan-v1-omo-038ed0c-dsh-47f9438` 标签；GitHub 默认分支改为 `main`。
+- [x] Batch A 治理产物：upstream locks、`parity.json`、包分类、`hook-inventory.lock.json`、compat 合同 seed。
+- [ ] 在本仓库 `packages/omo-dsh/` staging 完成实现（owner 已确认 staging 方案）。
 - [ ] 达到最终行为对等发布门。
 
 > 注意：本仓库不保存 API Token、密码或带凭据的远端 URL。任何在聊天、Issue 或日志中公开过的令牌都应立即撤销并重新签发。

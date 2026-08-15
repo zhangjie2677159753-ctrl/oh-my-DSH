@@ -1,0 +1,222 @@
+{
+  "schemaVersion": 1,
+  "sourceDocument": "docs/plans/ACCEPTANCE-AND-EVALUATION.md section 4",
+  "generatedBy": "local-node-extractor",
+  "generatedAt": "2026-08-15T14:15:40.882Z",
+  "total": 35,
+  "items": [
+    {
+      "id": "CT-01",
+      "text": "历史 Session read + live append。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-02",
+      "text": "read/subscribe race 以 seq 去重。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-03",
+      "text": "unknown required vs ignorable events。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-04",
+      "text": "seed replay 与 `session/end-seed`。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-05",
+      "text": "event observer 失败不回滚 commit。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-06",
+      "text": "reentrant append 拒绝。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-07",
+      "text": "scoped prompt shadow/dispose。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-08",
+      "text": "dynamic section order/interpolation。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-09",
+      "text": "inject vs steer vs followup。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-10",
+      "text": "role snapshot 与 model route 同 step 原子。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-11",
+      "text": "retry 与 fallback 分离。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-12",
+      "text": "removed header-delta/fallback semantics 拒绝。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-13",
+      "text": "pre/guard/execute/post ordering。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-14",
+      "text": "monotonic deny 不可覆写。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-15",
+      "text": "cooperative cancellation 等待 settlement。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-16",
+      "text": "cancel keepInbox。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-17",
+      "text": "explicit Session flush success/failure。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-18",
+      "text": "preset generation pinning。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-19",
+      "text": "recompose blankness 由 adapter 检查。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-20",
+      "text": "preset leaked global Service 拒绝。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-21",
+      "text": "subagent capability 在启动前拒绝。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-22",
+      "text": "one-shot structured output。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-23",
+      "text": "continuable structured output 拒绝。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-24",
+      "text": "child send 只影响 later turn。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-25",
+      "text": "interrupt current turn、保留 descendants。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-26",
+      "text": "Job stopping/capacity/process restart loss。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-27",
+      "text": "Goal revision CAS/replay disarmed。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-28",
+      "text": "Todo whole-list last-write-wins。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-29",
+      "text": "transactional resume rollback。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-30",
+      "text": "Compaction surface replace 不删除 events。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-31",
+      "text": "projection cold snapshot/delta/reset（UI 阶段）。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-32",
+      "text": "Slot presence/props/dispose（UI 阶段）。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-33",
+      "text": "MCP schema normalization（启用时）。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-34",
+      "text": "LSP start/cancel/cleanup（启用时）。",
+      "tests": [],
+      "status": "not-started"
+    },
+    {
+      "id": "CT-35",
+      "text": "Terminal readiness/partial-start cleanup（启用时）。",
+      "tests": [],
+      "status": "not-started"
+    }
+  ],
+  "notes": [
+    "E2E/unit/replay/hard-gate 清单仍以源文档为准；本文件仅作为 compat 合同测试的行级 seed"
+  ]
+}
