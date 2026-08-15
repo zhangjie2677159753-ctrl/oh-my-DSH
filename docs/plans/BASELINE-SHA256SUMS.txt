@@ -1,0 +1,10 @@
+# Planning baseline content hashes for commit 791888e.
+# Regenerate after any reviewed planning update; a later annotated tag binds the final commit.
+63a6b98b133a41469ddf5f02a3f82f5e01923dfff922c4cafc8aa6841a8d6f38  README.md
+0f0974136d961d638ac4697739aef94cb2b39c15ac36f95d4405f22ea3dc9bf3  docs/architecture/TARGET-ARCHITECTURE.md
+6821815c47985fe81d0687fd36abf2d7311ab5a27d4aee133a57595b51e889cb  docs/plans/ACCEPTANCE-AND-EVALUATION.md
+1d1d25eaec81b66f3d412bccf39e8fe1c93787cdab0d4c36bff6b83e073259c7  docs/plans/DEEPSEEK-EXECUTION-HANDOFF.md
+ca74155f8434550ecda5b36ebca2edcd438ecf8f91f155205fc149228324be6c  docs/plans/MASTER-IMPLEMENTATION-PLAN.md
+18aee0e96735d14ae204859560bcd7a095e567f9c5b7f7d826be12e20c7a8de4  docs/plans/PARITY-MATRIX.md
+1ae9b0f647776836ce7e98a5a1cb2e8d4dba29872dc38f8583ed294d4afd1a52  docs/plans/task-dag.json
+20990159b25d4d92059347b217887f310c23df043a3b0be01c7d9c66a87e6377  docs/research/SOURCE-BASELINE.md
