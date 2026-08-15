@@ -17,6 +17,14 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
    ```
    证明 roster 发现、结构校验通过、无 broken row。
 5. [x] 容器停止/删除无残留（`docker rm -f omo-dsh-test-web` 后 `docker ps` 无该实例）。
+6. [x] E04 角色插件集成（第二轮）：
+   - preset 新增 file-backed 行 `name: ./omo-role-plugin.mjs`，discovery 仍 healthy；
+   - 插件模块容器内加载成功：exports `name/inject/apply/Config`；
+   - 裸导入通过 `omo-plugin/node_modules/@deepseek-ai/*` 真实 entry symlink 解决；
+   - `omo_role`/`omo_role_status` 工具定义（append/fold `omo/role` session events）。
+7. [x] 记录 R16：out-of-repo 事件可 live append，但 stock persistence restore 拒绝未标记
+   ignorable 的未知类型且 append 无 ignorable 入口——Boulder 镜像 reconciliation
+   作为回退，上游注册面是 P1 跟踪项（SOURCE-BASELINE §5.6、PARITY-MATRIX PAR-STATE-002）。
 
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
