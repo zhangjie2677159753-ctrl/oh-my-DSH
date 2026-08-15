@@ -237,6 +237,7 @@ OMO 还有 Atlas 专用 Boulder continuation；不能只搬普通 Todo enforcer�
 - `omo-config-core` 是 Harness-API-neutral，但其 loader/schema 路径使用 Node runtime，必须放 DSH Host 或注入 runtime facilities。
 - upstream publish workflow 缺 CI 的 Senpi compatibility gate；目标发布不能继承该缺口。
 - `verify-npm-payload.mjs` 以 denylist 为主，且 alias manifest 可在验证后继续修改；目标必须验证**最终**每个 manifest variant 的 exact/required packed payload。
+- 已在本地固定归档复核一个具体 P1 fixture：`packages/model-core/package.json` 的根 export `types` 和顶层 `types` 都指向 `./index.d.ts`，但 package 根没有该文件，真实实现入口是 `src/index.ts`；其 `bun test src/*.test.ts` 与源码 typecheck 不经过 packed consumer，因此无法发现 declaration/export resolution 断裂。相邻 `claude-code-compat-core` 则把 `types` 指到真实 `./src/index.ts`。这证明发布 Gate 必须从最终 tarball 的外部 consumer 解析，而不能以 workspace source tests 代替。
 - generated schema freshness 应是 PR/CI/release fail-on-diff；不能靠发布流水线自动修复。
 - unified runtime schema 故意把 `[opencode]` 保持为 `record<string, unknown>`，generated editor schema 才替换 legacy OpenCode schema。DSH Adapter 必须显式测试两层 validator 的差异。
 

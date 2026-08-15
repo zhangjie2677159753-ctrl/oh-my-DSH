@@ -433,9 +433,10 @@ during final verification
 3. 验证 `omo-config-core` 只进入 Host Node target；Client/browser graph 出现其 Node-dependent loader 路径时失败，除非通过已声明 runtime facility adapter。
 4. 发布 workflow 与 CI required adapter gates 比较；Senpi compatibility 等任一 gate 缺失即失败。
 5. 每个最终 manifest variant 和 alias 必须在所有 mutation 之后独立 pack；payload 同时验证 required entries 与 exact allowlist，不只做 denylist。
-6. 每个 tarball 在空 consumer 中安装，验证 public runtime import、`exports`、`types`、`bin`，并执行 `tsc --noEmit`；发布前记录最终 tarball digest。
-7. Schema generation 在 PR、CI、release 都 fail-on-diff，不自动 commit 修复。
-8. Unified runtime `[opencode]` validator、legacy editor schema substitution 和 DSH overlay validator 做 differential fixtures；每个接受/拒绝差异都必须显式列入合同，DSH schema 使用独立 `$id`。
+6. 每个 tarball 在空 consumer 中安装，验证 public runtime import、`exports`、`types`、`bin`，并执行 `tsc --noEmit`；发布前记录最终 tarball digest。所有 manifest target 必须实际存在于最终 tarball，测试不得继承 Monorepo workspace symlink、root path mapping 或源码 fallback。
+7. P1 regression fixture：对固定上游 `model-core`（声明 `types: ./index.d.ts` 但文件缺失）证明旧 tarball 的 consumer type resolution 会失败；修复版必须在 Node16/NodeNext 和受支持 bundler resolution 下分别通过 public `import type`、value import 与目标 runtime import。源码 `bun test src/*.test.ts` 通过不得使该负 fixture 误判为发布可用。
+8. Schema generation 在 PR、CI、release 都 fail-on-diff，不自动 commit 修复。
+9. Unified runtime `[opencode]` validator、legacy editor schema substitution 和 DSH overlay validator 做 differential fixtures；每个接受/拒绝差异都必须显式列入合同，DSH schema 使用独立 `$id`。
 
 ## 13. 验收证据格式
 

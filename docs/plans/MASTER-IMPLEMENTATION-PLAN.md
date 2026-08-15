@@ -802,6 +802,14 @@ fork/reflection cost routing 必须先检查 `canNarrowCapabilitiesWhileReusingP
 
 `verify-npm-payload.mjs` 式 denylist 不足。对每个最终发布 manifest variant（包括 `oh-my-openagent` alias）执行：生成/修改最终 manifest → `npm pack`/等价 pack → required/exact allowlist 校验 → 在干净临时 consumer 安装 → runtime import → `tsc --noEmit`。任何 alias 在验证后修改 manifest 都必须重新 pack 和重新验证；同时检查 exports/types/bin/files、平台二进制、license/notices、无 source-relative/未声明 workspace import。
 
+把固定上游 `model-core` 作为 P1 必测回归：其 manifest 当前声明 `types: ./index.d.ts`，但 tarball/source 根没有该文件，只有 `src/index.ts`。Gate 必须同时验证：
+
+- 每个 `exports` condition 与顶层 `types/main/module/bin` target 都存在于**最终 tarball**，大小写一致且未越出 package；
+- TypeScript `node16`/`nodenext`（以及项目支持的 bundler resolution）能从干净 consumer `import type` 和 value import 公共 API；
+- Node/目标 runtime 能解析 value export，不因直接指向未编译 `.ts` 或缺 declaration 失败；
+- consumer 不得借助 Monorepo workspace symlink、root tsconfig path、源码目录或缓存“偶然通过”；
+- 修复后加入 packed regression，源码 `bun test src/*.test.ts` 只能作为补充，不能关闭该 Gate。
+
 ### OMO-3003 Schema Freshness 和双层配置合同
 
 Schema generation 必须在 PR/CI/release **fail on diff**，不得由 CI 自动修复或提交。为 DSH schema 使用独立 `$id`。显式测试：`omo-config-core` unified runtime schema 中 `[opencode]` 是 `record<string, unknown>`，而 generated editor JSON schema 会替换为 legacy OpenCode schema；Adapter 必须有自己的 runtime validator、editor schema 和两者允许差异的 fixture，不能宣称二者天然等价。
