@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-15T23:30:00+08:00",
+  "phase": "batch-a",
+  "tasks": {
+    "OMO-0001": { "status": "done", "evidence": ["docs/upstream/omo-lock.json", "docs/upstream/dsh-lock.json"] },
+    "OMO-0002": { "status": "done", "evidence": ["docs/legal/USAGE-DECISION.md (internal/private distribution decision)"] },
+    "OMO-0003": { "status": "done", "evidence": ["docs/research/SOURCE-BASELINE.md"] },
+    "OMO-0004": { "status": "partial", "evidence": ["contract-level replay via pure adapters; live upstream behavior capture deferred to OMO monorepo integration"] },
+    "OMO-0005": { "status": "done", "evidence": ["docs/plans/parity.json (60 capabilities, 20 core, 56 hooks, 5 deviations)"] },
+    "OMO-0006": { "status": "done", "evidence": ["docs/plans/task-dag.json (122 tasks, acyclic, drift 0)"] },
+    "OMO-0007": { "status": "done", "evidence": ["tag plan-v1-omo-038ed0c-dsh-47f9438 pushed; default branch main; docs/plans/BASELINE-SHA256SUMS.txt"] },
+    "OMO-0008": { "status": "done", "evidence": ["docs/upstream/omo-package-classification.json (45 packages, 20 neutral-core)"] },
+    "OMO-0101": { "status": "done", "evidence": ["packages/omo-dsh skeleton"] },
+    "OMO-0102": { "status": "done", "evidence": ["src/config/schema-validator.mjs + 10 tests"] },
+    "OMO-0103": { "status": "done", "evidence": ["src/tools/schema-linter.mjs, tools/lint-tool-schemas.mjs + 7 tests"] },
+    "OMO-0201": { "status": "done", "evidence": ["src/compat/session.mjs role codec/fold + 13 tests; capability seam src/compat/dsh-api.mjs"] },
+    "OMO-0202": { "status": "done", "evidence": ["src/compat/prompt.mjs + 8 tests"] },
+    "OMO-0203": { "status": "done", "evidence": ["src/compat/tools.mjs + 9 tests"] },
+    "OMO-0204": { "status": "done", "evidence": ["src/compat/routing.mjs + 10 tests"] },
+    "OMO-0205": { "status": "done", "evidence": ["src/compat/subagents.mjs + 8 tests"] },
+    "OMO-0206": { "status": "done", "evidence": ["src/compat/goals-todos.mjs (8 tests), src/compat/persistence.mjs (6 tests)"] },
+    "OMO-0207": { "status": "done", "evidence": ["src/compat/projection.mjs + 4 tests"] },
+    "OMO-0301": { "status": "done-contract-level", "evidence": ["tests/integration/vertical-slice.test.mjs"] },
+    "OMO-0302": { "status": "done-contract-level", "evidence": ["tools/g1-preflight.mjs; real-DSH mount remains a deployment gate (agent-presets/omo/G1-DEPLOYMENT-CHECKLIST.md)"] }
+  },
+  "suite": { "tests": 84, "pass": 84, "fail": 0, "runner": "node --test tests/*.test.mjs" }
+}
