@@ -291,9 +291,10 @@
       "sources": "`boulder-state/types.ts`",
       "dshMapping": "Core adapter",
       "acceptance": "unknown fields preserved",
-      "status": "verified-contract",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding still pending"
     },
     {
       "id": "PAR-BOULDER-002",
@@ -363,9 +364,10 @@
       "sources": "Codex behavior",
       "dshMapping": "blocked transition",
       "acceptance": "no loop",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding still pending"
     },
     {
       "id": "PAR-VERIFY-001",
@@ -566,9 +568,10 @@
       "sources": "config schemas/build script",
       "dshMapping": "dry-run migrator + DSH adapter validator",
       "acceptance": "unknown fields/idempotency；runtime/editor differential fixtures",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding still pending"
     },
     {
       "id": "PAR-REL-002",
@@ -586,9 +589,10 @@
       "sources": "extraction guard、registration audit、实际 imports",
       "dshMapping": "centralized classification + manifest/import graph",
       "acceptance": "all dependency maps；unresolved/undeclared/undefined layer fail；全 package coverage",
-      "status": "verified-contract",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding still pending"
     },
     {
       "id": "PAR-REL-004",
@@ -616,9 +620,10 @@
       "sources": "QA scripts/docs、`.agents/background-tasks.json`",
       "dshMapping": "generated behavior coverage + residue scanner",
       "acceptance": "Stop/SubagentStop/start-work/continuation explicit tests；runtime residue excluded",
-      "status": "verified-contract",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding still pending"
     }
   ],
   "corePackages": [
@@ -1054,13 +1059,19 @@
     "deviations": 5
   },
   "implementationSnapshot": {
-    "updatedAt": "2026-08-15T19:31:18.921Z",
+    "updatedAt": "2026-08-15T19:36:17.049Z",
     "suite": {
-      "tests": 211,
-      "pass": 211,
+      "tests": 229,
+      "pass": 229,
       "fail": 0
     },
     "preflight": "PASSED",
-    "note": "status vocabulary extended: contract-implemented = pure/integration level verified; implemented = DSH runtime binding verified"
+    "statusCounts": {
+      "verified-contract": 12,
+      "not-started": 32,
+      "contract-implemented": 16
+    },
+    "note": "status vocabulary: contract-implemented = pure/integration verified; implemented = DSH runtime binding verified",
+    "gaGap": "docs/plans/GA-GAP-ANALYSIS.md"
   }
 }
