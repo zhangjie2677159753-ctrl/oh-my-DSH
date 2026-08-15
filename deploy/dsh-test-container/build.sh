@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Build the controlled DSH test image from the LOCAL checkout (read-only).
-# Uses the host proxy for pnpm registry traffic; run on the host, not in CI.
+# BuildKit cannot read a host-side Dockerfile with a stdin context, so we
+# stage a hardlink snapshot of the checkout (minus node_modules/.git) into a
+# temp directory and use it as a real build context. The checkout itself is
+# never modified.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -11,16 +14,20 @@ if [ ! -f "$DSH/pnpm-lock.yaml" ]; then
   exit 2
 fi
 
-tar -C "$DSH" \
-  --exclude=.git \
-  --exclude=node_modules \
-  --exclude='**/node_modules' \
-  --exclude='**/lib' \
-  --exclude='**/dist' \
-  --exclude='**/.turbo' \
-  -cf - . | docker build \
+STAGE="$(mktemp -d)"
+trap 'rm -rf "$STAGE"' EXIT
+
+echo "Staging hardlink snapshot of $DSH ..."
+cp -al "$DSH/." "$STAGE/src"
+rm -rf "$STAGE/src/node_modules" "$STAGE/src/.git"
+find "$STAGE/src" -type d \( -name lib -o -name dist -o -name .turbo \) -prune -exec rm -rf {} +
+
+cp "$ROOT/deploy/dsh-test-container/Dockerfile" "$STAGE/Dockerfile"
+
+echo "Building image omo-dsh-test (proxy: 127.0.0.1:7890) ..."
+docker build \
   --network=host \
   --build-arg HTTP_PROXY=http://127.0.0.1:7890 \
   --build-arg HTTPS_PROXY=http://127.0.0.1:7890 \
   -t omo-dsh-test \
-  -f "$ROOT/deploy/dsh-test-container/Dockerfile" -
+  "$STAGE"
