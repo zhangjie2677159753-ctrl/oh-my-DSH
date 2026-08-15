@@ -169,7 +169,9 @@ interface OmoModelAlias {
 }
 ```
 
-建议别名：`primary.deep`、`primary.fast`、`planning.interview`、`planning.compiler`、`vision.default`。
+建议别名：`primary.deep`、`primary.fast`、`planning.interview`、`planning.compiler`、`vision.default`。这些别名映射部署能力，但 agent candidate order/fallback/variant 合同必须从 `model-core/src/agent-model-requirements.ts` 与固定测试 fixture 生成，不能以本设计文档的建议替代 canonical chain。
+
+Prompt 路由还必须表达非对称性：Prometheus 只有一个 model-independent upstream prompt；即使 route/fallback 模型变化，也不切换成虚构的 Prometheus model-family prompt。Atlas 使用 `getAtlasPromptSource`/dynamic orchestrator contract 选择 model-family variant，并加入 runtime category/agent/skill context。新增 DSH Prompt variant 属于适配/增强，需要 semantic contract eval，不能冒充固定上游 identity。
 
 DSH `agent/request-error` 只提供恢复 seam，OMO Runtime Fallback 维护自己的有界状态机：
 
@@ -193,16 +195,20 @@ attempt
 
 ### 7.1 子角色
 
+角色层级不可混淆：Atlas/Prometheus 属于同一父 Session 的 primary roles；Metis/Momus 始终是独立 child Sessions，不能注册成 primary，也不能用 primary role switch 到达。
+
 | Role | 默认能力 | 写入 | 委派 |
 |---|---|---|---|
 | Explore | 仓库只读搜索/LSP read | 禁止 | 禁止 |
 | Librarian | 外部资料/开源代码只读 | 禁止 | 禁止 |
 | Oracle | 高质量架构咨询 | 禁止 | 兼容模式按上游白名单 |
-| Metis | 需求缺口与隐含意图 | 禁止 | 只允许研究白名单（按上游合同冻结） |
-| Momus | 计划/验收审查 | 禁止 | 按上游合同冻结 |
+| Metis | 需求缺口与隐含意图 | OpenCode：硬拒绝 write/edit/apply_patch | OpenCode 保留 task delegation；Senpi profile 禁止 delegation |
+| Momus | 计划/验收审查 | OpenCode：硬拒绝 write/edit/apply_patch | OpenCode 保留 task delegation；Senpi one-shot/profile 规则另行冻结 |
 | Multimodal-Looker | 图片/PDF/UI/图表 | 禁止业务源码 | 禁止 |
 | Sisyphus-Junior | 原子实现与验证 | 允许 | 只允许 Explore/Librarian/Oracle 研究，禁止 category 实现递归 |
 | Plan-Compiler | 结构化计划编译 | 只返回 schema | 禁止公开委派 |
+
+OpenCode/Senpi profile 差异必须成为配置/manifest 的显式 policy revision；不得取并集造成越权，也不得取交集后声称精确对等。
 
 ### 7.2 统一 `task()` facade
 

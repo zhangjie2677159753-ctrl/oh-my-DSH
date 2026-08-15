@@ -40,11 +40,11 @@
 | PAR-GOV-001 | 固定 revision 行为对等 | OMO/DSH commit lock | compatibility manifest | SHA 漂移 CI fail | verified-contract |
 | PAR-GOV-002 | SUL 使用/分发限制 | `LICENSE.md` | License Gate L0 | 未批准不复制 Core/Prompt | verified-contract |
 | PAR-CORE-001 | 20 个 Harness-neutral Core | `packages/AGENTS.md`, extraction guard | workspace dependencies/adapter | 每包 reuse/adapt/native 决策 | verified-contract |
-| PAR-ROLE-001 | 四 Primary Role | agent factories/config builders | `omo/role` + router | same Session atomic switch | verified-contract |
-| PAR-ROLE-002 | `/start-work` 后续采用 Atlas（无 Atlas 则 Sisyphus）的同 Session 语义；OpenCode native switch 与 Senpi persona/workflow transition 机制不同 | `start-work-hook.ts`、Senpi invocation tracker + tests | DSH parsed command + authoritative `omo/role` event | Session ID 保持；无 raw slash 的 native activation 不漏记；自然语言/Skill read 不误触发 | verified-contract |
+| PAR-ROLE-001 | Sisyphus/Hephaestus/Prometheus/Atlas 是 Primary Role；Metis/Momus 是 child subagent，不得互换 cardinality | agent factories/config builders、`metis.ts`、`momus.ts` | `omo/role` + child role registry | same Session atomic primary switch；registry invalid config fail | verified-contract |
+| PAR-ROLE-002 | `/start-work` 后续采用 Atlas（无 Atlas 则 Sisyphus）的同 Session 语义；OpenCode native switch 与 Senpi persona/workflow transition 机制不同 | `start-work-hook.ts`、Senpi invocation tracker + tests | DSH parsed command + authoritative `omo/role` event | Session ID 保持；outgoing message role stamp；stale Boulder/stop reconcile；resume/retry same Session；无 raw slash activation 不漏记；自然语言/Skill read 不误触发 | verified-contract |
 | PAR-ROLE-003 | Resume 角色 | DSH Session replay target | role fold | process restart restore | not-started |
-| PAR-PROMPT-001 | Prompt model variants/runtime injection | `prompts-core`, agent prompts | ordered sections/compiler | manifest/hash/policy snapshots | not-started |
-| PAR-MODEL-001 | agent/category model requirements | `model-core` | model alias/capability router | route differential | not-started |
+| PAR-PROMPT-001 | Prometheus 单一 model-independent prompt；Atlas model-family prompt routing + runtime injection | `prompts-core`、Prometheus/Atlas prompt source/tests | ordered sections/compiler | manifest/hash/policy snapshots；不得虚构 upstream Prometheus family variant | not-started |
+| PAR-MODEL-001 | canonical agent/category candidate/fallback chains | `model-core/src/agent-model-requirements.ts` + tests | capability aliases + model router | candidate order/override/current model/variant/fallback differential | not-started |
 | PAR-MODEL-002 | runtime fallback | OMO fallback hooks | `agent/request-error` controller | bounded/no loop/no side effect replay | not-started |
 | PAR-TASK-001 | `task()` normalize/defaults | delegate-task source/tests | OMO facade | category wins; defaults match | verified-contract |
 | PAR-TASK-002 | sync task | delegate sync executor | one-shot foreground | partial/error/result footer | not-started |
@@ -54,11 +54,11 @@
 | PAR-AGENT-001 | Explore read-only search | agent source/tests | child persona/filter | write/delegate denial | not-started |
 | PAR-AGENT-002 | Librarian external research | source/tests | child persona/filter | source citations/no write | not-started |
 | PAR-AGENT-003 | Oracle consultation | source/tests | child persona/filter | read-only, route, output | not-started |
-| PAR-AGENT-004 | Metis gap analysis | source/tests | child structured result | no source write | not-started |
-| PAR-AGENT-005 | Momus plan review | source/tests | saved-plan-path review | approve/reject contract | not-started |
+| PAR-AGENT-004 | Metis gap analysis；OpenCode deny write/edit/apply_patch but retains task，Senpi denies delegation | source/tests/profile policy | child structured result + profile-specific guard | no write；delegation visibility/execution differential；not primary | not-started |
+| PAR-AGENT-005 | Momus plan review；OpenCode deny write/edit/apply_patch but retains task，Senpi one-shot/profile differs | source/tests/profile policy | saved-plan-path review + profile-specific guard | approve/reject；no write；delegation/profile differential；not primary | not-started |
 | PAR-AGENT-006 | Multimodal | source/tests | vision child | text-only no silent degrade | not-started |
 | PAR-AGENT-007 | Junior implementation/research delegation | junior prompt/source | child write + research allowlist | category recursion deny | verified-contract |
-| PAR-PLAN-001 | Prometheus plan role | prompt/config | same Session planning phase | no implementation before approval | not-started |
+| PAR-PLAN-001 | Prometheus primary plan role；permission map allows edit/bash/webfetch/question；`prometheus-md-only` 仅约束 Write/Edit 到 `.omo/*.md` 并给 delegation 加 warning，未硬禁普通 bash mutation | prompt/config/hook/tests | same Session planning phase + compat guard；可选 shell hardening | Write/Edit path exact；delegation warning；bash 保持 compat 或以 deviation harden；no implementation before approval | not-started |
 | PAR-PLAN-002 | approval → Metis | ulw-plan workflow | planning pipeline gate | Metis not before approval | verified-contract |
 | PAR-PLAN-003 | conditional Momus/Oracle review | workflow review_required | policy gate | not universally invoked | verified-contract |
 | PAR-PLAN-004 | deterministic Plan IR/Renderer | DSH enhancement | Plan-Compiler | exact Boulder grammar | intentional-deviation |

@@ -142,9 +142,13 @@ Completion latch 必须用真实 state store（不能只用不复刻副作用的
 - compat 与 hardened policy 各自符合文档；
 - monitor/rules/skill/user content 不能越过 guard。
 
-### 5.3 Child
+### 5.3 Child 与角色 Cardinality
 
-- Explore/Librarian/Oracle/Metis/Momus 写文件；
+- Registry 尝试把 Atlas/Prometheus 注册为普通 reviewer child，或把 Metis/Momus 暴露为 primary role：启动失败；
+- Explore/Librarian/Oracle 写文件；
+- OpenCode Metis/Momus 的 write/edit/apply_patch 在 prompt 可见性和执行层都拒绝，但 task delegation 仍按该 profile 可用；
+- Senpi Metis 的 delegation 也拒绝；Momus 使用其单独 one-shot/profile fixture；
+- 两个 profile 间不得通过取并集越权或通过取交集伪称对等；
 - Junior category recursion；
 - direct Plan-Compiler；
 - sibling/stranger send/cancel；
@@ -211,11 +215,13 @@ during final verification
 
 ### E2E-04 `@plan → /start-work`
 
-- Prometheus 同 Session；
-- approval 后 Metis；
-- conditional Momus/Oracle；
+- Prometheus 作为 primary 留在同一 Session；permission map 保留 edit/bash/webfetch/question；compat guard 对 Write/Edit 只允许 `.omo/*.md` 并给 delegated implementation 加 planning warning。普通 bash mutation 在现行上游未被该 hook 硬禁；若 DSH hardening 拒绝它，必须切换 policy revision 并登记 deviation；
+- explicit approval 后建立 scaffold，再由 child Metis 执行 mandatory gap analysis；
+- persisted `review_required` 为 false 时不调用 Momus/Oracle，为 true 时调用 child Momus + independent Oracle；
 - Plan Renderer；
 - `/start-work` 经 Command Registry/Host authoritative transition，在同一 Session 写入 role=Atlas；
+- outgoing message/projection stamp Atlas（或 fallback Sisyphus），stale Boulder `agent=prometheus` 被可审计地 reconcile，旧 stop-continuation 状态清除；
+- background completion、resume、retry 都使用原 Session ID；
 - 仅出现自然语言“start work”、读取 `SKILL.md` 或改变 UI label 时不得触发 activation；
 - 模拟 Senpi 式 native activation（无 raw slash text）时，权威 transition 仍关闭 planning/review gate；
 - Context/plan 不丢。
@@ -308,6 +314,13 @@ during final verification
 - final answer。
 
 每个语义 case 保存输入、环境、model manifest、工具轨迹、状态轨迹、score、human adjudication。
+
+### 8.3 Model/Prompt Differential
+
+- 从固定 `agent-model-requirements.ts` 生成每个 agent/category 的 candidate/fallback fixtures；验证 explicit override、disabled provider、capability、current/UI model、variant/reasoning/thinking/verbosity 和 runtime fallback。
+- Prometheus 在 route 切换前后保持同一 upstream prompt identity/semantic hash；DSH adapter section 另有 revision，不得被标成 upstream family variant。
+- Atlas 对每个已支持 model family 选择正确 variant，并包含 runtime category/agent/skill injection；fallback 后 Prompt family 与 route 同步切换。
+- Prometheus/Atlas cardinality、route 与 Prompt 不能被 reviewer child config 覆盖。
 
 ## 9. 真实模型评测矩阵
 

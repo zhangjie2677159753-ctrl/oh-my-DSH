@@ -324,11 +324,11 @@ Prompt assembly 与 request route 使用相同 role snapshot；记录 role/promp
 
 ### OMO-0602 Primary Role Routes
 
-默认逻辑（可配置）：
+从 `model-core/src/agent-model-requirements.ts` 和 `model-requirements-agents.test.ts` 生成 canonical candidate/fallback fixtures，并在 DSH capability aliases 上重放 candidate order、availability、explicit override、category config、current/UI model、variant、reasoning/thinking/verbosity 与 runtime fallback。默认能力意图可配置：
 
 - Sisyphus/Hephaestus/Atlas → deep tool-capable；
 - Prometheus interview → high-quality conversational；
-- 不把 marketing model name 作为 schema enum。
+- 不把 marketing model name 作为 schema enum，也不能用上述抽象意图替代 upstream chain differential。
 
 ### OMO-0603 子角色和 Category Route
 
@@ -350,9 +350,9 @@ Quick/Explore/Librarian → fast；Oracle/Metis → deep；Momus/Compiler → st
 - `junior/deepseek-v4-flash.md`
 - continuation variant。
 
-### OMO-0703 GPT/Qwen Variants
+### OMO-0703 GPT/Qwen 适配与 Structured Variants
 
-Prometheus/Momus/Plan-Compiler；结构化输出明确 schema，禁止自由 Markdown 冒充 IR。
+固定上游 Prometheus 使用一个 model-independent prompt；不能为不同 route 虚构“上游 Prometheus model-family variant”。如为 DSH GPT/Qwen 增加适配 section，必须标注 adapter enhancement、保持同一 semantic contract 并单独评测。Atlas 则必须保留 model-family prompt routing。Momus/Plan-Compiler 的结构化输出明确 schema，禁止自由 Markdown 冒充 IR。
 
 ### OMO-0704 Manifest/Snapshot
 
@@ -417,6 +417,8 @@ transient、rate-limit、server、auth、policy、capability、context、schema�
 
 ## Epic E10 — 子角色
 
+角色 cardinality 是硬合同：Atlas/Prometheus 只能是 primary role；Metis/Momus 只能是 child subagent。启动阶段验证 registry，任何把前两者注册为普通 reviewer child，或把后两者暴露为 primary switch target 的配置都 fail loud。
+
 每个角色重复以下任务模板：
 
 1. 固定 OMO source prompt/permission/route contract；
@@ -431,8 +433,8 @@ transient、rate-limit、server、auth、policy、capability、context、schema�
 - OMO-1001 Explore
 - OMO-1002 Librarian
 - OMO-1003 Oracle
-- OMO-1004 Metis
-- OMO-1005 Momus
+- OMO-1004 Metis：OpenCode profile 硬拒绝 write/edit/apply_patch，但保留 task delegation；Senpi profile 禁止 delegation；分别做 visibility/execution 负测试
+- OMO-1005 Momus：OpenCode profile 硬拒绝 write/edit/apply_patch，但保留 task delegation；Senpi one-shot/profile policy 单独冻结与测试
 - OMO-1006 Multimodal-Looker
 - OMO-1007 Sisyphus-Junior
 - OMO-1008 internal Plan-Compiler
@@ -498,7 +500,7 @@ Explore/Librarian 并行，bounded query；结果带 source/evidence。
 
 ### OMO-1303 Metis
 
-找遗漏、隐含意图、边界和风险；返回 structured findings。
+用户批准后先建立 plan scaffold，再执行 mandatory gap analysis；找遗漏、隐含意图、边界和风险并返回 structured findings。Metis 不得在 approval 前代替澄清，也不得被提升为 primary planner。
 
 ### OMO-1304 Plan-Compiler
 
@@ -561,7 +563,17 @@ plan name、quoted name、worktree、make-pr/ship；保持上游 fixture。
 
 在 DSH 中 append 权威 `omo/role=atlas`（Atlas 不可用时按兼容合同回退 Sisyphus）并 flush；后续 Turn/Continuation 必须读取该 fold。保持同一 Session 语义，不复制 OpenCode 私有 agent-switch API。Activation 只能来自解析成功的 `/start-work` Command/Host transition，不得从自然语言“start work”、`SKILL.md` 读取或 UI label 模糊推断；加入 native activation 漏记回归测试和幂等 context marker 测试。
 
-### OMO-1504 Todo Projection
+### OMO-1504 Message/Boulder/Continuation Reconciliation
+
+同一 transaction/reconcile protocol 还必须：
+
+- 将所选 execution role stamp 到 outgoing message/projection；
+- 清除上一轮 `/stop-continuation` 的 stale stop state；
+- 把 legacy/stale Boulder `agent=prometheus` 改写为当前有效 Atlas/Sisyphus execution role，同时保留审计来源；
+- background completion、resume 和 retry 绑定原 Session ID，不新建 replacement Session；
+- 任一步 crash 后通过 intent/commit/reconcile 收敛 role event、message stamp、Boulder agent、stop state 和 plan binding。
+
+### OMO-1505 Todo Projection
 
 从下一个 incomplete top-level task 建 Atlas 当前 Todo；不能把全部项目状态塞 Todo。
 
@@ -657,7 +669,7 @@ all tasks checked → verifying → final wave evidence → approve → Boulder 
 ## Epic E20 — File/Edit Guards
 
 - OMO-2001 read-before-write policy；
-- OMO-2002 Prometheus plan-only write guard；
+- OMO-2002 Prometheus plan-only guard profiles：compat 精确保留 broad permission map、Write/Edit 仅 `.omo/*.md`、delegation warning；可选 hardening 才拒绝 state-changing bash/委派实现，并登记 deviation；
 - OMO-2003 notepad append-only tool；
 - OMO-2004 Hashline stale/ambiguous guard；
 - OMO-2005 bash file-read guard disposition；

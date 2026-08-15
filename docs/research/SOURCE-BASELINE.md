@@ -112,7 +112,10 @@
 - 同时更新输出消息的 agent；
 - 读取/创建 Boulder，解析计划名、worktree、PR/ship 选项；
 - 用 marker 保证上下文注入幂等；
-- 会从近期 Session 寻找 Prometheus 计划。
+- 会从近期 Session 寻找 Prometheus 计划；
+- 会在输出消息上 stamp 所选 execution agent；
+- 会清理旧 stop-continuation 状态，并在需要时把 stale Prometheus Boulder agent 改写为有效 Atlas/Sisyphus execution role；
+- background completion 的 resume/retry 仍回到同一个 Session，而不是新建替代 Session。
 
 所以“Prometheus → `/start-work` → 当前会话后续以 Atlas 语义执行”是确切产品不变量，而不是仅复制计划到新 Session。其 Harness 机制不能机械泛化：OpenCode 会修改当前 Session 的 registered agent；Senpi 保持同一 Session，通过 persona/workflow transition 达到等价效果。DSH 应使用权威的 `omo/role` Session Event 和 role fold，而不是假装调用 OpenCode 式 agent-switch API。
 
@@ -154,7 +157,15 @@ Senpi 的 `packages/omo-senpi/src/components/task/skill-invocation-tracker.ts:cr
 
 因此 DSH 兼容模式必须保留“category wins”行为，可发弃用警告；不能直接改成硬互斥后仍宣称对等。
 
-### 4.5 Atlas 与 Junior 权限修正
+### 4.5 角色、权限、Prompt 与模型修正
+
+角色 cardinality 必须保持：Atlas 与 Prometheus 是 primary；Metis 与 Momus 是 subagent。不能把 Metis/Momus 暴露成可切换的主 Session 角色，也不能把 Atlas/Prometheus 当普通 reviewer child 启动。
+
+Prometheus 的 agent permission map 本身较宽：`edit`、`bash`、`webfetch`、`question` 均为 allow。`prometheus-md-only` 只对其 `BLOCKED_TOOLS = [Write, Edit, write, edit]` 做路径限制，仅允许这些文件工具写 `.omo/*.md`；对 task/call_omo_agent 则注入 planning-only 警告。它并没有把普通 `bash` 从 permission map 中移除，因此不能错误宣称现行 OpenCode 已在执行层封死所有 shell 写入或 delegated implementation。迁移时必须保留 permission map、Write/Edit guard 和 delegation warning 的分层；若 DSH 额外禁止 state-changing shell 或硬拒绝规划委派实现，应作为显式 hardening profile/deviation 测试，不能冒充 exact parity。
+
+OpenCode 的 Metis/Momus 都拒绝 `write`、`edit`、`apply_patch`，但保留 task delegation；Senpi profile 有意不同，其中 Metis 禁止 delegation。DSH 必须按目标兼容 profile 冻结权限，不得把 OpenCode 与 Senpi 合并成一个“绝对只读/绝不委派”规则。无论 Prompt 是否提及，写入拒绝都要由 tool filter + execution guard 强制。
+
+Canonical model candidate/fallback chains 的真源是 `packages/model-core/src/agent-model-requirements.ts` 及其测试，而不是规划文档中的营销模型例子。Prometheus 使用单一 model-independent prompt；Atlas 才按 model family 选择 prompt variant 并注入 runtime category/agent/skill context。DSH 可用 capability alias 替代具体 Provider ID，但 route differential、candidate order、variant selection 与 fallback 行为必须由固定真源 fixture 证明。
 
 `plugin-handlers/tool-config-handler.ts` 当前对 Atlas：
 
