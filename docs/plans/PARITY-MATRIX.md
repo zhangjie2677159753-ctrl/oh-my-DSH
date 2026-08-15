@@ -86,8 +86,11 @@
 | PAR-OPENCLAW-001 | gateway/hooks/replies | openclaw-core/schema | optional Host integration | credential/outage/malicious input | not-started |
 | PAR-MON-001 | monitor lifecycle/tools/status | monitor source/tests | Host observer + projection | no authority mutation | not-started |
 | PAR-UI-001 | current agent/work/status | OMO UI behavior | DSH projections/Slots | cold replay/current state | not-started |
-| PAR-REL-001 | config migration | config schemas | dry-run migrator | unknown fields/idempotency | not-started |
-| PAR-REL-002 | package/release gates | scripts/workflows | pack/SBOM/compat | final manifest verified | not-started |
+| PAR-REL-001 | config migration；unified runtime `[opencode]` untyped 与 generated editor schema substitution 的已知差异 | config schemas/build script | dry-run migrator + DSH adapter validator | unknown fields/idempotency；runtime/editor differential fixtures | not-started |
+| PAR-REL-002 | package/release gates | scripts/workflows | pack/SBOM/compat | final manifest verified；Senpi compatibility 不得从 publish 缺失 | not-started |
+| PAR-REL-003 | Core/adapter/package layer classification 与 dependency graph | extraction guard、registration audit、实际 imports | centralized classification + manifest/import graph | all dependency maps；unresolved/undeclared/undefined layer fail；全 package coverage | verified-contract |
+| PAR-REL-004 | 每个最终 manifest variant/alias 的 packed payload | payload verifier、publish aliases | exact/required allowlist + clean consumer | manifest mutation 后 re-pack；runtime import；`tsc --noEmit`；exports/types/bin/license | verified-contract |
+| PAR-REL-005 | generated schema freshness | schema build/workflow | PR/CI/release fail-on-diff | 不自动修复/提交；独立 DSH `$id` | verified-contract |
 
 ## 3. 20 Core 的处置
 

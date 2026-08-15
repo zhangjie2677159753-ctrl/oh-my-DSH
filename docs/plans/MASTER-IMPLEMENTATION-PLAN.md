@@ -107,6 +107,19 @@
 - 输出：机器可读 `parity.json` + 人读矩阵。
 - 每行字段：ID、source、inputs、observable outputs、state change、permission、errors、recovery、DSH mapping、tests、status、deviation。
 
+### OMO-0006 Package Classification 与依赖真源
+
+建立单一机器可读 package classification（neutral core、Harness adapter、platform/runtime package、application、binary/release-only），替换 `shared-core-extraction-guard.test.ts` 与 `package-registration-audit.test.ts` 中重复/不完整的手工清单。依赖审计必须：
+
+- 解析 `dependencies`、`devDependencies`、`peerDependencies`、`optionalDependencies` 等全部 manifest dependency maps；
+- 从集中 classification 推导 forbidden adapter families，不能只检查 `@opencode-ai/*` 和 `omo-codex`；
+- 同时解析实际 TS/JS import specifier 建图，而不是只信 manifest；
+- 对未声明 workspace import、未解析 import、undefined layer 和未分类 package fail closed；
+- 覆盖每个普通包、platform package、adapter 和发布 alias；
+- 检查 manifest graph 与 import graph 的不一致、环和违反层级方向。
+
+`omo-config-core` 只能称为 Harness-API-neutral，不能称 browser/runtime-neutral：`loader/paths.ts`、`loader/types.ts`、`schema/task.ts`、`loader/loader.ts` 使用 Node runtime。目标必须明确它运行在 DSH Host Node plane；若未来放到其他 runtime，需注入 filesystem/path/process facility，不能让 Client bundle 隐式携带 Node 假设。
+
 ### G0 退出门
 
 - License 决策完成；
@@ -750,12 +763,28 @@ all tasks checked → verifying → final wave evidence → approve → Boulder 
 
 ## Epic E30 — Release Engineering
 
+### OMO-3001 Compatibility Gate Parity
+
+发布 workflow 必须包含 CI 的全部 adapter compatibility gates，特别是 Senpi compatibility；用生成的 required-gates manifest 防止 CI 与 publish workflow 漂移。任一支持 Adapter 未执行或失败都禁止发布。
+
+### OMO-3002 Final Artifact Payload Contract
+
+`verify-npm-payload.mjs` 式 denylist 不足。对每个最终发布 manifest variant（包括 `oh-my-openagent` alias）执行：生成/修改最终 manifest → `npm pack`/等价 pack → required/exact allowlist 校验 → 在干净临时 consumer 安装 → runtime import → `tsc --noEmit`。任何 alias 在验证后修改 manifest 都必须重新 pack 和重新验证；同时检查 exports/types/bin/files、平台二进制、license/notices、无 source-relative/未声明 workspace import。
+
+### OMO-3003 Schema Freshness 和双层配置合同
+
+Schema generation 必须在 PR/CI/release **fail on diff**，不得由 CI 自动修复或提交。为 DSH schema 使用独立 `$id`。显式测试：`omo-config-core` unified runtime schema 中 `[opencode]` 是 `record<string, unknown>`，而 generated editor JSON schema 会替换为 legacy OpenCode schema；Adapter 必须有自己的 runtime validator、editor schema 和两者允许差异的 fixture，不能宣称二者天然等价。
+
+### OMO-3004 Release Metadata 与供应链
+
 - package publish metadata/notice；
 - preset/bundle install；
 - compatibility manifest；
 - SBOM/third-party notices；
 - signed/reproducible artifacts；
-- changelog/known deviations。
+- changelog/known deviations；
+- package classification/import graph report；
+- 最终 packed artifact digest 与 consumer smoke evidence。
 
 ## Epic E31 — Canary/Rollback
 

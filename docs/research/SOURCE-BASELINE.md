@@ -216,7 +216,22 @@ OMO 还有 Atlas 专用 Boulder continuation；不能只搬普通 Todo enforcer�
 
 当前 `config/schema/hooks.ts` 的 `HookNameSchema` 枚举 **56 个公开 `disabled_hooks` 配置名**。运行时组合并非与它一一对应：源码审计识别出约 58 个 constructed runtime hook slots，另有绕过 `disabled_hooks` 的 Team transform、无条件 context transform，以及作为嵌套开关的 `startup-toast`。文档中“约 54，开 Team/Monitor 约 62”是历史近似值，不能作为固定验收。迁移必须维护三份清单：公开配置名、实际 constructed slots、内部/无条件/嵌套行为，并以 drift test 固定例外。
 
-### 4.8 许可证
+### 4.8 Package/Release 审计修正
+
+固定上游的 Core neutrality、package registration 与发布检查存在几类不能照搬的覆盖缺口：
+
+- `shared-core-extraction-guard.test.ts` 的源码 forbidden patterns 比 manifest 检查更完整；manifest 侧只检查部分 family，不能证明依赖纯净。
+- `package-registration-audit.test.ts` 主要按 manifest 建图且会跳过 undefined layer；无法发现未声明但实际 import 的 workspace 包。
+- package layer/classification 在多处重复维护，容易 drift；目标必须有单一机器真源，并由它生成各审计清单。
+- `omo-config-core` 是 Harness-API-neutral，但其 loader/schema 路径使用 Node runtime，必须放 DSH Host 或注入 runtime facilities。
+- upstream publish workflow 缺 CI 的 Senpi compatibility gate；目标发布不能继承该缺口。
+- `verify-npm-payload.mjs` 以 denylist 为主，且 alias manifest 可在验证后继续修改；目标必须验证**最终**每个 manifest variant 的 exact/required packed payload。
+- generated schema freshness 应是 PR/CI/release fail-on-diff；不能靠发布流水线自动修复。
+- unified runtime schema 故意把 `[opencode]` 保持为 `record<string, unknown>`，generated editor schema 才替换 legacy OpenCode schema。DSH Adapter 必须显式测试两层 validator 的差异。
+
+这些是静态源码审计发现；审计环境无 Bun（exit 127），实施时仍需在具备 Bun 的固定 revision 环境运行原测试和新增回归套件。
+
+### 4.9 许可证
 
 根 `LICENSE.md` 为 Sustainable Use License 1.0：允许内部业务用途或非商业/个人用途；分发限制、notice 和 modified notice 均需遵守。实施前必须确定：
 

@@ -400,6 +400,17 @@ during final verification
 - dependency/SBOM/vulnerability scan；
 - SUL notices/modified notice。
 
+### 12.1 Package/Release 合同
+
+1. 集中 package classification 必须覆盖 workspace 的每个包、platform package、adapter、binary 和 alias；重复的本地清单与 classification drift 时 CI 失败。
+2. Manifest graph 解析全部 dependency maps；import graph 解析实际 TS/JS specifiers。undeclared/unresolved workspace import、undefined layer、forbidden adapter edge 或未分类包均失败。
+3. 验证 `omo-config-core` 只进入 Host Node target；Client/browser graph 出现其 Node-dependent loader 路径时失败，除非通过已声明 runtime facility adapter。
+4. 发布 workflow 与 CI required adapter gates 比较；Senpi compatibility 等任一 gate 缺失即失败。
+5. 每个最终 manifest variant 和 alias 必须在所有 mutation 之后独立 pack；payload 同时验证 required entries 与 exact allowlist，不只做 denylist。
+6. 每个 tarball 在空 consumer 中安装，验证 public runtime import、`exports`、`types`、`bin`，并执行 `tsc --noEmit`；发布前记录最终 tarball digest。
+7. Schema generation 在 PR、CI、release 都 fail-on-diff，不自动 commit 修复。
+8. Unified runtime `[opencode]` validator、legacy editor schema substitution 和 DSH overlay validator 做 differential fixtures；每个接受/拒绝差异都必须显式列入合同，DSH schema 使用独立 `$id`。
+
 ## 13. 验收证据格式
 
 每个 Task：
