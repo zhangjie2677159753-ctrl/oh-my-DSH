@@ -6,6 +6,7 @@
 // Approval is structural: only approve() transitions; prompt text can never
 // forge it. Repair is bounded; rejections are never dropped.
 import { sha256 } from "../compat/prompt.mjs"
+import { validateOmoPlanV1 } from "./plan-ir.mjs"
 
 export const PLANNING_STATES = Object.freeze([
   "idle", "interviewing", "awaiting-approval", "scaffolded", "metis-done",
@@ -88,6 +89,10 @@ export function createPlanningPipeline({ profile = "opencode-compat", reviewRequ
     compilePlan(ir) {
       if (profile !== "dsh-structured-plan") return fail("compilePlan", "structured profile only")
       if (state !== "metis-done") return fail("compilePlan", "metis must complete first")
+      // Plan-Compiler output is a schema-bound IR: invalid IR fails before
+      // it can be rendered or handed off (no free Markdown posing as IR).
+      const irErrors = validateOmoPlanV1(ir)
+      if (irErrors.length > 0) return fail("compilePlan", `invalid plan IR: ${irErrors.join("; ")}`)
       state = "authored"
       planDigest = sha256(JSON.stringify(ir))
       log.push({ action: "compilePlan", at: now(), planDigest })

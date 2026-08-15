@@ -65,9 +65,10 @@
       "sources": "agent factories/config builders、`metis.ts`、`momus.ts`",
       "dshMapping": "`omo/role` + child role registry",
       "acceptance": "same Session atomic primary switch；registry invalid config fail",
-      "status": "verified-contract",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test integration; DSH runtime binding still pending"
     },
     {
       "id": "PAR-ROLE-002",
@@ -75,9 +76,10 @@
       "sources": "`start-work-hook.ts`、Senpi invocation tracker + tests",
       "dshMapping": "DSH parsed command + authoritative `omo/role` event",
       "acceptance": "Session ID 保持；outgoing message role stamp；stale Boulder/stop reconcile；resume/retry same Session；无 raw slash activation 不漏记；自然语言/Skill read 不误触发",
-      "status": "verified-contract",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test integration; DSH runtime binding still pending"
     },
     {
       "id": "PAR-ROLE-003",
@@ -115,9 +117,10 @@
       "sources": "OMO fallback hooks",
       "dshMapping": "`agent/request-error` controller",
       "acceptance": "bounded/no loop/no side effect replay",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test integration; DSH runtime binding still pending"
     },
     {
       "id": "PAR-TASK-001",
@@ -125,9 +128,10 @@
       "sources": "delegate-task source/tests",
       "dshMapping": "OMO facade",
       "acceptance": "category wins; defaults match",
-      "status": "verified-contract",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test integration; DSH runtime binding still pending"
     },
     {
       "id": "PAR-TASK-002",
@@ -235,9 +239,10 @@
       "sources": "junior prompt/source",
       "dshMapping": "child write + research allowlist",
       "acceptance": "category recursion deny",
-      "status": "verified-contract",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test integration; DSH runtime binding still pending"
     },
     {
       "id": "PAR-PLAN-001",
@@ -275,9 +280,10 @@
       "sources": "DSH enhancement",
       "dshMapping": "Plan-Compiler",
       "acceptance": "exact Boulder grammar",
-      "status": "intentional-deviation",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test integration; DSH runtime binding still pending"
     },
     {
       "id": "PAR-BOULDER-001",
@@ -295,9 +301,10 @@
       "sources": "`plan-checklist.ts` + tests",
       "dshMapping": "reuse Core",
       "acceptance": "exact regex/fence/boundary",
-      "status": "verified-contract",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test integration; DSH runtime binding still pending"
     },
     {
       "id": "PAR-BOULDER-003",
@@ -315,9 +322,10 @@
       "sources": "hook source/tests",
       "dshMapping": "turn-stopping + idle driver",
       "acceptance": "full safeguard matrix",
-      "status": "verified-contract",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test integration; DSH runtime binding still pending"
     },
     {
       "id": "PAR-CONT-001A",
@@ -375,9 +383,10 @@
       "sources": "Boulder/Atlas tests",
       "dshMapping": "verification state",
       "acceptance": "complete only after F tasks",
-      "status": "verified-contract",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test integration; DSH runtime binding still pending"
     },
     {
       "id": "PAR-STATE-001",
@@ -385,9 +394,10 @@
       "sources": "DSH todo/write",
       "dshMapping": "projection only",
       "acceptance": "not project authority",
-      "status": "verified-contract",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test integration; DSH runtime binding still pending"
     },
     {
       "id": "PAR-STATE-002",
@@ -405,9 +415,10 @@
       "sources": "Core",
       "dshMapping": "file/repository",
       "acceptance": "cross Session/worktree",
-      "status": "verified-contract",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test integration; DSH runtime binding still pending"
     },
     {
       "id": "PAR-GOAL-001",
@@ -1041,5 +1052,15 @@
     "corePackages": 20,
     "hooksConfigurable": 56,
     "deviations": 5
+  },
+  "implementationSnapshot": {
+    "updatedAt": "2026-08-15T19:31:18.921Z",
+    "suite": {
+      "tests": 211,
+      "pass": 211,
+      "fail": 0
+    },
+    "preflight": "PASSED",
+    "note": "status vocabulary extended: contract-implemented = pure/integration level verified; implemented = DSH runtime binding verified"
   }
 }

@@ -2,6 +2,7 @@ import test from "node:test"
 import assert from "node:assert/strict"
 import { resumeFromLog, forkRoleState, assertChildCannotMutateParent } from "../src/roles/lifecycle.mjs"
 import { createPlanningPipeline, PLANNING_STATES } from "../src/planning/pipeline.mjs"
+import { samplePlan } from "../src/planning/plan-ir.mjs"
 import { decideContinuation, observeTurn, CONTINUATION_CONSTANTS } from "../src/continuation/driver.mjs"
 
 const roleEvent = (seq, revision, role = "atlas", changedBy = "start-work") => ({
@@ -51,7 +52,7 @@ test("structured trace: compiler only after metis; conditional review not univer
   const p = createPlanningPipeline({ profile: "dsh-structured-plan", reviewRequired: false })
   p.startInterview("n"); p.approve(); p.scaffold({}); p.metis([])
   assert.equal(p.authorPlan("x").ok, false)
-  assert.equal(p.compilePlan({ tasks: [] }).ok, true)
+  assert.equal(p.compilePlan(samplePlan()).ok, true)
   assert.equal(p.review("approve").ok, false) // reviewRequired false
   const handoff = p.approveHandoff()
   assert.equal(handoff.ok, true)
