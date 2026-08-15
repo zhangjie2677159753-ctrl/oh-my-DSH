@@ -206,6 +206,12 @@ DSH 的对等实现应以“研究委派白名单 + 禁止实现递归”为默�
 
 OMO 还有 Atlas 专用 Boulder continuation；不能只搬普通 Todo enforcer。
 
+#### 已确认的 completion latch 源码/测试矛盾
+
+固定 SHA 的 `idle-event.ts` 在 `incompleteCount === 0` 分支先执行 `state.allTodosCompletedAt = Date.now()`，紧接着调用 `sessionStateStore.resetContinuationProgress(sessionID)`；而真实 `session-state.ts` 的该函数会把 `state.allTodosCompletedAt` 设回 `undefined`。这与 `idle-event.test.ts` 中 `#4013 P0.1` 的回归合同冲突：第一次 idle 后 latch 应保留，第二次 idle 应在进入 Todo/注入路径前退出。该测试使用的 fake store 只记录 reset 调用，没有复刻真实 reset 的清 latch 副作用，因此静态测试仍可能通过而生产实现失效。
+
+这是固定上游 revision 的**疑似实现缺陷**，不是要复刻的兼容行为。由于审计环境没有 Bun（exit 127），尚未执行上游 focused test；实现 OMO for DSH 时必须先写一个使用真实 state store 的回归测试，按 `#4013 P0.1` 的测试意图保留 completion latch，并把“重置进展计数”和“清除 completion latch”拆成不同 transition/API。只有权威 Todo mutation/event 表明 complete→incomplete、显式开始新 work、reset/cleanup Session，或其他定义的状态迁移时才能清 latch；不能要求后续 idle 在 latch 已短路后再靠轮询发现 reopen，重复 idle 也不得重新进入 continuation。
+
 ### 4.7 Hook 数量
 
 当前 `config/schema/hooks.ts` 的 `HookNameSchema` 枚举 **56 个公开 `disabled_hooks` 配置名**。运行时组合并非与它一一对应：源码审计识别出约 58 个 constructed runtime hook slots，另有绕过 `disabled_hooks` 的 Team transform、无条件 context transform，以及作为嵌套开关的 `startup-toast`。文档中“约 54，开 Team/Monitor 约 62”是历史近似值，不能作为固定验收。迁移必须维护三份清单：公开配置名、实际 constructed slots、内部/无条件/嵌套行为，并以 drift test 固定例外。

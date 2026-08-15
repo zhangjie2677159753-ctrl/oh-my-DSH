@@ -71,6 +71,16 @@ unit
 
 使用 fake clock 固定：2s countdown、3s abort、5s cooldown、60s compaction guard、3 stagnation、5 failures、5min reset。每个 gate 单独和组合测试。
 
+Completion latch 必须用真实 state store（不能只用不复刻副作用的 fake）验收：
+
+1. 首次 `all todos complete` 写入 `allTodosCompletedAt`，重置 stagnation/failure/progress 但不清 latch；
+2. 第二次 idle 在 Todo fetch、progress tracking、countdown 和 injection 前退出；
+3. 权威 Todo mutation/event 的 complete → reopen 清 latch并允许继续；不能要求下一次 idle 在 latch 已短路后靠轮询发现 reopen；再次 complete 写新 latch；
+4. 新 work、显式 reset/cleanup 的清 latch 语义分别测试；
+5. 两个并发 idle 最多执行一次 completion transition；
+6. restart/replay 后不能因 latch 丢失重新注入；
+7. 上游 `#4013 P0.1` test 必须以真实 store 版本固定，防止 mock 隐藏 `resetContinuationProgress` 的清 latch 副作用。
+
 ## 4. `compat/dsh-api` 合同套件
 
 对每个支持 DSH SHA 至少 30 项：

@@ -66,6 +66,7 @@
 | PAR-BOULDER-002 | structured checklist parser | `plan-checklist.ts` + tests | reuse Core | exact regex/fence/boundary | verified-contract |
 | PAR-BOULDER-003 | session origins/task sessions/worktree | state/storage | repository | resume/reconcile | not-started |
 | PAR-CONT-001 | generic Todo continuation | hook source/tests | turn-stopping + idle driver | full safeguard matrix | verified-contract |
+| PAR-CONT-001A | all-complete latch 的测试意图优先于固定上游疑似缺陷：`idle-event.ts` 设置 latch 后调用真实 reset 会清 latch；现有 fake-store test 未暴露副作用 | `idle-event.ts:133-138`、`session-state.ts:204-219`、`idle-event.test.ts` `#4013 P0.1` | 分离 reset-progress/clear-latch transition；DSH durable/replay policy | 真实 store 连续 idle 不重入；Todo event 驱动 complete→reopen；并发；restart/replay | verified-contract |
 | PAR-CONT-002 | Atlas Boulder continuation | atlas hook | work driver | final wave/child/blocker | not-started |
 | PAR-CONT-003 | stop continuation | command/guard | durable stop state | countdown race stop | not-started |
 | PAR-CONT-004 | external blocker escape | Codex behavior | blocked transition | no loop | not-started |

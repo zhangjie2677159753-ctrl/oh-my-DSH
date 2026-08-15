@@ -592,7 +592,11 @@ settlement 或 resume 后继续；Goal 可辅助 armed/round budget，但 OMO dr
 
 复刻固定常量；fake clock tests；directive-only response 和无真实进展 pause。
 
-### OMO-1705 External Blocker
+### OMO-1705 Completion Latch Regression
+
+先移植 `idle-event.test.ts` 的 `#4013 P0.1` 意图，再使用**真实** continuation state store 测试。不要照抄固定上游 `idle-event.ts` 中“设置 `allTodosCompletedAt` 后调用会清除它的 `resetContinuationProgress`”这一矛盾顺序。把 `resetProgressCounters` 与 `clearCompletionLatch` 拆分：首次观察到全部完成时原子写 latch 并清进展/失败计数但保留 latch；后续 idle 在读取 Todo/启动 countdown/注入前退出。只在权威 Todo mutation/event 表明 completed→incomplete、新 work 已显式开始、Session cleanup/reset 等声明过的 transition 清 latch；不能依赖已被 latch 短路的下一次 idle 再去轮询发现 reopen。测试必须覆盖真实 store、fake clock、连续两次 idle、Todo event 驱动的 complete→reopen→complete、restart/replay 和并发 idle。
+
+### OMO-1706 External Blocker
 
 credential、hardware、authorization、third-party outage → blocked，输出解除条件；不无限重复。
 
