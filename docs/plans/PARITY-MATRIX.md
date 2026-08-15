@@ -84,6 +84,8 @@
 | PAR-MEM-001 | durable memory | memory-core | Host service | scope/delete/privacy | not-started |
 | PAR-MEM-002 | Senpi fork reflection 继承 parent prefix/cwd 且省略 tool/extension/context restrictions，存在 authority expansion | `prepareReflectionForkSpawn`、`runner-fork-spawn.test.ts` | context inheritance 与 capability re-authorization 分离；isolated fallback | task/Team/extension/credential/parent-write denial；cache/isolation output equivalence；no leak | verified-contract |
 | PAR-TEAM-001 | teams/tasks/mailboxes/worktree | team-core | Host + child backend | no dual authority | not-started |
+| PAR-TEAM-002 | Hyperplan main lead owns debate/distillation；foreground plan child owns sequencing/verification and cannot read Team mailbox | `hyperplan/SKILL.md` | actual-roster TeamRun + owned handoff DTO | planner not team member；verbatim output/questions；lead no pre-plan | verified-contract |
+| PAR-TEAM-003 | Hyperplan docs permit 4-member degraded roster but later hard-code 5；security-research separately requires 5 with replacement | Hyperplan/security-research Skills | workflow-specific roster policy | 5 normal；4 Hyperplan degraded barriers/cleanup；security remains 5 | verified-contract |
 | PAR-OPENCLAW-001 | gateway/hooks/replies | openclaw-core/schema | optional Host integration | credential/outage/malicious input | not-started |
 | PAR-MON-001 | monitor lifecycle/tools/status | monitor source/tests | Host observer + projection | no authority mutation | not-started |
 | PAR-UI-001 | current agent/work/status | OMO UI behavior | DSH projections/Slots | cold replay/current state | not-started |
@@ -92,6 +94,7 @@
 | PAR-REL-003 | Core/adapter/package layer classification 与 dependency graph | extraction guard、registration audit、实际 imports | centralized classification + manifest/import graph | all dependency maps；unresolved/undeclared/undefined layer fail；全 package coverage | verified-contract |
 | PAR-REL-004 | 每个最终 manifest variant/alias 的 packed payload；P1 fixture：`model-core` types 指向不存在的 root `index.d.ts` | payload verifier、publish aliases、`model-core/package.json` | exact/required allowlist + clean consumer | manifest mutation 后 re-pack；所有 target 存在；runtime/type import；`tsc --noEmit`；exports/types/bin/license | verified-contract |
 | PAR-REL-005 | generated schema freshness | schema build/workflow | PR/CI/release fail-on-diff | 不自动修复/提交；独立 DSH `$id` | verified-contract |
+| PAR-REL-006 | Hook QA coverage 不能由错误 21-point 文档或默认 2-event Codex smoke 代表；stale background task file 不是 lifecycle truth | QA scripts/docs、`.agents/background-tasks.json` | generated behavior coverage + residue scanner | Stop/SubagentStop/start-work/continuation explicit tests；runtime residue excluded | verified-contract |
 
 ## 3. 20 Core 的处置
 

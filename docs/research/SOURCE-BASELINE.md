@@ -72,6 +72,13 @@
 3. 以现行源码和测试为兼容模式；
 4. 若 DSH 目标要更强，使用独立配置开关并标注“DSH hardening”，不得宣称为精确对等。
 
+还必须排除“看起来像状态/测试但不是合同”的仓库材料：
+
+- `.agents/skills/opencode-qa/references/events-hooks.md` 自称 21 个 hook points，但同段只列 19 个名称；该文档计数不能覆盖 56 configurable/58 constructed inventory。
+- Codex QA `app-server-drive.sh` 默认只断言 `sessionStart,userPromptSubmit`，`hook-unit-probe.sh` 只断言 ultrawork prompt injection；它们不能证明 Stop、SubagentStop、`/start-work` 或 Continuation 已回归锁定。
+- `.agents/background-tasks.json` 含 2025-12-11 仍为 `running` 的 checked-in residue；它不是 task lifecycle authority，必须从 fixtures/publish payload 排除，不能据此推导 durable running semantics。
+- Skill Markdown 是产品合同线索，但其内部流程矛盾必须通过 roster-driven 状态机和回归测试解决，不能逐句照抄。
+
 ## 4. 已核验的 OMO 事实
 
 ### 4.1 Core 包数量与边界
@@ -249,7 +256,13 @@ OMO 还有 Atlas 专用 Boulder continuation；不能只搬普通 Todo enforcer�
 
 `runner-fork-spawn.test.ts` 当前只证明 prefix-breaking flags 缺失，甚至明确期待它们缺失；没有 runtime guard 或负测试证明 fork worker 不能调用 task/delegation/privileged extension。这是 High-risk upstream behavior。OMO for DSH 不应为了 cache parity 盲目继承 authority：必须把 context/prefix inheritance 与 capability inheritance 分开；Memory reflection/dream child 使用显式最小权限 persona/tool allowlist 和 execution guard，且不能继承 parent role、Team、task control、credential、extension 或 filesystem authority。若 DSH Provider 无法在保留 prefix/cache 的同时缩窄工具，则优先牺牲 cache、走隔离 child；任何兼容开关允许 parent capability inheritance 都必须默认为 off，并作为安全偏差接受单独审查。
 
-### 4.10 许可证
+### 4.10 Hyperplan/Team Skill 内部合同与矛盾
+
+`.agents/skills/hyperplan/SKILL.md` 的有效语义包括：只允许 main、lead-eligible Session（planner `prometheus`/`plan` 不可编排 Team）；Lead 只蒸馏 findings，不拥有最终 plan sequencing；必须以前台 `task(subagent_type="plan", run_in_background=false)` 交给非 Team member 的 plan agent，后者看不到 Team mailbox，产物按合同原样转交用户。实现时必须传递 owned insight bundle，不能依赖 plan child 读取 mailbox。
+
+同一 Skill 也有 roster 矛盾：创建五角色，但 `deep` 不可用时允许去掉 researcher；后续 round、provenance、wait 和 cleanup 又硬编码“all 5”。而 `security-research` 是另一条独立 workflow，明确要求不可少于五人，category 不可用时替换为 `unspecified-high`。DSH 不得把这两个 Skill 的规则混为一个全局 Team cardinality；每个 TeamRun 保存实际 roster 与 workflow policy，dispatch/barrier/provenance/cleanup 都遍历 roster snapshot。Hyperplan 必须测试 5-member normal 与 4-member degraded；security-research 必须测试 replacement 后仍为 5，不能降级为 4。
+
+### 4.11 许可证
 
 根 `LICENSE.md` 为 Sustainable Use License 1.0：允许内部业务用途或非商业/个人用途；分发限制、notice 和 modified notice 均需遵守。实施前必须确定：
 

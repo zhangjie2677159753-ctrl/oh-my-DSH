@@ -303,6 +303,23 @@ during final verification
 - no orphan；
 - Team state 与 Boulder 对齐且只有一个 authority。
 
+### E2E-16 Hyperplan Roster/Planner Ownership
+
+- normal 五人完成三轮；所有 barrier、provenance 和 cleanup 基于 actual roster；
+- `deep` unavailable 时四人 degraded roster，无等待/关闭不存在 researcher 的 deadlock，provenance 明确 researcher absent；
+- security-research category unavailable 时替换成员但仍为五人，不套用 Hyperplan 降级；
+- planner primary/非 main Session 启动 Hyperplan 被拒；
+- Lead 只输出 insight bundle；foreground plan child 不在 Team roster、看不到 mailbox，只从完整 owned handoff DTO 得到材料；
+- plan child 返回计划或 clarifying questions 时原样转交；Lead 不提前写/重写 task graph；
+- plan child failure/cancel 后 Team cleanup 仍遍历 actual roster，无 orphan。
+
+### E2E-17 Hook QA Coverage/Residue
+
+- generated inventory 固定 56 configurable、58 constructed 和 exception set；QA coverage 是另一份矩阵；
+- Codex 默认两事件 smoke 和 ultrawork probe 只能覆盖对应行为，不能把其他行标 verified；
+- Stop、SubagentStop、`/start-work`、Todo/Atlas continuation、background wake、compaction、cleanup 各有显式 contract/live scenario；
+- 注入旧 `.agents/background-tasks.json` `status=running` residue 不得创建运行中 task；发布 payload scanner 对非 fixture runtime state fail。
+
 ## 8. Differential Testing
 
 ### 8.1 可精确比较

@@ -688,6 +688,14 @@ all tasks checked → verifying → final wave evidence → approve → Boulder 
 
 逐行关闭 56 个公开 Hook 配置名，并关闭 constructed runtime slots 与内部/无条件/嵌套行为：native/adapt/emulate/not-applicable/deferred 均需测试或 ADR；不得以“DSH 原生更强”一句关闭。
 
+### OMO-2201 Hook Inventory 与 QA Coverage Drift
+
+生成 `hook-inventory.lock.json`（56 configurable、58 constructed、exception allowlist）和独立 `hook-qa-coverage.json`。后者对每个行为记录 unit/contract/live replay test，不得把 `.agents/.../events-hooks.md` 的错误“21”计数或 Codex 默认 `sessionStart,userPromptSubmit`/ultrawork probe 当全覆盖。至少为 Stop、SubagentStop、`/start-work`、Todo continuation、Atlas continuation、background wake、compaction 和 cleanup 配置显式 live/contract scenario；inventory coverage 与 QA coverage 分开统计，二者都必须 100% 或获批 exception。
+
+### OMO-2202 Runtime Residue Exclusion
+
+扫描 source/package/publish payload 中的 runtime state；`.agents/background-tasks.json` 这类 checked-in stale `running` residue 必须排除、迁移为明确 fixture 或在 release fail。Task lifecycle 只能由源码、测试和 replay fixture 定义，不能把陈旧数据文件当 durable state 合同。
+
 ### G7 退出门
 
 - nested AGENTS/rules fixtures；
@@ -731,13 +739,28 @@ fork/reflection cost routing 必须先检查 `canNarrowCapabilitiesWhileReusingP
 
 ## Epic E24 — Team/Worktree
 
+### OMO-2401 Team Authority 与 Roster Snapshot
+
 - OMO `team-core` authority；
 - optional DSH AgentTeams backend；
+- TeamRun 在 create 成功后持久化实际 roster snapshot、workflow policy revision 和 degradation/replacement reason；
+- dispatch、barrier、wait、provenance、shutdown/cleanup 只遍历 actual roster，禁止硬编码 5/name list；
 - member task/mailbox/status；
 - worktree lifecycle；
 - dependency DAG/deadlock；
 - shutdown/orphan cleanup；
 - 多写者 merge/conflict policy。
+
+### OMO-2402 Hyperplan Lead/Planner Ownership
+
+仅 main、lead-eligible primary 可启动 Hyperplan；Prometheus/plan child 不能编排 Team。Lead 运行 adversarial rounds 后只生成 owned insight bundle，不预写最终 task graph；以前台同步 `task(subagent_type="plan", run_in_background=false)` 交给独立 plan child。Plan child 不属于 Team、不能读取 mailbox，所有 surviving insights/open questions/provenance 必须在 handoff payload 中；其 plan output 按合同原样呈现，clarifying questions 原样转交。
+
+### OMO-2403 Workflow-specific Cardinality
+
+- Hyperplan normal：skeptic/validator/researcher/architect/creative 五人；
+- `deep` unavailable：仅去掉 researcher，实际四人继续，所有 round/barrier/provenance/cleanup 使用四人 roster，提示 degraded mode；
+- Security-research：不可少于五人；category unavailable 时替换为 `unspecified-high`，仍保持五人；
+- 两条 workflow 的 fallback 不得合并为全局 Team policy。
 
 ## Epic E25 — OpenClaw
 
