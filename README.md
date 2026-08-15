@@ -4,6 +4,8 @@
 
 本仓库当前阶段只交付经过源码核验的实施蓝图，不伪装成已经完成的适配器。目标不是“借鉴 OMO 做一个相似插件”，而是在固定上游基线下迁移 OMO 的角色、行为、状态机、权限、恢复语义和验收合同，同时使用 DSH 原生 Session、Subagent、Tool、Prompt、Persistence、Compaction、Goal 与 UI 扩展能力承载它们。
 
+“完整”只适用于发布时选择并声明的 **Conformance Profile**：`opencode-compat`、`senpi-compat` 或明确列出两者交集/差异的组合 Profile。DSH hardening、Plan-Compiler、AgentTeams bridge 等增强单独计分，不能替代兼容行；optional/deferred integration 未验证时不得被算作 GA 完成。每次发布必须附带 in-scope rows、out-of-scope rows、deviations、blocked items 和证据清单。
+
 ## 基线
 
 | 项目 | 固定版本 |
@@ -17,7 +19,7 @@
 
 ```text
 完整 OMO 产品语义
-+ OMO Harness-neutral Core
++ 20 个已逐包审计并按运行时/Adapter 边界处置的 OMO Core packages
 + packages/omo-dsh 适配器
 + 单一 OMO Agent Preset
 + 同一父 Session 内可持久切换的四个 Primary Role
@@ -36,6 +38,7 @@
 4. [`docs/plans/PARITY-MATRIX.md`](docs/plans/PARITY-MATRIX.md)：能力域、56 个公开 Hook 配置名及内部/组合 Hook、OMO→DSH 处置和追踪规则。
 5. [`docs/plans/ACCEPTANCE-AND-EVALUATION.md`](docs/plans/ACCEPTANCE-AND-EVALUATION.md)：合同测试、集成/回放/故障注入、真实模型评测和发布门。
 6. [`docs/plans/DEEPSEEK-EXECUTION-HANDOFF.md`](docs/plans/DEEPSEEK-EXECUTION-HANDOFF.md)：交给 DeepSeek 执行时的批次、停止条件、提交纪律与证据格式。
+7. [`docs/plans/task-dag.json`](docs/plans/task-dag.json)：122 个稳定任务 ID 的机器可读依赖图；Markdown 与 DAG 必须 drift-check。
 
 ## 三条不可妥协原则
 

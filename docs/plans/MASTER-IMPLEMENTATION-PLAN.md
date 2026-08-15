@@ -2,7 +2,7 @@
 
 ## 0. 文档用途
 
-这是交给 DeepSeek 实施的主计划。每个任务都有稳定 ID、依赖、交付物和退出条件。实现 Agent 不得自行跳阶段、合并 Gate 或把未验证假设写成既成事实。
+这是交给 DeepSeek 实施的主计划。每个任务都有稳定 ID，并必须在机器可读 DAG 中补齐依赖、交付物和退出条件；正文摘要不保证逐任务重复全部字段。实现 Agent 不得自行跳阶段、合并 Gate 或把未验证假设写成既成事实。
 
 ## 1. 最终目标（North Star）
 
@@ -86,10 +86,11 @@
 ### OMO-0002 License Gate L0
 
 - 依赖：0001。
-- 输出：`docs/legal/USAGE-DECISION.md`。
-- 必答：内部/个人/商业？仓库 public/private？是否分发？是否复制 Prompt/Core？notice/modified notice 如何处理？
-- 验收：owner 明确签字/记录；未通过时只允许洁净室行为适配与本地测试，不复制源码。
-- 失败行为：构建脚本检测到 copied prompt/core manifest 时阻断。
+- 输出：`docs/legal/USAGE-DECISION.md` 和适用 notices/modified notices 清单。
+- 必答：内部/个人/商业？仓库 public/private？是否分发/发布 package/二进制？是否复制/改写 Prompt/Core？行为回放、测试 fixture、文档引用和派生内容如何处理？notice/modified notice 如何处理？
+- 验收：项目 owner 与合格 legal reviewer 明确签字/记录具体 use/distribution/publication；规划本身不提供法律意见，也不能断言“clean-room adapter 自动不受许可证/版权义务影响”。
+- 未通过时：不得公开仓库、分发或发布 artifact；不得复制上游 Prompt/Core。仅允许 legal 决策明确许可的本地研究/洁净室活动。
+- 失败行为：public remote/publish job/copied prompt-core manifest/no-notice 在 L0 未通过时全部阻断。
 
 ### OMO-0003 建立真源索引
 
@@ -107,7 +108,17 @@
 - 输出：机器可读 `parity.json` + 人读矩阵。
 - 每行字段：ID、source、inputs、observable outputs、state change、permission、errors、recovery、DSH mapping、tests、status、deviation。
 
-### OMO-0006 Package Classification 与依赖真源
+### OMO-0006 Machine-readable Task DAG
+
+输出 `docs/plans/task-dag.json`，由 Schema/CI 验证：所有正文 `OMO-NNNN` ID 唯一且均有 node；每个 node 含 `epic`、`dependencies`（允许显式空数组）、`outputs`、`entryCriteria`、`exitCriteria`、`acceptanceIds`、`parityRows`、`ownerLane`；dependency ID 存在、无 cycle、所有 Gate 可从 roots 到达、Batch/Lane 只引用真实 ID。Markdown 的任务/Gate/Batch 清单从 DAG 生成或 drift-check，禁止 `110x`、范围表达遗漏新增任务、孤儿 node 或依赖未完成就 claim。
+
+最小依赖骨架：`0001→0002/0003/0004`，`0003/0004→0005`，`0001/0003→0006`，`0002/0005/0006→G0`；`010x/020x` 依赖 G0；`030x` 依赖所需 `010x/0201..0207`。其余精确边在实现前由 owner/reviewer 从各 Epic 合同补齐并通过 CI，不能依赖段落顺序暗示。
+
+### OMO-0007 Baseline Git/Review Gate
+
+在实现前创建 reviewed planning baseline commit + annotated tag，生成所有规划/lock/parity/DAG 文件的 SHA-256 manifest；运行 working-tree、secret、Git history、credentialed-remote scan；配置 main branch protection、PR-only merge、required reviewer、required status checks 和禁止 force-push。验证远端 URL 无凭据。任何未提交/未追踪规划、缺 tag/hash、secret finding 或无法证明 review base 都阻断 Batch A。
+
+### OMO-0008 Package Classification 与依赖真源
 
 建立单一机器可读 package classification（neutral core、Harness adapter、platform/runtime package、application、binary/release-only），替换 `shared-core-extraction-guard.test.ts` 与 `package-registration-audit.test.ts` 中重复/不完整的手工清单。依赖审计必须：
 
@@ -122,9 +133,9 @@
 
 ### G0 退出门
 
-- License 决策完成；
-- 56 个公开 Hook 名称及 constructed/internal 清单零遗漏；
-- Core 包真实数量为 20；
+- Owner/legal License use/distribution/publication 决策完成；
+- generated Hook inventories 已由固定 SHA 产生：56 个公开配置名、58 个 constructed slots、explicit exceptions；不能只凭手工“约 58”关闭 Gate；
+- 20 个 Core package 均已逐包审计 Harness imports、runtime APIs、dependency graph 和 Host/Client placement；
 - 关键提案修正已纳入；
 - 10 个代表流程可从行为行追踪到测试。
 
@@ -404,7 +415,7 @@ transient、rate-limit、server、auth、policy、capability、context、schema�
 
 ### OMO-0905 Continuable
 
-返回 child Session ID；send/interrupt/resume；不允许 outputSchema；冷恢复 descriptor。
+返回 durable child Session identity/descriptor；send/interrupt 和后续 Turn continuation。必须区分 `discoverable`、`idle`、`running`、`lost-activation`、`reactivatable`：Session history/identity 可跨进程发现，不代表正在运行的 Turn/Provider activation 自动存活。冷启动时先 capability probe provider 是否能 reattach/reactivate；可以则以新 Turn 继续同一 child Session，不可以则保持可审计 terminal/lost 或请求显式重启策略，绝不伪称 live execution 已恢复。不允许 `outputSchema`。
 
 ### OMO-0906 Control Tools
 
@@ -449,6 +460,8 @@ transient、rate-limit、server、auth、policy、capability、context、schema�
 
 ## Epic E11 — 并发和预算
 
+### OMO-1101 Concurrency/Budget/Orphan Runtime
+
 - parent active children cap；
 - provider/model cap；
 - workspace writer lease；
@@ -459,6 +472,7 @@ transient、rate-limit、server、auth、policy、capability、context、schema�
 ### G4 退出门
 
 - 所有子角色独立 Session；
+- Junior compat：直接按名委派 Explore/Librarian/Oracle 的正测试全部成功；嵌套 category 实现、Metis/Momus/Junior/primary 等非白名单角色在工具可见性和执行层均失败，证明不是仅靠 `maxDepth`；
 - tool prompt visibility 与执行权限一致；
 - 100% 权限负测试；
 - 10 child 并发不超 cap；
@@ -490,6 +504,8 @@ transient、rate-limit、server、auth、policy、capability、context、schema�
 
 ## Epic E13 — Planning Pipeline
 
+该 Epic 输出两个独立 conformance traces：`opencode-compat` 与可选 `dsh-structured-plan`。共同前缀是 interview → explicit approval → scaffold → mandatory Metis；compat 后由 Prometheus 写兼容计划，structured profile 才在 Metis 后调用 Plan-Compiler。任何测试或报告不得把两条轨迹混成一个顺序。
+
 ### OMO-1301 Interview
 
 Prometheus 澄清真实目标、non-goals、assumptions；用户未批准/仍有问题不得创建最终计划或自动开工。澄清期可按上游合同使用只读研究，但 mandatory Metis plan critique 必须在用户批准后。
@@ -502,9 +518,9 @@ Explore/Librarian 并行，bounded query；结果带 source/evidence。
 
 用户批准后先建立 plan scaffold，再执行 mandatory gap analysis；找遗漏、隐含意图、边界和风险并返回 structured findings。Metis 不得在 approval 前代替澄清，也不得被提升为 primary planner。
 
-### OMO-1304 Plan-Compiler
+### OMO-1304 Plan Author/Optional Plan-Compiler
 
-Qwen route；只返回 Plan IR；schema invalid 进入 bounded repair。
+`opencode-compat`：Prometheus 根据 scaffold + Metis findings 写兼容计划。`dsh-structured-plan`：同一 gates 后由 Qwen Plan-Compiler 只返回 Plan IR，schema invalid 进入 bounded repair。两者输出分别留 trace，不能把 Compiler 设为 compat 必经组件。
 
 ### OMO-1305 Momus
 
@@ -579,6 +595,8 @@ plan name、quoted name、worktree、make-pr/ship；保持上游 fixture。
 
 ## Epic E16 — Atlas Policy
 
+每次测试/发布分别生成 `atlas-compat` 与 `atlas-deny-business-files` conformance report。Compat 只证明固定上游权限/行为；Hardened 额外证明直接写入限制和证据门。Hardened 的更强结果不能用于把 compat parity row 标 verified，反之亦然。项目级“机器证据后才能宣称 OMO for DSH 完成”是 DSH release hardening；若固定上游某路径仅 advisory，矩阵必须明确区别。
+
 ### OMO-1601 Compat Policy
 
 精确保留 source permissions。
@@ -649,7 +667,7 @@ all tasks checked → verifying → final wave evidence → approve → Boulder 
 - crash/restart 无重复/漏任务；
 - Atlas 两种 policy 都测；
 - 用户插话/问题/stop/cancel 正确；
-- 无证据、stale evidence、failed command 均不能 complete；
+- DSH release/hardened profile 中无证据、stale evidence、failed command 均不能 complete；compat profile 单独与固定上游 completion contract 差分，不用 hardening 代填；
 - external blocker 不死循环；
 - 100-call 长任务无提前完成。
 
@@ -690,7 +708,7 @@ all tasks checked → verifying → final wave evidence → approve → Boulder 
 
 ### OMO-2201 Hook Inventory 与 QA Coverage Drift
 
-生成 `hook-inventory.lock.json`（56 configurable、58 constructed、exception allowlist）和独立 `hook-qa-coverage.json`。后者对每个行为记录 unit/contract/live replay test，不得把 `.agents/.../events-hooks.md` 的错误“21”计数或 Codex 默认 `sessionStart,userPromptSubmit`/ultrawork probe 当全覆盖。至少为 Stop、SubagentStop、`/start-work`、Todo continuation、Atlas continuation、background wake、compaction 和 cleanup 配置显式 live/contract scenario；inventory coverage 与 QA coverage 分开统计，二者都必须 100% 或获批 exception。
+在 G0 先由固定 SHA composer/schema extractor 生成并锁定 `hook-inventory.lock.json`；E22 负责把全部项绑定实现/测试并关闭。清单必须是 56 configurable、58 constructed、exception allowlist和独立 `hook-qa-coverage.json`。后者对每个行为记录 unit/contract/live replay test，不得把 `.agents/.../events-hooks.md` 的错误“21”计数或 Codex 默认 `sessionStart,userPromptSubmit`/ultrawork probe 当全覆盖。至少为 Stop、SubagentStop、`/start-work`、Todo continuation、Atlas continuation、background wake、compaction 和 cleanup 配置显式 live/contract scenario；inventory coverage 与 QA coverage 分开统计，二者都必须 100% 或获批 exception。
 
 ### OMO-2202 Runtime Residue Exclusion
 
@@ -804,9 +822,13 @@ fork/reflection cost routing 必须先检查 `canNarrowCapabilitiesWhileReusingP
 
 ## Epic E28 — Test/Eval Harness
 
+### OMO-2801 Multi-layer Test/Eval Harness
+
 详见 `ACCEPTANCE-AND-EVALUATION.md`：unit、contract、integration、replay、chaos、differential、model eval、soak。
 
 ## Epic E29 — Migration
+
+### OMO-2901 Config/State Migration and Downgrade
 
 - OMO config dry-run mapping；
 - state version migration；
@@ -837,7 +859,9 @@ fork/reflection cost routing 必须先检查 `canNarrowCapabilitiesWhileReusingP
 
 Schema generation 必须在 PR/CI/release **fail on diff**，不得由 CI 自动修复或提交。为 DSH schema 使用独立 `$id`。显式测试：`omo-config-core` unified runtime schema 中 `[opencode]` 是 `record<string, unknown>`，而 generated editor JSON schema 会替换为 legacy OpenCode schema；Adapter 必须有自己的 runtime validator、editor schema 和两者允许差异的 fixture，不能宣称二者天然等价。
 
-### OMO-3004 Release Metadata 与供应链
+### OMO-3004 Release Metadata、Threat Gates 与供应链
+
+Release blocker threat suite 必须覆盖：结构化 command/executable allowlist 与 shell injection；untrusted Plan/Rule/Skill/模型验证命令的批准与 digest binding；canonical path、worktree ownership、symlink/hardlink/mount/TOCTOU；stdout/stderr/evidence/artifact/child/UI/telemetry secret redaction；dependency pin/provenance/checksum/signature/禁止 floating install；telemetry/network egress allowlist、consent/opt-out、payload minimization/offline mode。任一失败不可用风险接受之外的平均分绕过。
 
 - package publish metadata/notice；
 - preset/bundle install；
@@ -849,6 +873,8 @@ Schema generation 必须在 PR/CI/release **fail on diff**，不得由 CI 自动
 - 最终 packed artifact digest 与 consumer smoke evidence。
 
 ## Epic E31 — Canary/Rollback
+
+### OMO-3101 Canary/Kill-switch/Rollback Drill
 
 - opt-in alpha，不改 default preset；
 - integration kill switches；
@@ -867,7 +893,8 @@ Schema generation 必须在 PR/CI/release **fail on diff**，不得由 CI 自动
 - chaos/soak 无 retry storm/orphan/state divergence；
 - migration/rollback drill 通过；
 - 无 P0/P1；
-- License/security/privacy/architecture/QA/release owners 批准 parity report。
+- Owner/legal 签署具体 use/distribution/publication；security/privacy/architecture/QA/release owners 批准逐 Profile parity report；
+- optional/deferred 仅在该 Profile 明确 out-of-scope 且获批时不阻塞；hardening/enhancement 不填充 compat。
 
 ---
 
@@ -875,7 +902,7 @@ Schema generation 必须在 PR/CI/release **fail on diff**，不得由 CI 自动
 
 ## Batch A：Vertical Slice（必须先做）
 
-`0001-0005 → 0101-0103 → 0201-0206 → 0301-0302`
+`0001-0008 → 0101-0103 → 0201-0207 → 0301-0302`（真实依赖以 `task-dag.json` 为准，不把数字范围当 DAG）
 
 只有它通过，才允许并行后续工作。
 
@@ -885,7 +912,7 @@ Schema generation 必须在 PR/CI/release **fail on diff**，不得由 CI 自动
 
 ## Batch C：Task/Children
 
-先协议和 Explore，再复制角色模板：`0901-0903 → 1001 → 0904-0906 → 1002-1008 → 110x`。
+先协议和 Explore，再复制角色模板：`0901-0903 → 1001 → 0904-0906 → 1002-1008 → E11 并发/预算验收`。具体节点与依赖只引用 `task-dag.json` 中存在的 ID，不再使用不存在的 `110x` 占位 ID。
 
 ## Batch D：Planning + State
 

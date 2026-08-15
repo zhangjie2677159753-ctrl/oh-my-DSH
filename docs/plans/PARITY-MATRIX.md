@@ -14,11 +14,15 @@
 
 `native-equivalent` 仍必须有等价证明；`intentional-deviation` 必须有 ADR、配置开关、迁移与评测；`blocked` 必须有具体阻塞和 owner。只有 `verified` 才能计入 GA parity。
 
+每个 release 还必须声明 `conformanceProfile`：至少区分 `opencode-compat`、`senpi-compat`、`dsh-hardened` 和组合 Profile。每行状态按 Profile 记录；同一实现可在 compat 中是 `verified`、在 hardened 中是 `intentional-deviation`，但 hardened 通过不能反向填充 compat。`optional`/`deferred` 仅在 Profile 明确 out-of-scope 且有批准理由时不阻塞；否则仍阻塞“完整”声明。
+
 建议机器可读字段：
 
 ```json
 {
   "id": "PAR-ROLE-001",
+  "conformanceProfile": "opencode-compat",
+  "scope": "in-scope",
   "source": ["path:symbol", "test:name"],
   "inputs": [],
   "outputs": [],
@@ -38,8 +42,10 @@
 | ID | OMO 行为合同 | 固定真源 | DSH 目标映射 | 关键验收 | 初始状态 |
 |---|---|---|---|---|---|
 | PAR-GOV-001 | 固定 revision 行为对等 | OMO/DSH commit lock | compatibility manifest | SHA 漂移 CI fail | verified-contract |
-| PAR-GOV-002 | SUL 使用/分发限制 | `LICENSE.md` | License Gate L0 | 未批准不复制 Core/Prompt | verified-contract |
-| PAR-CORE-001 | 20 个 Harness-neutral Core | `packages/AGENTS.md`, extraction guard | workspace dependencies/adapter | 每包 reuse/adapt/native 决策 | verified-contract |
+| PAR-GOV-002 | SUL/版权 use、public repo、distribution、package publication、Prompt/Core/fixture/notices 决策 | `LICENSE.md` + owner/legal decision | License Gate L0 | 未签署不得公开/分发/发布/复制；clean-room 不自动免责 | verified-contract |
+| PAR-GOV-003 | durable reviewed planning baseline | Git commit/tag/hash manifest/branch rules | pre-implementation gate | no untracked plan；secret/history/remote scan；PR protection | not-started |
+| PAR-GOV-004 | machine-readable task DAG | plan task IDs/Gates/Batches | `task-dag.json` + drift validator | all IDs/deps exist；acyclic；no orphan/range omission/placeholder | not-started |
+| PAR-CORE-001 | inventory 中有 20 个 Core package；“Core”不等于零依赖、Node/browser-neutral 或可直接跨 Harness 运行 | `packages/AGENTS.md`、extraction guard、manifest/import graph | per-package workspace dependency/adapter/runtime placement | 每包 harness imports、runtime APIs、dependencies、reuse/adapt/native/Host/Client 决策 | verified-contract |
 | PAR-ROLE-001 | Sisyphus/Hephaestus/Prometheus/Atlas 是 Primary Role；Metis/Momus 是 child subagent，不得互换 cardinality | agent factories/config builders、`metis.ts`、`momus.ts` | `omo/role` + child role registry | same Session atomic primary switch；registry invalid config fail | verified-contract |
 | PAR-ROLE-002 | `/start-work` 后续采用 Atlas（无 Atlas 则 Sisyphus）的同 Session 语义；OpenCode native switch 与 Senpi persona/workflow transition 机制不同 | `start-work-hook.ts`、Senpi invocation tracker + tests | DSH parsed command + authoritative `omo/role` event | Session ID 保持；outgoing message role stamp；stale Boulder/stop reconcile；resume/retry same Session；无 raw slash activation 不漏记；自然语言/Skill read 不误触发 | verified-contract |
 | PAR-ROLE-003 | Resume 角色 | DSH Session replay target | role fold | process restart restore | not-started |
@@ -49,7 +55,7 @@
 | PAR-TASK-001 | `task()` normalize/defaults | delegate-task source/tests | OMO facade | category wins; defaults match | verified-contract |
 | PAR-TASK-002 | sync task | delegate sync executor | one-shot foreground | partial/error/result footer | not-started |
 | PAR-TASK-003 | background task | background manager | DSH Job + descriptor | process-local semantics explicit | not-started |
-| PAR-TASK-004 | continuable child | OMO resume/task control | DSH continuable Session | send/interrupt/resume authority | not-started |
+| PAR-TASK-004 | continuable child 有 durable Session identity/history，但 live Turn/activation 不自动跨进程存活 | OMO resume/task control + DSH provider capabilities | DSH child Session discovery + capability-based reactivation/new Turn | send/interrupt；cold discover；reattach/reactivate/unsupported/lost 分支 | not-started |
 | PAR-TASK-005 | queue/progress/promotion/residency | senpi-task/core | task runtime | cap/queue/budget tests | not-started |
 | PAR-AGENT-001 | Explore read-only search | agent source/tests | child persona/filter | write/delegate denial | not-started |
 | PAR-AGENT-002 | Librarian external research | source/tests | child persona/filter | source citations/no write | not-started |
@@ -75,7 +81,7 @@
 | PAR-STATE-001 | Todo single Session snapshot | DSH todo/write | projection only | not project authority | verified-contract |
 | PAR-STATE-002 | Session Log replay/audit | DSH session | OMO events | crash recovery | verified-contract |
 | PAR-STATE-003 | Boulder project authority | Core | file/repository | cross Session/worktree | verified-contract |
-| PAR-GOAL-001 | persistent goal aid | DSH goal | auxiliary status | resume rearm explicit | not-started |
+| PAR-GOAL-001 | durable goal event + process-local activation | DSH goal | auxiliary status | replay/fork/start remain disarmed；only direct top-level human resume may rearm；OMO driver forbidden | not-started |
 | PAR-RULE-001 | rules discovery/security | rules-engine | context resolver | precedence/path traversal | not-started |
 | PAR-AGENTSMD-001 | hierarchical AGENTS | agents-md-core | native-aware adapter | no duplicate injection | not-started |
 | PAR-SKILL-001 | skill discovery/precedence/filter | skills-loader-core | DSH Skill Registry | collision/disabled/agent scope | not-started |
@@ -214,7 +220,7 @@ Drift test：固定 public 56、constructed snapshot、exception set；任一变
 | ID | DSH 设计 | 为什么是偏差 | 默认/开关 | 必需证据 |
 |---|---|---|---|---|
 | DEV-001 | Structured Plan-Compiler | 当前 OMO 不是此固定多模型 IR pipeline | 可选后逐步默认 | quality/eval 不低于 upstream |
-| DEV-002 | Atlas 禁止业务文件直写 | current Atlas source 未硬禁所有 write/edit | `compat` 默认首发；`deny-business-files` opt-in，成熟后再评估默认 | parity + hardening A/B |
+| DEV-002 | Atlas 禁止业务文件直写/统一机器证据 release gate | current Atlas source 未硬禁所有 write/edit，部分 completion policy 可能是 advisory | `atlas-compat` 与 `atlas-deny-business-files` 分开报告；hardening 不填 compat | parity + hardening A/B + per-profile conformance |
 | DEV-003 | Junior maxDepth=0 strict mode | current Junior 允许 research delegation | compat allowlist 默认；strict opt-in | task corpus |
 | DEV-004 | DSH AgentTeams backend | OMO team-core 是原 authority | optional backend，single authority | team differential |
 | DEV-005 | DSH Goal 辅助 | OMO continuation 不等同通用 Goal driver | optional internal support | completion correctness |

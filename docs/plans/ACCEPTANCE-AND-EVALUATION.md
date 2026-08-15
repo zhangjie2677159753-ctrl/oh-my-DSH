@@ -149,6 +149,7 @@ Completion latch 必须用真实 state store（不能只用不复刻副作用的
 - OpenCode Metis/Momus 的 write/edit/apply_patch 在 prompt 可见性和执行层都拒绝，但 task delegation 仍按该 profile 可用；
 - Senpi Metis 的 delegation 也拒绝；Momus 使用其单独 one-shot/profile fixture；
 - 两个 profile 间不得通过取并集越权或通过取交集伪称对等；
+- Junior compat 直接 named Explore/Librarian/Oracle delegation 分别成功；nested category implementation、Metis/Momus/Junior/primary/其他角色分别在 visibility + execution 层失败，不能只以 `maxDepth` 测；
 - Junior category recursion；
 - direct Plan-Compiler；
 - sibling/stranger send/cancel；
@@ -228,9 +229,12 @@ during final verification
 ### E2E-04 `@plan → /start-work`
 
 - Prometheus 作为 primary 留在同一 Session；permission map 保留 edit/bash/webfetch/question；compat guard 对 Write/Edit 只允许 `.omo/*.md` 并给 delegated implementation 加 planning warning。普通 bash mutation 在现行上游未被该 hook 硬禁；若 DSH hardening 拒绝它，必须切换 policy revision 并登记 deviation；
-- explicit approval 后建立 scaffold，再由 child Metis 执行 mandatory gap analysis；
+- 两个 trace 独立验收：
+  - `opencode-compat`：interview/可选只读 research → explicit approval → scaffold → child Metis mandatory gap analysis → Prometheus author；
+  - `dsh-structured-plan`：相同 gates → Metis → Plan-Compiler → deterministic renderer；
+- approval 前 Metis/Plan-Compiler 均不得进入 mandatory plan-generation path；Plan-Compiler 不得早于 Metis；
 - persisted `review_required` 为 false 时不调用 Momus/Oracle，为 true 时调用 child Momus + independent Oracle；
-- Plan Renderer；
+- 两 trace 分别验证 Plan/Boulder grammar，不互相填充 conformance；
 - `/start-work` 经 Command Registry/Host authoritative transition，在同一 Session 写入 role=Atlas；
 - outgoing message/projection stamp Atlas（或 fallback Sisyphus），stale Boulder `agent=prometheus` 被可审计地 reconcile，旧 stop-continuation 状态清除；
 - background completion、resume、retry 都使用原 Session ID；
@@ -269,8 +273,9 @@ during final verification
 ### E2E-10 Process Restart
 
 - Boulder 与 role 恢复；
-- Goal 显式 rearm；
-- Job 标 lost；continuable 可恢复；
+- Goal 保持 disarmed；只有 direct top-level human 明确请求 resume/continue 后才可按当前 revision rearm。OMO driver、replay、fork、session-start、background wake 都不得自动 rearm；
+- Job 标 lost；
+- continuable child 的 Session identity/history 可冷发现，但 live Turn/activation 不视为存活；按 provider capability 分别测试 reattach/reactivate、以新 Turn 继续同一 child Session、或明确 lost/unsupported；
 - continuation 正确继续/暂停。
 
 ### E2E-11 Provider Failure
@@ -430,6 +435,14 @@ during final verification
 
 ## 12. 安全/隐私验收
 
+以下任一失败均是 release blocker：
+
+- Tool/verification command 使用结构化 executable+args allowlist 或经过可信 policy；拒绝 shell metacharacter、command substitution、newline/env injection 和未授权 executable。来自 Plan、Rules、AGENTS、Skill、模型或外部内容的命令默认不可信，不能直接执行；
+- 验证命令绑定批准的 plan revision、workspace/worktree root 和 command policy revision；计划被篡改、命令新增或 digest stale 时必须重新批准；
+- 文件写入、artifact 收集、worktree 创建/切换检查 canonical path、owner、symlink/hardlink、mount boundary，并通过 open-time/no-follow 或等价机制防 TOCTOU；攻击者在 check/use 间替换路径必须失败；
+- stdout/stderr、evidence artifact、child result、exception、telemetry 和 UI projection 做 secret/credential/PII redaction；压缩、二进制、base64、超大输出和 prompt injection 不能绕过；
+- dependency 锁定版本与 provenance；安装/构建脚本、下载 artifact、SBOM、checksum/signature 和 source commit 可追踪；禁止未批准的 floating dependency/network install；
+- telemetry/network egress 有 endpoint/provider allowlist、consent/opt-out、payload minimization、timeout 和 offline mode；Rules/Skill/child 不得新增任意 egress；
 - token/credential 不进 Git、Session Log、Boulder、telemetry、child context；
 - prompt/tool output 默认不完整上报；
 - redaction property tests；
@@ -481,6 +494,14 @@ reviewer: ...
 ```
 
 Final report 必须链接证据，不能粘一句“所有测试通过”。
+
+### 12.2 Conformance Profile Release Accounting
+
+- 每次 run/report 选择 `opencode-compat`、`senpi-compat`、`dsh-hardened` 和启用的 optional integration 列表；同一 case 的状态按 Profile 分开。
+- `atlas-compat` 与 `atlas-deny-business-files` 分别运行权限、completion 和 evidence cases；hardening 通过不提升 compat 分数。
+- `opencode-compat` planning 与 `dsh-structured-plan` 分别运行顺序/产物测试；Plan-Compiler enhancement 不提升 upstream planning parity。
+- optional/deferred row 若不是明确批准的 out-of-scope，就保持 release blocker；报告必须列出未实现/blocked/deferred，而不能以总平均掩盖。
+- “完整”只可修饰报告中明确声明且所有 in-scope rows verified 的 Profile。
 
 ## 14. Release Gates
 

@@ -83,7 +83,7 @@
 
 ### 4.1 Core 包数量与边界
 
-当前 `packages/AGENTS.md` 明确列出 **20 个 Core 包**：
+当前 `packages/AGENTS.md` 明确列出 **20 个被分类为 Core 的包**。这里的 Core 是 inventory/layer 名称，不自动意味着零依赖、Node/browser-runtime-neutral、可直接发布或可不经 Adapter 跨 Harness 使用：
 
 1. `utils`
 2. `model-core`
@@ -264,11 +264,11 @@ OMO 还有 Atlas 专用 Boulder continuation；不能只搬普通 Todo enforcer�
 
 ### 4.11 许可证
 
-根 `LICENSE.md` 为 Sustainable Use License 1.0：允许内部业务用途或非商业/个人用途；分发限制、notice 和 modified notice 均需遵守。实施前必须确定：
+根 `LICENSE.md` 标识 Sustainable Use License 1.0，并包含内部/个人/非商业使用及分发、notice、modified notice 等条款。下列摘要仅用于定位 Gate，**不是法律意见或最终许可结论**；具体适用性必须由项目 owner/合格 legal reviewer 对预期 use/distribution/publication 签署决定：
 
 - `oh-my-dsh` 是否只作个人/内部使用；
 - GitHub 仓库公开与否；
-- 是否复制 OMO Core/Prompt，还是仅写洁净室兼容适配；
+- 是否复制 OMO Core/Prompt，还是仅写洁净室兼容适配；洁净室策略本身不能由工程团队推断为自动免除许可证/版权义务；
 - 是否需要保留原许可证和显著修改声明；
 - 商业使用/分发是否需要另行授权。
 
@@ -312,7 +312,7 @@ DSH 通过 TypeScript declaration merging 扩展 `SessionEventMap`。`Session.ap
 One-shot start 支持的能力由 provider 显式声明：`outputSchema`、`depthLimit`、`toolFilter`、`persona`。不支持必须在启动前 fail loud。
 
 - in-process provider 可支持全部四项；ACP provider 不支持这些可选项；
-- one-shot background 返回 Job ID；continuable 返回 durable child Session ID；
+- one-shot background 返回 Job ID；continuable 返回 durable child Session identity/history，但 live Turn/Provider activation 不因此自动跨进程存活；冷恢复必须按 provider capability 区分 discover、reattach/reactivate、以新 Turn 继续同一 child Session、unsupported/lost；
 - continuable 当前明确不支持 `outputSchema`；
 - `send_message` 只排入后续 Turn，不能改变正在运行的 Turn；
 - `interrupt_agent` 只取消当前 Turn、保留 inbox、不会删除 child，也不会取消 descendant；
@@ -331,7 +331,10 @@ One-shot start 支持的能力由 provider 显式声明：`outputSchema`、`dept
 
 以下是本项目决定，不是现行 OMO 的逐字事实：
 
-1. GPT Prometheus 访谈 → 用户批准 → Explore/Librarian 调研（可在澄清期按需启动）→ Metis mandatory gap analysis → Qwen Plan-Compiler → 根据持久化 `review_required` 条件调用 Momus/Oracle 的结构化流水线。该顺序是 DSH 目标编排；必须保留 OMO 的 approval 与 conditional review gates。
+1. 规划顺序必须分成两条合同，不能混写：
+   - `opencode-compat`：Prometheus 加载 `ulw-plan` 并访谈；只读 Explore/Librarian 可按需服务澄清；用户明确批准创建计划；建立 scaffold；批准后执行 mandatory Metis gap analysis；Prometheus 写计划；只有持久化 `review_required=true` 时调用 Momus + independent Oracle；最后 `/start-work`。
+   - `dsh-structured-plan` 增强：在上述 approval/Metis gates 后，将 surviving requirements/findings 送入 Qwen Plan-Compiler → deterministic validator/renderer；conditional Momus/Oracle 保持不变。Plan-Compiler 不能提前到用户批准或 mandatory Metis 之前，也不能把 enhancement 的顺序算作 upstream parity。
+
 2. DS V4 Pro/Flash 专用 Prompt 变体和模型评测。
 3. 可选 Atlas `deny-business-files` 硬化模式。
 4. `plan_update`、`notepad_append`、`evidence_record` 专用工具，避免普通文件写入破坏格式或审计。

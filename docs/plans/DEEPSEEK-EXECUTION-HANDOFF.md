@@ -18,6 +18,8 @@
 
 ## 3. 仓库与分支纪律
 
+规划仓库在实现前必须已有 durable baseline commit，并创建 annotated baseline tag（建议 `plan-v1-omo-038ed0c-dsh-47f9438`）；记录文档 hash manifest，运行 secret/history scan，配置受保护主分支、required review/status checks 和 PR-only merge。没有这些证据不得开始 Batch A。远端只保存 credential-free URL；认证由 credential helper/SSH 管理。
+
 真正实现目标是 OMO Monorepo 中的 `packages/omo-dsh/`。如果只在 `oh-my-dsh` 规划仓库执行，第一步应创建/挂接一个合法工作副本或记录上游合入策略，不能把 adapter 假装已经在 OMO workspace。
 
 分支建议：
@@ -88,29 +90,32 @@ Claim task
 ### 6.1 范围
 
 ```text
-OMO-0001..0005
+OMO-0001..0008
 OMO-0101..0103
-OMO-0201..0206
+OMO-0201..0207
 OMO-0301..0302
+# 顺序与可 claim 状态以 docs/plans/task-dag.json 为准，范围仅便于阅读
 ```
 
 ### 6.2 具体交付
 
-1. upstream lock + license decision；
-2. parity machine schema；
-3. package skeleton；
-4. config/tool schema lint；
-5. `compat/dsh-api` 最小 session/prompt/tool/route/subagent/todo；
-6. `omo/role` 最小 event/fold；
-7. Sisyphus + Explore vertical slice；
-8. mount/two sessions/child/stop/resume/unmount integration；
-9. 资源泄漏证明。
+1. upstream lock + owner/legal license decision；
+2. parity machine schema + declared conformance profiles；
+3. machine-readable `task-dag.json` + ID/dependency/drift validator；
+4. centralized package classification/import graph；
+5. package skeleton；
+6. config/tool schema lint；
+7. `compat/dsh-api` 最小 session/prompt/tool/route/subagent/todo/client projection DTO；
+8. `omo/role` 最小 event/fold；
+9. Sisyphus + Explore vertical slice；
+10. mount/two sessions/child/stop/resume/unmount integration；
+11. 资源泄漏证明。
 
 ### 6.3 Batch A 停止条件
 
 遇到任一情况必须停止并报告，不得绕过：
 
-- License 未决定且任务需要复制 OMO source/prompt；
+- Owner/legal 尚未签署具体 use/distribution/publication 决策；即使采用 clean-room behavior adapter，也不能自行断言不受许可证/版权义务影响；
 - DSH 实际 SHA 不匹配；
 - preset mount 需要发布 process-global service；
 - child provider 不支持所需 capability；
@@ -215,7 +220,9 @@ Reviewer 不因测试多就忽略缺失的行为合同。
 
 执行 Agent 只能在以下条件全部满足后说“完整 OMO for DSH 已完成”：
 
-- parity matrix 所有 in-scope 行 `verified`；
+- release 明确声明一个或多个 conformance profiles；
+- parity matrix 对该 Profile 的所有 in-scope 行 `verified`；optional/deferred 只有经批准明确 out-of-scope 才不阻塞；
+- hardened/enhancement 结果没有被用于填充 compat parity；
 - Hook 三清单全关闭且 drift test；
 - 20 Core 每个有处置与测试；
 - G0-G9 通过；
@@ -223,7 +230,7 @@ Reviewer 不因测试多就忽略缺失的行为合同。
 - model eval threshold；
 - false-success <1%；
 - migration/rollback/soak；
-- License/security/privacy sign-off；
+- Owner/legal 已批准具体 use/distribution/publication；Security/privacy sign-off；
 - final conformance report 获批；
 - artifact 已发布/安装验证。
 
@@ -292,12 +299,15 @@ Atlas bypass、data leak、false success、retry storm、orphan、migration loss
 
 ```text
 只执行 Batch A。先读全部六份规划文档和固定 SHA 的相关源码，不写任何业务实现，先提交：
-1) License Gate 所需问题和当前结论；
+1) Owner/legal License Gate 问题、use/distribution/publication 决策；
 2) OMO/DSH lock manifests；
-3) machine-readable parity schema；
-4) packages/omo-dsh skeleton file plan；
-5) compat/dsh-api 30+ contract test list；
-6) vertical slice sequence diagram；
-7) 预计提交序列。
+3) machine-readable parity schema 与 conformance profiles；
+4) task-dag.json、完整 ID/dependency/drift validation；
+5) centralized package classification 与 manifest/import graph plan；
+6) baseline tag/hash manifest/branch protection/secret-history scan evidence；
+7) packages/omo-dsh skeleton file plan；
+8) compat/dsh-api 30+ contract test list；
+9) vertical slice sequence diagram；
+10) 预计提交序列。
 经审查通过后，再从 OMO-0101 开始编码。不要修改 DSH shipped preset，不要复制 OMO Prompt/Core，不要使用聊天中出现过的 token。
 ```

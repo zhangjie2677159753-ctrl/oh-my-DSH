@@ -270,20 +270,27 @@ interface OmoTaskRequest {
 
 ## 8. Prometheus 规划流水线
 
-DSH 目标内部流水线：
+两条流水线必须由 Profile 明确区分：
 
 ```text
-GPT Prometheus interview + optional Explore/Librarian context
-→ explicit user approval to create the plan
+opencode-compat:
+Prometheus interview + optional read-only Explore/Librarian
+→ explicit user approval to create plan
+→ create plan scaffold
 → mandatory Metis gap analysis
+→ Prometheus writes compatible plan
+→ if persisted review_required: Momus + independent Oracle
+→ user handoff → /start-work
+
+optional dsh-structured-plan:
+[same interview / approval / scaffold / Metis gates]
 → Qwen Plan-Compiler (structured IR)
 → deterministic validate + render
-→ if review_required: Momus acceptance review + independent Oracle review
-→ bounded repair loop / user review
-→ approved handoff
+→ if persisted review_required: Momus + independent Oracle
+→ bounded repair / user handoff → /start-work
 ```
 
-这是 DSH 目标增强；对外必须保持 OMO 的规划行为合同、计划位置、格式和 `/start-work` 语义。
+第二条是 DSH 目标增强；Plan-Compiler 不得在 approval/Metis 前运行，也不能用 enhanced success 填充 compat parity。两条均保持计划位置、Boulder grammar、review gate 和 `/start-work` 可观察语义。
 
 ### 8.1 Plan IR
 
@@ -570,7 +577,7 @@ packages/omo-dsh/
 - Prompt/模型/guard 绑定同一 role revision；
 - child 真独立且权限不可绕过；
 - Boulder/Log/Todo 崩溃恢复可收敛；
-- Atlas 无证据不能完成；
+- `atlas-compat` 完成语义通过固定上游 differential；`atlas-deny-business-files`/DSH release profile 额外要求机器证据，二者分别报告且 hardening 不冒充 parity；
 - 用户插话/问题/外部阻塞能停止自动续跑；
 - stop/update/unmount 后没有 listener、timer、child、job、monitor 泄漏；
 - DSH revision 升级不通过 compat contract 时拒绝发布。
