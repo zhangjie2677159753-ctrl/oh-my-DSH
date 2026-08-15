@@ -60,7 +60,7 @@ export function foldGoalEvents(events) {
 }
 
 export function humanResume(state) {
-  if (state.phase !== "paused" && state.phase !== "blocked") {
+  if (state.phase !== "pause" && state.phase !== "blocked") {
     throw new TypeError(`humanResume: cannot resume from phase ${state.phase}`)
   }
   return Object.freeze({ ...state, armed: true })
