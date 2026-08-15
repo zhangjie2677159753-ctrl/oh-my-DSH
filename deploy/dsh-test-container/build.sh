@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 # Build the controlled DSH test image from the LOCAL checkout (read-only).
-# BuildKit cannot read a host-side Dockerfile with a stdin context, so we
-# stage a hardlink snapshot of the checkout (minus node_modules/.git) into a
-# temp directory and use it as a real build context. The checkout itself is
-# never modified.
+# Strategy: extract a tar snapshot (excludes .git/node_modules/built dirs) into
+# a temp directory and use it as a real build context. Tar handles the
+# cross-device /tmp situation; the checkout itself is never modified.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -17,10 +16,16 @@ fi
 STAGE="$(mktemp -d)"
 trap 'rm -rf "$STAGE"' EXIT
 
-echo "Staging hardlink snapshot of $DSH ..."
-cp -al "$DSH/." "$STAGE/src"
-rm -rf "$STAGE/src/node_modules" "$STAGE/src/.git"
-find "$STAGE/src" -type d \( -name lib -o -name dist -o -name .turbo \) -prune -exec rm -rf {} +
+echo "Extracting snapshot of $DSH ..."
+mkdir -p "$STAGE/src"
+tar -C "$DSH" \
+  --exclude=.git \
+  --exclude=node_modules \
+  --exclude='**/node_modules' \
+  --exclude='**/lib' \
+  --exclude='**/dist' \
+  --exclude='**/.turbo' \
+  -cf - . | tar -C "$STAGE/src" -xf -
 
 cp "$ROOT/deploy/dsh-test-container/Dockerfile" "$STAGE/Dockerfile"
 
