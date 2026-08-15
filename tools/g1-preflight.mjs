@@ -66,7 +66,7 @@ check("config default validates", async () => {
 })
 
 check("unit suite passes (node --test)", () => {
-  const out = execFileSync("node", ["--test", "tests/*.test.mjs"], { cwd: pkg, encoding: "utf8" })
+  const out = execFileSync("node", ["--test", "tests/**/*.test.mjs"], { cwd: pkg, encoding: "utf8" })
   if (!/# fail 0/.test(out)) throw new Error("node --test reported failures")
 })
 
