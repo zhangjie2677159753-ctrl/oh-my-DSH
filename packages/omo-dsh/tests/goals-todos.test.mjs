@@ -37,7 +37,7 @@ test("replay fold reconstructs phase but stays disarmed", () => {
 test("only a direct human resume arms; wrong phase refuses", () => {
   let state = foldGoalEvents([
     { type: "goal/change", data: { goalId: "g1", revision: 1, action: "create" } },
-    { type: "goal/change", data: { goalId: "g1", revision: 2, action: "paused" } },
+    { type: "goal/change", data: { goalId: "g1", revision: 2, action: "pause" } },
   ])
   const armed = humanResume(state)
   assert.equal(armed.armed, true)
