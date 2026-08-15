@@ -55,6 +55,7 @@
 - [x] 完成 OMO SUL-1.0 法务/使用场景决策（内部团队、私有分发，见 `docs/legal/USAGE-DECISION.md`）。
 - [x] 推送规划基线与 `plan-v1-omo-038ed0c-dsh-47f9438` 标签；GitHub 默认分支改为 `main`。
 - [x] Batch A 治理产物：upstream locks、`parity.json`、包分类、`hook-inventory.lock.json`、compat 合同 seed。
+- [x] OMO-0102 配置 Schema 校验器 + OMO-0103 Tool Schema Linter（19 项 `node --test` 全部通过）。
 - [ ] 在本仓库 `packages/omo-dsh/` staging 完成实现（owner 已确认 staging 方案）。
 - [ ] 达到最终行为对等发布门。
 

@@ -1,0 +1,52 @@
+import test from "node:test"
+import assert from "node:assert/strict"
+import { lintTypeString, validateParameterSchema, scanSourceText } from "../src/tools/schema-linter.mjs"
+
+test("allowed types pass", () => {
+  for (const t of ["string", "number", "integer", "boolean", "object", "array", "null"]) {
+    assert.equal(lintTypeString(t), null)
+  }
+})
+
+test("illegal json/text types fail (DSH 2026-08-14 incident)", () => {
+  for (const t of ["json", "text", "any", "function"]) {
+    assert.ok(lintTypeString(t) !== null, t)
+  }
+})
+
+test("object-rooted parameter schema with anyOf string-or-array passes", () => {
+  const schema = {
+    type: "object",
+    properties: {
+      target: { anyOf: [{ type: "string" }, { type: "array", items: { type: "string" } }] },
+    },
+  }
+  assert.deepEqual(validateParameterSchema(schema), [])
+})
+
+test("non-object-rooted parameter schema fails", () => {
+  const errors = validateParameterSchema({ type: "array", items: { type: "string" } })
+  assert.ok(errors.some((e) => e.includes("object-rooted")))
+})
+
+test("nested illegal type fails structurally", () => {
+  const schema = { type: "object", properties: { q: { type: "json" } } }
+  const errors = validateParameterSchema(schema)
+  assert.ok(errors.some((e) => e.includes("illegal type")))
+})
+
+test("scanSourceText catches quoted literals in both quote styles", () => {
+  const source = [
+    `params = { type: "object", properties: { a: { type: "json" } } }`,
+    `other: { type: 'text' }`,
+    `ok: { type: 'string' }`,
+    `subtype: 'json'`, // word-boundary: must NOT match inside subtype
+  ].join("\n")
+  const violations = scanSourceText(source)
+  assert.deepEqual(violations.map((v) => v.type), ["json", "text"])
+})
+
+test("scanSourceText reports line numbers", () => {
+  const violations = scanSourceText("line1\nline2: { type: 'json' }\n")
+  assert.deepEqual(violations, [{ line: 2, type: "json", error: `illegal type "json"; allowed: string|number|integer|boolean|object|array|null` }])
+})
