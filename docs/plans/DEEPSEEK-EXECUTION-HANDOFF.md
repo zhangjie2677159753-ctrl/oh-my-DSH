@@ -295,7 +295,20 @@ Atlas bypass、data leak、false success、retry storm、orphan、migration loss
 8. reconstruct incident timeline；
 9. add regression test before re-release。
 
-## 14. 第一条给 DeepSeek 的启动指令
+## 14. 开发子 Agent 约定（owner 指令）
+
+开发委派必须使用 deepseek-v4-flash 模型，禁用 pro/主模型子 agent：
+
+1. 首选 DSH 内置 `subagent_flash`（deepseek-v4-flash tier）；
+2. 若 DSH 子 agent 后端故障，fallback 为 opencode 非交互运行：
+   ```bash
+   opencode run --model coding-plan/deepseek-v4-flash --dir /home/zhangjie/projects/oh-my-DSH "<task>"
+   ```
+   （`opencode run` 即本机 opencode 的 go/非交互模式；模型别名以 `opencode models` 实际清单为准）
+3. 子 agent 产出必须由主 agent 校验（schema、行数、diff、测试）后才能提交；
+4. 禁止用 `subagent_pro` 或主模型子 agent 做批量开发委派。
+
+## 15. 第一条给 DeepSeek 的启动指令
 
 ```text
 只执行 Batch A。先读全部六份规划文档和固定 SHA 的相关源码，不写任何业务实现，先提交：
