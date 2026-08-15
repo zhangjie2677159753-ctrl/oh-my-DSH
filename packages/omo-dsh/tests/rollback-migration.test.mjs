@@ -1,6 +1,6 @@
 import test from "node:test"
 import assert from "node:assert/strict"
-import { assessRollbackTrigger, createRollbackRunner, ROLLBACK_STEPS, reconstructTimeline } from "../src/release/rollback.mjs"
+import { assessRollbackTrigger, createRollbackRunner, ROLLBACK_STEPS, ROLLBACK_TRIGGERS, reconstructTimeline } from "../src/release/rollback.mjs"
 import { createStateMigrator } from "../src/migration/state-migrator.mjs"
 
 // --- E31 rollback ---
