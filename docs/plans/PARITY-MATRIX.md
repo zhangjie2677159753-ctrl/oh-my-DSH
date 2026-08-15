@@ -41,7 +41,7 @@
 | PAR-GOV-002 | SUL 使用/分发限制 | `LICENSE.md` | License Gate L0 | 未批准不复制 Core/Prompt | verified-contract |
 | PAR-CORE-001 | 20 个 Harness-neutral Core | `packages/AGENTS.md`, extraction guard | workspace dependencies/adapter | 每包 reuse/adapt/native 决策 | verified-contract |
 | PAR-ROLE-001 | 四 Primary Role | agent factories/config builders | `omo/role` + router | same Session atomic switch | verified-contract |
-| PAR-ROLE-002 | `/start-work` Atlas fallback Sisyphus | `start-work-hook.ts` + tests | DSH command + role event | Session ID 保持 | verified-contract |
+| PAR-ROLE-002 | `/start-work` 后续采用 Atlas（无 Atlas 则 Sisyphus）的同 Session 语义；OpenCode native switch 与 Senpi persona/workflow transition 机制不同 | `start-work-hook.ts`、Senpi invocation tracker + tests | DSH parsed command + authoritative `omo/role` event | Session ID 保持；无 raw slash 的 native activation 不漏记；自然语言/Skill read 不误触发 | verified-contract |
 | PAR-ROLE-003 | Resume 角色 | DSH Session replay target | role fold | process restart restore | not-started |
 | PAR-PROMPT-001 | Prompt model variants/runtime injection | `prompts-core`, agent prompts | ordered sections/compiler | manifest/hash/policy snapshots | not-started |
 | PAR-MODEL-001 | agent/category model requirements | `model-core` | model alias/capability router | route differential | not-started |

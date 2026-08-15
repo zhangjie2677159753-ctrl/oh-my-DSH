@@ -544,9 +544,9 @@ plan name、quoted name、worktree、make-pr/ship；保持上游 fixture。
 
 显式 plan > recent session plan > active Boulder resume/choice；歧义必须问/列选项。
 
-### OMO-1503 Role Switch
+### OMO-1503 Authoritative Role Transition
 
-append `omo/role=atlas` 或 fallback Sisyphus；flush；幂等 context marker。
+在 DSH 中 append 权威 `omo/role=atlas`（Atlas 不可用时按兼容合同回退 Sisyphus）并 flush；后续 Turn/Continuation 必须读取该 fold。保持同一 Session 语义，不复制 OpenCode 私有 agent-switch API。Activation 只能来自解析成功的 `/start-work` Command/Host transition，不得从自然语言“start work”、`SKILL.md` 读取或 UI label 模糊推断；加入 native activation 漏记回归测试和幂等 context marker 测试。
 
 ### OMO-1504 Todo Projection
 

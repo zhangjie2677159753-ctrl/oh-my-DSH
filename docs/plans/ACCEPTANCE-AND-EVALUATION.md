@@ -205,7 +205,9 @@ during final verification
 - approval 后 Metis；
 - conditional Momus/Oracle；
 - Plan Renderer；
-- `/start-work` 同 Session role=Atlas；
+- `/start-work` 经 Command Registry/Host authoritative transition，在同一 Session 写入 role=Atlas；
+- 仅出现自然语言“start work”、读取 `SKILL.md` 或改变 UI label 时不得触发 activation；
+- 模拟 Senpi 式 native activation（无 raw slash text）时，权威 transition 仍关闭 planning/review gate；
 - Context/plan 不丢。
 
 ### E2E-05 依赖门

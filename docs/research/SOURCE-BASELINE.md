@@ -114,7 +114,9 @@
 - 用 marker 保证上下文注入幂等；
 - 会从近期 Session 寻找 Prometheus 计划。
 
-所以“Prometheus → `/start-work` → 当前会话切成 Atlas”是确切当前行为，而不是仅复制计划到新 Session。
+所以“Prometheus → `/start-work` → 当前会话后续以 Atlas 语义执行”是确切产品不变量，而不是仅复制计划到新 Session。其 Harness 机制不能机械泛化：OpenCode 会修改当前 Session 的 registered agent；Senpi 保持同一 Session，通过 persona/workflow transition 达到等价效果。DSH 应使用权威的 `omo/role` Session Event 和 role fold，而不是假装调用 OpenCode 式 agent-switch API。
+
+Senpi 的 `packages/omo-senpi/src/components/task/skill-invocation-tracker.ts:createSkillInvocationTracker` 还暴露了一个迁移风险：若只观察 `SKILL.md` 读取或原始 `/skill:start-work` 文本，原生 activation 可能漏记，使 Metis/Momus review gate 错误保持开放。DSH 必须把命令解析后的 start-work activation 写成 Host 侧权威状态转换；不得从自然语言“start work”模糊推断，也不得仅靠 Skill 文件读取推断。
 
 ### 4.3 Boulder v2
 
