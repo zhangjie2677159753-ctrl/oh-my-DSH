@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "repo": "https://github.com/code-yeongyu/oh-my-openagent",
+  "branch": "dev",
+  "commit": "038ed0cbbefe2b40677b63867aeea0d16bc303e0",
+  "tree": "bd947eda805acf5fe3141f243575629e5d017a12",
+  "commitDate": "2026-08-14T08:57:56Z",
+  "commitMessage": "Merge pull request #6864 from code-yeongyu/feat/memory-fork-cost-routing",
+  "version": "5.0.0-beta.7",
+  "license": "SUL-1.0",
+  "licenseFile": "LICENSE.md",
+  "capturedAt": "2026-08-15T22:05:00+08:00",
+  "sourceArchive": "api.github.com/repos/code-yeongyu/oh-my-openagent/tarball/dev",
+  "digests": {
+    "LICENSE.md": "b61ac928f152d13517328263e6bee9175b928f9ab696a2d2ca2b6cfd961ddc32",
+    "package.json": "74653c8388c01f171562c95f789d2db923a3884360fdcd08e108d9f9e258d1d9",
+    "packages/boulder-state/src/types.ts": "d04a5887e39c19631664750f90f6bb4e4c60dec86d152f32979219257c8447fd",
+    "packages/omo-opencode/src/config/schema/hooks.ts": "22b935eab32fa2c7886352ed1a31e4e61e5938871f15de907676651eb5cde3a5",
+    "packages/model-core/package.json": "a57dfb0d6983beb059c939b73bf5f2cec02faafc22f5641ebaf37c52b4d83b28"
+  },
+  "usageDecision": "docs/legal/USAGE-DECISION.md",
+  "notes": [
+    "Pinned behavioral parity baseline; any SHA drift must fail CI.",
+    "HookNameSchema has 56 configurable names; ~58 constructed runtime slots audited from composers; generated inventory to be locked in hook-inventory.lock.json.",
+    "Copying upstream prompts/core into the PRIVATE repo follows the L0 decision; notices/modified notices required."
+  ]
+}

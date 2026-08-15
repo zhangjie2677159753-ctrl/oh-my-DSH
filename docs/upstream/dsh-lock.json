@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "repo": "https://github.com/deepseek-ai/deepseek-harness",
+  "commit": "47f943859bef60e4160492346772ded9b24f765a",
+  "tree": "f904efab9ef435201d6ba4da88a34d6366568272",
+  "version": "0.1.0-rc.5",
+  "license": "MIT",
+  "status": "Developer Preview",
+  "capturedAt": "2026-08-15T22:05:00+08:00",
+  "localCheckout": "/home/zhangjie/projects/deepseek-harness",
+  "notes": [
+    "Official statement: compatibility-breaking changes are expected during Developer Preview.",
+    "Local checkout contains unrelated uncommitted modifications that are NOT part of the compatibility contract:",
+    "  - packages/client/connection/src/index.ts",
+    "  - packages/sandbox/sandbox/src/escalation.ts",
+    "  - packages/sandbox/sandbox/tests/escalation.spec.ts",
+    "All omo-dsh SPI access must stay behind src/compat/dsh-api.ts with exact-SHA contract tests.",
+    "Compatibility suite must pass before upgrading to a newer DSH SHA."
+  ]
+}
