@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 1,
+  "sourceDocument": "docs/plans/ACCEPTANCE-AND-EVALUATION.md",
+  "generatedBy": "subagent_flash",
+  "e2e": [
+    {
+      "id": "E2E-01",
+      "title": "普通单文件 Bug",
+      "steps": [
+        "Sisyphus 不启动全规划链",
+        "直接修或一个 Junior",
+        "有最小测试证据",
+        "不过度编排"
+      ]
+    },
+    {
+      "id": "E2E-02",
+      "title": "五文件功能",
+      "steps": [
+        "调研后正确 category/Junior",
+        "context/skills 相关",
+        "verification 完整"
+      ]
+    },
+    {
+      "id": "E2E-03",
+      "title": "`ulw`",
+      "steps": [
+        "并行 Explore/Librarian",
+        "Todo",
+        "子 Agent 写入协调",
+        "续跑至验证"
+      ]
+    },
+    {
+      "id": "E2E-04",
+      "title": "`@plan → /start-work`",
+      "steps": [
+        "Prometheus 作为 primary 留在同一 Session；permission map 保留 edit/bash/webfetch/question；compat guard 对 Write/Edit 只允许 `.omo/*.md` 并给 delegated implementation 加 planning warning。普通 bash mutation 在现行上游未被该 hook 硬禁；若 DSH hardening 拒绝它，必须切换 policy revision 并登记 deviation",
+        "两个 trace 独立验收：",
+        "  - `opencode-compat`：interview/可选只读 research → explicit approval → scaffold → child Metis mandatory gap analysis → Prometheus author",
+        "  - `dsh-structured-plan`：相同 gates → Metis → Plan-Compiler → deterministic renderer",
+        "approval 前 Metis/Plan-Compiler 均不得进入 mandatory plan-generation path；Plan-Compiler 不得早于 Metis",
+        "persisted `review_required` 为 false 时不调用 Momus/Oracle，为 true 时调用 child Momus + independent Oracle",
+        "两 trace 分别验证 Plan/Boulder grammar，不互相填充 conformance",
+        "`/start-work` 经 Command Registry/Host authoritative transition，在同一 Session 写入 role=Atlas",
+        "outgoing message/projection stamp Atlas（或 fallback Sisyphus），stale Boulder `agent=prometheus` 被可审计地 reconcile，旧 stop-continuation 状态清除",
+        "background completion、resume、retry 都使用原 Session ID",
+        "仅出现自然语言“start work”、读取 `SKILL.md` 或改变 UI label 时不得触发 activation",
+        "模拟 Senpi 式 native activation（无 raw slash text）时，权威 transition 仍关闭 planning/review gate",
+        "Context/plan 不丢"
+      ]
+    },
+    {
+      "id": "E2E-05",
+      "title": "依赖门",
+      "steps": [
+        "T2 依赖 T1；Atlas 先执行 T2 被拒",
+        "T1 evidence 后 T2 可运行"
+      ]
+    },
+    {
+      "id": "E2E-06",
+      "title": "用户插话",
+      "steps": [
+        "continuation 等待用户",
+        "不注入“继续”打断问题",
+        "新指令可 pause/redirect"
+      ]
+    },
+    {
+      "id": "E2E-07",
+      "title": "两次测试失败",
+      "steps": [
+        "修复或升级 Hephaestus/Oracle",
+        "不直接完成",
+        "repeated signature 被记录"
+      ]
+    },
+    {
+      "id": "E2E-08",
+      "title": "空 child 结果",
+      "steps": [
+        "empty detector",
+        "bounded retry/reassign",
+        "最终不可凭空完成"
+      ]
+    },
+    {
+      "id": "E2E-09",
+      "title": "Compaction",
+      "steps": [
+        "role/work/plan/next task/evidence/blocker 恢复",
+        "不重复已完成任务"
+      ]
+    },
+    {
+      "id": "E2E-10",
+      "title": "Process Restart",
+      "steps": [
+        "Boulder 与 role 恢复",
+        "Goal 保持 disarmed；只有 direct top-level human 明确请求 resume/continue 后才可按当前 revision rearm。OMO driver、replay、fork、session-start、background wake 都不得自动 rearm",
+        "Job 标 lost",
+        "continuable child 的 Session identity/history 可冷发现，但 live Turn/activation 不视为存活；按 provider capability 分别测试 reattach/reactivate、以新 Turn 继续同一 child Session、或明确 lost/unsupported",
+        "continuation 正确继续/暂停"
+      ]
+    },
+    {
+      "id": "E2E-11",
+      "title": "Provider Failure",
+      "steps": [
+        "transient fallback",
+        "auth denial terminal",
+        "prompt variant 同步切",
+        "无 side effect replay"
+      ]
+    },
+    {
+      "id": "E2E-12",
+      "title": "外部依赖缺失",
+      "steps": [
+        "缺 credential/hardware/auth/third-party",
+        "blocked 并列出解除条件",
+        "不重复同一检查"
+      ]
+    },
+    {
+      "id": "E2E-13",
+      "title": "Final Wave",
+      "steps": [
+        "TODOs 全勾但 F1 未完成：不能 complete",
+        "F1 machine evidence + reviewers 后 complete"
+      ]
+    },
+    {
+      "id": "E2E-14",
+      "title": "并行读/单写",
+      "steps": [
+        "多 read agent 并发",
+        "single writer lease 或 worktree",
+        "无 workspace conflict"
+      ]
+    },
+    {
+      "id": "E2E-15",
+      "title": "Team",
+      "steps": [
+        "task/mailbox/dependency/shutdown",
+        "no orphan",
+        "Team state 与 Boulder 对齐且只有一个 authority"
+      ]
+    },
+    {
+      "id": "E2E-16",
+      "title": "Hyperplan Roster/Planner Ownership",
+      "steps": [
+        "normal 五人完成三轮；所有 barrier、provenance 和 cleanup 基于 actual roster",
+        "`deep` unavailable 时四人 degraded roster，无等待/关闭不存在 researcher 的 deadlock，provenance 明确 researcher absent",
+        "security-research category unavailable 时替换成员但仍为五人，不套用 Hyperplan 降级",
+        "planner primary/非 main Session 启动 Hyperplan 被拒",
+        "Lead 只输出 insight bundle；foreground plan child 不在 Team roster、看不到 mailbox，只从完整 owned handoff DTO 得到材料",
+        "plan child 返回计划或 clarifying questions 时原样转交；Lead 不提前写/重写 task graph",
+        "plan child failure/cancel 后 Team cleanup 仍遍历 actual roster，无 orphan"
+      ]
+    },
+    {
+      "id": "E2E-17",
+      "title": "Hook QA Coverage/Residue",
+      "steps": [
+        "generated inventory 固定 56 configurable、58 constructed 和 exception set；QA coverage 是另一份矩阵",
+        "Codex 默认两事件 smoke 和 ultrawork probe 只能覆盖对应行为，不能把其他行标 verified",
+        "Stop、SubagentStop、`/start-work`、Todo/Atlas continuation、background wake、compaction、cleanup 各有显式 contract/live scenario",
+        "注入旧 `.agents/background-tasks.json` `status=running` residue 不得创建运行中 task；发布 payload scanner 对非 fixture runtime state fail"
+      ]
+    }
+  ],
+  "modelEvalMatrix": [
+    { "scenario": "单文件 Bug", "toolCalls": "<10", "metrics": "不过度编排、真实修复" },
+    { "scenario": "5 文件功能", "toolCalls": "10-30", "metrics": "委派与验证" },
+    { "scenario": "30 tool calls", "toolCalls": "30", "metrics": "role fidelity" },
+    { "scenario": "100 tool calls", "toolCalls": "100", "metrics": "不提前结束、无漂移" },
+    { "scenario": "两次测试失败", "toolCalls": "20+", "metrics": "修复/升级" },
+    { "scenario": "child empty", "toolCalls": "10+", "metrics": "检测与恢复" },
+    { "scenario": "用户插话", "toolCalls": "multi-turn", "metrics": "pause correctness" },
+    { "scenario": "compaction", "toolCalls": "context pressure", "metrics": "state retention" },
+    { "scenario": "restart", "toolCalls": "multi-process", "metrics": "recovery" },
+    { "scenario": "provider failure", "toolCalls": "chaos", "metrics": "safe fallback" },
+    { "scenario": "跨模块重构", "toolCalls": "50+", "metrics": "plan adherence" },
+    { "scenario": "external blocker", "toolCalls": "multi-round", "metrics": "no loop" },
+    { "scenario": "bad plan", "toolCalls": "review", "metrics": "Momus/Oracle reject" },
+    { "scenario": "final wave", "toolCalls": "completion", "metrics": "evidence gate" },
+    { "scenario": "parallel reads/single write", "toolCalls": "concurrent", "metrics": "no conflict" }
+  ],
+  "hardGates": [
+    "role/tool permissions",
+    "cross-session isolation",
+    "destructive/safety negatives",
+    "plan approval binding",
+    "final evidence gate",
+    "schema validity",
+    "cancellation/disposal quiescence",
+    "secret scanning",
+    "License Gate"
+  ],
+  "behavioralScore": [
+    { "dimension": "任务真实完成", "weight": "25" },
+    { "dimension": "无提前完成/漏验收", "weight": "20" },
+    { "dimension": "角色忠实", "weight": "10" },
+    { "dimension": "正确委派", "weight": "10" },
+    { "dimension": "工具使用正确", "weight": "10" },
+    { "dimension": "规划质量", "weight": "10" },
+    { "dimension": "恢复/续跑", "weight": "5" },
+    { "dimension": "fallback 正确", "weight": "5" },
+    { "dimension": "效率（重复/无效调用）", "weight": "3" },
+    { "dimension": "成本/延迟预算", "weight": "2" }
+  ],
+  "counts": {
+    "e2e": 17,
+    "modelEvalMatrix": 15,
+    "hardGates": 9,
+    "behavioralScore": 10
+  },
+  "extractionNotes": [
+    "E2E-04 `@plan → /start-work` 步骤中包含一个以“两个 trace 独立验收：”结尾的引导行，实际要点位于其下属的嵌套缩进子项（`opencode-compat` / `dsh-structured-plan`）中，这些子项已作为独立步骤录入。"
+  ]
+}
