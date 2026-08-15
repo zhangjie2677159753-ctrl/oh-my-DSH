@@ -1,0 +1,994 @@
+{
+  "schemaVersion": 1,
+  "source": "OMO workspace packages/ at fixed SHA 038ed0cbbefe2b40677b63867aeea0d16bc303e0",
+  "generatedBy": "local-node-extractor",
+  "generatedAt": "2026-08-15T14:13:02.321Z",
+  "neutralCoreSet": [
+    "utils",
+    "model-core",
+    "omo-config-core",
+    "delegate-core",
+    "prompts-core",
+    "rules-engine",
+    "agents-md-core",
+    "lsp-core",
+    "mcp-stdio-core",
+    "mcp-client-core",
+    "comment-checker-core",
+    "hashline-core",
+    "tmux-core",
+    "team-core",
+    "openclaw-core",
+    "boulder-state",
+    "memory-core",
+    "telemetry-core",
+    "claude-code-compat-core",
+    "skills-loader-core"
+  ],
+  "packages": [
+    {
+      "dir": "agents-md-core",
+      "name": "@oh-my-opencode/agents-md-core",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [
+        "@oh-my-opencode/rules-engine"
+      ],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": "./index.d.ts",
+      "exportsDot": {
+        "types": "./index.d.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "ast-grep-mcp",
+      "name": "@oh-my-opencode/ast-grep-mcp",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "platform-mcp-executable",
+      "runtimeDependencies": [
+        "@oh-my-opencode/mcp-stdio-core",
+        "@oh-my-opencode/utils"
+      ],
+      "devDependencies": [
+        "bun-types"
+      ],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": {
+        "types": "./src/index.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [
+        "omo-ast-grep"
+      ],
+      "findings": [],
+      "classificationOverride": "platform-mcp-executable"
+    },
+    {
+      "dir": "boulder-state",
+      "name": "@oh-my-opencode/boulder-state",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": "./index.d.ts",
+      "exportsDot": {
+        "types": "./index.d.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "claude-code-compat-core",
+      "name": "@oh-my-opencode/claude-code-compat-core",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [
+        "@oh-my-opencode/model-core",
+        "@oh-my-opencode/utils"
+      ],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": "./src/index.ts",
+      "exportsDot": {
+        "types": "./src/index.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "comment-checker-core",
+      "name": "@oh-my-opencode/comment-checker-core",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [
+        "@oh-my-opencode/utils"
+      ],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": "./index.d.ts",
+      "exportsDot": {
+        "types": "./index.d.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "delegate-core",
+      "name": "@oh-my-opencode/delegate-core",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [
+        "@oh-my-opencode/model-core"
+      ],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": "./index.d.ts",
+      "exportsDot": {
+        "types": "./index.d.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": [
+        "types target missing on disk: ./index.d.ts"
+      ]
+    },
+    {
+      "dir": "git-bash-mcp",
+      "name": "@oh-my-opencode/git-bash-mcp",
+      "version": "0.0.0",
+      "private": true,
+      "classification": "platform-mcp-executable",
+      "runtimeDependencies": [
+        "@oh-my-opencode/mcp-stdio-core",
+        "@oh-my-opencode/utils"
+      ],
+      "devDependencies": [
+        "bun-types"
+      ],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": {
+        "types": "./src/index.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [
+        "omo-git-bash"
+      ],
+      "findings": [],
+      "classificationOverride": "platform-mcp-executable"
+    },
+    {
+      "dir": "hashline-core",
+      "name": "@oh-my-opencode/hashline-core",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [
+        "diff"
+      ],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": "./index.d.ts",
+      "exportsDot": {
+        "types": "./index.d.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": [
+        "types target missing on disk: ./index.d.ts"
+      ]
+    },
+    {
+      "dir": "lsp-core",
+      "name": "@oh-my-opencode/lsp-core",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [
+        "@oh-my-opencode/mcp-stdio-core"
+      ],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": "./src/index.ts",
+      "exportsDot": {
+        "types": "./src/index.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "lsp-daemon",
+      "name": "@code-yeongyu/lsp-daemon",
+      "version": "0.1.0",
+      "private": false,
+      "classification": "platform-daemon",
+      "runtimeDependencies": [],
+      "devDependencies": [
+        "@biomejs/biome",
+        "@oh-my-opencode/lsp-core",
+        "@oh-my-opencode/mcp-stdio-core",
+        "@types/node",
+        "typescript",
+        "vitest"
+      ],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": null,
+      "bin": [
+        "omo-lsp-daemon"
+      ],
+      "findings": [],
+      "classificationOverride": "platform-daemon"
+    },
+    {
+      "dir": "lsp-tools-mcp",
+      "name": "@code-yeongyu/lsp-tools-mcp",
+      "version": "0.1.0",
+      "private": false,
+      "classification": "platform-mcp-executable",
+      "runtimeDependencies": [],
+      "devDependencies": [
+        "@oh-my-opencode/lsp-core",
+        "@oh-my-opencode/mcp-stdio-core",
+        "@biomejs/biome",
+        "@types/node",
+        "typescript",
+        "vitest"
+      ],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": null,
+      "bin": [
+        "omo-lsp"
+      ],
+      "findings": [],
+      "classificationOverride": "platform-mcp-executable"
+    },
+    {
+      "dir": "mcp-client-core",
+      "name": "@oh-my-opencode/mcp-client-core",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [
+        "@modelcontextprotocol/sdk",
+        "@oh-my-opencode/claude-code-compat-core",
+        "@oh-my-opencode/utils",
+        "zod"
+      ],
+      "devDependencies": [
+        "bun-types"
+      ],
+      "peerDependencies": [],
+      "types": "./src/index.ts",
+      "exportsDot": {
+        "types": "./src/index.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "mcp-stdio-core",
+      "name": "@oh-my-opencode/mcp-stdio-core",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [],
+      "devDependencies": [
+        "bun-types"
+      ],
+      "peerDependencies": [],
+      "types": "./src/index.ts",
+      "exportsDot": {
+        "types": "./src/index.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "memory-core",
+      "name": "@oh-my-opencode/memory-core",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": {
+        "types": null,
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "model-core",
+      "name": "@oh-my-opencode/model-core",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": "./index.d.ts",
+      "exportsDot": {
+        "types": "./index.d.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": [
+        "types target missing on disk: ./index.d.ts"
+      ]
+    },
+    {
+      "dir": "oh-my-opencode-darwin-arm64",
+      "name": "oh-my-opencode-darwin-arm64",
+      "version": "5.0.0-beta.7",
+      "private": false,
+      "classification": "harness-adapter",
+      "runtimeDependencies": [],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": null,
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "oh-my-opencode-darwin-x64",
+      "name": "oh-my-opencode-darwin-x64",
+      "version": "5.0.0-beta.7",
+      "private": false,
+      "classification": "harness-adapter",
+      "runtimeDependencies": [],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": null,
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "oh-my-opencode-darwin-x64-baseline",
+      "name": "oh-my-opencode-darwin-x64-baseline",
+      "version": "5.0.0-beta.7",
+      "private": false,
+      "classification": "harness-adapter",
+      "runtimeDependencies": [],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": null,
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "oh-my-opencode-linux-arm64",
+      "name": "oh-my-opencode-linux-arm64",
+      "version": "5.0.0-beta.7",
+      "private": false,
+      "classification": "harness-adapter",
+      "runtimeDependencies": [],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": null,
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "oh-my-opencode-linux-arm64-musl",
+      "name": "oh-my-opencode-linux-arm64-musl",
+      "version": "5.0.0-beta.7",
+      "private": false,
+      "classification": "harness-adapter",
+      "runtimeDependencies": [],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": null,
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "oh-my-opencode-linux-x64",
+      "name": "oh-my-opencode-linux-x64",
+      "version": "5.0.0-beta.7",
+      "private": false,
+      "classification": "harness-adapter",
+      "runtimeDependencies": [],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": null,
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "oh-my-opencode-linux-x64-baseline",
+      "name": "oh-my-opencode-linux-x64-baseline",
+      "version": "5.0.0-beta.7",
+      "private": false,
+      "classification": "harness-adapter",
+      "runtimeDependencies": [],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": null,
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "oh-my-opencode-linux-x64-musl",
+      "name": "oh-my-opencode-linux-x64-musl",
+      "version": "5.0.0-beta.7",
+      "private": false,
+      "classification": "harness-adapter",
+      "runtimeDependencies": [],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": null,
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "oh-my-opencode-linux-x64-musl-baseline",
+      "name": "oh-my-opencode-linux-x64-musl-baseline",
+      "version": "5.0.0-beta.7",
+      "private": false,
+      "classification": "harness-adapter",
+      "runtimeDependencies": [],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": null,
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "oh-my-opencode-windows-arm64",
+      "name": "oh-my-opencode-windows-arm64",
+      "version": "5.0.0-beta.7",
+      "private": false,
+      "classification": "harness-adapter",
+      "runtimeDependencies": [],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": null,
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "oh-my-opencode-windows-x64",
+      "name": "oh-my-opencode-windows-x64",
+      "version": "5.0.0-beta.7",
+      "private": false,
+      "classification": "harness-adapter",
+      "runtimeDependencies": [],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": null,
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "oh-my-opencode-windows-x64-baseline",
+      "name": "oh-my-opencode-windows-x64-baseline",
+      "version": "5.0.0-beta.7",
+      "private": false,
+      "classification": "harness-adapter",
+      "runtimeDependencies": [],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": null,
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "omo-codex",
+      "name": "@oh-my-opencode/omo-codex",
+      "version": "5.0.0-beta.7",
+      "private": true,
+      "classification": "harness-adapter",
+      "runtimeDependencies": [
+        "@oh-my-opencode/utils"
+      ],
+      "devDependencies": [
+        "bun-types"
+      ],
+      "peerDependencies": [],
+      "types": "./index.d.ts",
+      "exportsDot": {
+        "types": "./index.d.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "omo-config-core",
+      "name": "@oh-my-opencode/omo-config-core",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [
+        "jsonc-parser",
+        "zod"
+      ],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": "./index.d.ts",
+      "exportsDot": {
+        "types": "./index.d.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": [
+        "types target missing on disk: ./index.d.ts"
+      ]
+    },
+    {
+      "dir": "omo-native",
+      "name": "omo-ai",
+      "version": "5.0.0-0.beta.7",
+      "private": false,
+      "classification": "platform-native",
+      "runtimeDependencies": [
+        "@code-yeongyu/senpi"
+      ],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": null,
+      "bin": [
+        "omo"
+      ],
+      "findings": [],
+      "classificationOverride": "platform-native"
+    },
+    {
+      "dir": "omo-opencode",
+      "name": "@oh-my-opencode/omo-opencode",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "harness-adapter",
+      "runtimeDependencies": [
+        "@clack/prompts",
+        "@modelcontextprotocol/sdk",
+        "@oh-my-opencode/agents-md-core",
+        "@oh-my-opencode/boulder-state",
+        "@oh-my-opencode/claude-code-compat-core",
+        "@oh-my-opencode/comment-checker-core",
+        "@oh-my-opencode/delegate-core",
+        "@oh-my-opencode/hashline-core",
+        "@oh-my-opencode/mcp-client-core",
+        "@oh-my-opencode/model-core",
+        "@oh-my-opencode/omo-codex",
+        "@oh-my-opencode/omo-config-core",
+        "@oh-my-opencode/openclaw-core",
+        "@oh-my-opencode/prompts-core",
+        "@oh-my-opencode/rules-engine",
+        "@oh-my-opencode/shared-skills",
+        "@oh-my-opencode/skills-loader-core",
+        "@oh-my-opencode/telemetry-core",
+        "@oh-my-opencode/tmux-core",
+        "@oh-my-opencode/team-core",
+        "@oh-my-opencode/utils",
+        "@opencode-ai/plugin",
+        "@opencode-ai/sdk",
+        "commander",
+        "js-yaml",
+        "jsonc-parser",
+        "picocolors",
+        "picomatch",
+        "zod"
+      ],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": null,
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "omo-senpi",
+      "name": "@oh-my-opencode/omo-senpi",
+      "version": "5.0.0-beta.7",
+      "private": true,
+      "classification": "harness-adapter",
+      "runtimeDependencies": [
+        "@earendil-works/pi-tui",
+        "@oh-my-opencode/ast-grep-mcp",
+        "@oh-my-opencode/utils",
+        "@oh-my-opencode/comment-checker-core",
+        "@oh-my-opencode/telemetry-core",
+        "@oh-my-opencode/prompts-core",
+        "@oh-my-opencode/lsp-core",
+        "@oh-my-opencode/senpi-task",
+        "@oh-my-opencode/omo-config-core",
+        "@oh-my-opencode/omo-opencode",
+        "@oh-my-opencode/delegate-core",
+        "@oh-my-opencode/team-core",
+        "@oh-my-opencode/boulder-state",
+        "@code-yeongyu/lsp-daemon",
+        "typebox"
+      ],
+      "devDependencies": [
+        "@code-yeongyu/senpi"
+      ],
+      "peerDependencies": [
+        "@code-yeongyu/senpi"
+      ],
+      "types": "./src/index.ts",
+      "exportsDot": {
+        "types": "./src/index.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "openclaw-core",
+      "name": "@oh-my-opencode/openclaw-core",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [
+        "@oh-my-opencode/tmux-core",
+        "@oh-my-opencode/utils"
+      ],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": "./src/index.ts",
+      "exportsDot": {
+        "types": "./src/index.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "pi-goal",
+      "name": "@oh-my-opencode/pi-goal",
+      "version": "4.15.1",
+      "private": true,
+      "classification": "harness-adapter",
+      "runtimeDependencies": [],
+      "devDependencies": [
+        "@mariozechner/pi-ai",
+        "@mariozechner/pi-coding-agent",
+        "@mariozechner/pi-tui",
+        "typebox"
+      ],
+      "peerDependencies": [
+        "@mariozechner/pi-ai",
+        "@mariozechner/pi-coding-agent",
+        "@mariozechner/pi-tui",
+        "typebox"
+      ],
+      "types": null,
+      "exportsDot": null,
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "pi-webfetch",
+      "name": "@oh-my-opencode/pi-webfetch",
+      "version": "4.15.1",
+      "private": true,
+      "classification": "harness-adapter",
+      "runtimeDependencies": [
+        "turndown"
+      ],
+      "devDependencies": [
+        "@mariozechner/pi-ai",
+        "@mariozechner/pi-coding-agent",
+        "@mariozechner/pi-tui",
+        "@types/turndown",
+        "typebox"
+      ],
+      "peerDependencies": [
+        "@mariozechner/pi-ai",
+        "@mariozechner/pi-coding-agent",
+        "@mariozechner/pi-tui",
+        "typebox"
+      ],
+      "types": null,
+      "exportsDot": null,
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "prompts-core",
+      "name": "@oh-my-opencode/prompts-core",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [],
+      "devDependencies": [],
+      "peerDependencies": [
+        "@oh-my-opencode/model-core",
+        "@oh-my-opencode/utils"
+      ],
+      "types": "./index.d.ts",
+      "exportsDot": {
+        "types": "./index.d.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": [
+        "types target missing on disk: ./index.d.ts"
+      ]
+    },
+    {
+      "dir": "rules-engine",
+      "name": "@oh-my-opencode/rules-engine",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [
+        "@oh-my-opencode/utils",
+        "picomatch"
+      ],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": "./index.d.ts",
+      "exportsDot": {
+        "types": "./index.d.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "senpi-task",
+      "name": "@oh-my-opencode/senpi-task",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "harness-adapter",
+      "runtimeDependencies": [
+        "@oh-my-opencode/delegate-core",
+        "@oh-my-opencode/omo-config-core",
+        "@oh-my-opencode/team-core",
+        "@oh-my-opencode/utils",
+        "typebox"
+      ],
+      "devDependencies": [
+        "@code-yeongyu/senpi",
+        "@earendil-works/pi-tui",
+        "typebox"
+      ],
+      "peerDependencies": [
+        "@code-yeongyu/senpi",
+        "@earendil-works/pi-tui",
+        "typebox"
+      ],
+      "types": "./src/index.ts",
+      "exportsDot": {
+        "types": "./src/index.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "shared-skills",
+      "name": "@oh-my-opencode/shared-skills",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "content-skills",
+      "runtimeDependencies": [],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": "./index.d.ts",
+      "exportsDot": {
+        "types": "./index.d.ts",
+        "import": "./index.mjs"
+      },
+      "bin": [],
+      "findings": [],
+      "classificationOverride": "content-skills"
+    },
+    {
+      "dir": "skills-loader-core",
+      "name": "@oh-my-opencode/skills-loader-core",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [
+        "@oh-my-opencode/claude-code-compat-core",
+        "@oh-my-opencode/model-core",
+        "@oh-my-opencode/shared-skills",
+        "@oh-my-opencode/utils",
+        "js-yaml",
+        "picomatch",
+        "zod"
+      ],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": "./src/index.ts",
+      "exportsDot": {
+        "types": "./src/index.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "team-core",
+      "name": "@oh-my-opencode/team-core",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [
+        "@oh-my-opencode/tmux-core",
+        "@oh-my-opencode/utils",
+        "zod"
+      ],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": "./src/index.ts",
+      "exportsDot": {
+        "types": "./src/index.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "telemetry-core",
+      "name": "@oh-my-opencode/telemetry-core",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [
+        "@oh-my-opencode/utils",
+        "posthog-node"
+      ],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": "./index.d.ts",
+      "exportsDot": {
+        "types": "./index.d.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": []
+    },
+    {
+      "dir": "tmux-core",
+      "name": "@oh-my-opencode/tmux-core",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [
+        "@oh-my-opencode/utils"
+      ],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": "./index.d.ts",
+      "exportsDot": {
+        "types": "./index.d.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": [
+        "types target missing on disk: ./index.d.ts"
+      ]
+    },
+    {
+      "dir": "utils",
+      "name": "@oh-my-opencode/utils",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "neutral-core",
+      "runtimeDependencies": [
+        "@oh-my-opencode/omo-config-core",
+        "js-yaml",
+        "jsonc-parser"
+      ],
+      "devDependencies": [],
+      "peerDependencies": [],
+      "types": "./index.d.ts",
+      "exportsDot": {
+        "types": "./index.d.ts",
+        "import": "./src/index.ts"
+      },
+      "bin": [],
+      "findings": [
+        "types target missing on disk: ./index.d.ts"
+      ]
+    },
+    {
+      "dir": "web",
+      "name": "oh-my-openagent-web",
+      "version": "0.1.0",
+      "private": true,
+      "classification": "application-web",
+      "runtimeDependencies": [
+        "@radix-ui/react-separator",
+        "@radix-ui/react-slot",
+        "class-variance-authority",
+        "clsx",
+        "geist",
+        "lucide-react",
+        "marked",
+        "next",
+        "next-intl",
+        "react",
+        "react-dom",
+        "tailwind-merge",
+        "tailwindcss-animate"
+      ],
+      "devDependencies": [
+        "@biomejs/biome",
+        "@opennextjs/cloudflare",
+        "@playwright/test",
+        "@tailwindcss/postcss",
+        "@types/node",
+        "@types/react",
+        "@types/react-dom",
+        "@typescript/native-preview",
+        "eslint",
+        "eslint-config-next",
+        "eslint-config-prettier",
+        "eslint-plugin-prettier",
+        "globals",
+        "postcss",
+        "prettier",
+        "prettier-plugin-tailwindcss",
+        "tailwindcss",
+        "typescript",
+        "typescript-eslint",
+        "wrangler"
+      ],
+      "peerDependencies": [],
+      "types": null,
+      "exportsDot": null,
+      "bin": [],
+      "findings": [],
+      "classificationOverride": "application-web"
+    }
+  ],
+  "counts": {
+    "total": 45,
+    "byClassification": {
+      "neutral-core": 20,
+      "platform-mcp-executable": 3,
+      "platform-daemon": 1,
+      "harness-adapter": 18,
+      "platform-native": 1,
+      "content-skills": 1,
+      "application-web": 1
+    }
+  },
+  "notes": [
+    "unknown 分类需实现阶段人工复核后升级为 platform/binary、application 或 adapter",
+    "runtime-dependency 边界还需 import-graph 验证（manifest 不完整）",
+    "omo-config-core 为 Node-runtime-dependent，见 SOURCE-BASELINE.md",
+    "7 个 unknown 已按目录语义复核归入 platform/content/application（classificationOverride 字段保留来源）"
+  ]
+}

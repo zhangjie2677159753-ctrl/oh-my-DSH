@@ -1,0 +1,1045 @@
+{
+  "schemaVersion": 1,
+  "sourceDocument": "docs/plans/PARITY-MATRIX.md",
+  "generatedBy": "local-node-extractor (subagent_flash backend failed twice)",
+  "generatedAt": "2026-08-15T14:12:43.348Z",
+  "profiles": [
+    "opencode-compat",
+    "senpi-compat",
+    "dsh-hardened"
+  ],
+  "capabilities": [
+    {
+      "id": "PAR-GOV-001",
+      "contract": "固定 revision 行为对等",
+      "sources": "OMO/DSH commit lock",
+      "dshMapping": "compatibility manifest",
+      "acceptance": "SHA 漂移 CI fail",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-GOV-002",
+      "contract": "SUL/版权 use、public repo、distribution、package publication、Prompt/Core/fixture/notices 决策",
+      "sources": "`LICENSE.md` + owner/legal decision",
+      "dshMapping": "License Gate L0",
+      "acceptance": "未签署不得公开/分发/发布/复制；clean-room 不自动免责",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-GOV-003",
+      "contract": "durable reviewed planning baseline",
+      "sources": "Git commit/tag/hash manifest/branch rules",
+      "dshMapping": "pre-implementation gate",
+      "acceptance": "no untracked plan；secret/history/remote scan；PR protection",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-GOV-004",
+      "contract": "machine-readable task DAG",
+      "sources": "plan task IDs/Gates/Batches",
+      "dshMapping": "`task-dag.json` + drift validator",
+      "acceptance": "all IDs/deps exist；acyclic；no orphan/range omission/placeholder",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-CORE-001",
+      "contract": "inventory 中有 20 个 Core package；“Core”不等于零依赖、Node/browser-neutral 或可直接跨 Harness 运行",
+      "sources": "`packages/AGENTS.md`、extraction guard、manifest/import graph",
+      "dshMapping": "per-package workspace dependency/adapter/runtime placement",
+      "acceptance": "每包 harness imports、runtime APIs、dependencies、reuse/adapt/native/Host/Client 决策",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-ROLE-001",
+      "contract": "Sisyphus/Hephaestus/Prometheus/Atlas 是 Primary Role；Metis/Momus 是 child subagent，不得互换 cardinality",
+      "sources": "agent factories/config builders、`metis.ts`、`momus.ts`",
+      "dshMapping": "`omo/role` + child role registry",
+      "acceptance": "same Session atomic primary switch；registry invalid config fail",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-ROLE-002",
+      "contract": "`/start-work` 后续采用 Atlas（无 Atlas 则 Sisyphus）的同 Session 语义；OpenCode native switch 与 Senpi persona/workflow transition 机制不同",
+      "sources": "`start-work-hook.ts`、Senpi invocation tracker + tests",
+      "dshMapping": "DSH parsed command + authoritative `omo/role` event",
+      "acceptance": "Session ID 保持；outgoing message role stamp；stale Boulder/stop reconcile；resume/retry same Session；无 raw slash activation 不漏记；自然语言/Skill read 不误触发",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-ROLE-003",
+      "contract": "Resume 角色",
+      "sources": "DSH Session replay target",
+      "dshMapping": "role fold",
+      "acceptance": "process restart restore",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-PROMPT-001",
+      "contract": "Prometheus 单一 model-independent prompt；Atlas model-family prompt routing + runtime injection",
+      "sources": "`prompts-core`、Prometheus/Atlas prompt source/tests",
+      "dshMapping": "ordered sections/compiler",
+      "acceptance": "manifest/hash/policy snapshots；不得虚构 upstream Prometheus family variant",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-MODEL-001",
+      "contract": "canonical agent/category candidate/fallback chains",
+      "sources": "`model-core/src/agent-model-requirements.ts` + tests",
+      "dshMapping": "capability aliases + model router",
+      "acceptance": "candidate order/override/current model/variant/fallback differential",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-MODEL-002",
+      "contract": "runtime fallback",
+      "sources": "OMO fallback hooks",
+      "dshMapping": "`agent/request-error` controller",
+      "acceptance": "bounded/no loop/no side effect replay",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-TASK-001",
+      "contract": "`task()` normalize/defaults",
+      "sources": "delegate-task source/tests",
+      "dshMapping": "OMO facade",
+      "acceptance": "category wins; defaults match",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-TASK-002",
+      "contract": "sync task",
+      "sources": "delegate sync executor",
+      "dshMapping": "one-shot foreground",
+      "acceptance": "partial/error/result footer",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-TASK-003",
+      "contract": "background task",
+      "sources": "background manager",
+      "dshMapping": "DSH Job + descriptor",
+      "acceptance": "process-local semantics explicit",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-TASK-004",
+      "contract": "continuable child 有 durable Session identity/history，但 live Turn/activation 不自动跨进程存活",
+      "sources": "OMO resume/task control + DSH provider capabilities",
+      "dshMapping": "DSH child Session discovery + capability-based reactivation/new Turn",
+      "acceptance": "send/interrupt；cold discover；reattach/reactivate/unsupported/lost 分支",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-TASK-005",
+      "contract": "queue/progress/promotion/residency",
+      "sources": "senpi-task/core",
+      "dshMapping": "task runtime",
+      "acceptance": "cap/queue/budget tests",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-AGENT-001",
+      "contract": "Explore read-only search",
+      "sources": "agent source/tests",
+      "dshMapping": "child persona/filter",
+      "acceptance": "write/delegate denial",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-AGENT-002",
+      "contract": "Librarian external research",
+      "sources": "source/tests",
+      "dshMapping": "child persona/filter",
+      "acceptance": "source citations/no write",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-AGENT-003",
+      "contract": "Oracle consultation",
+      "sources": "source/tests",
+      "dshMapping": "child persona/filter",
+      "acceptance": "read-only, route, output",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-AGENT-004",
+      "contract": "Metis gap analysis；OpenCode deny write/edit/apply_patch but retains task，Senpi denies delegation",
+      "sources": "source/tests/profile policy",
+      "dshMapping": "child structured result + profile-specific guard",
+      "acceptance": "no write；delegation visibility/execution differential；not primary",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-AGENT-005",
+      "contract": "Momus plan review；OpenCode deny write/edit/apply_patch but retains task，Senpi one-shot/profile differs",
+      "sources": "source/tests/profile policy",
+      "dshMapping": "saved-plan-path review + profile-specific guard",
+      "acceptance": "approve/reject；no write；delegation/profile differential；not primary",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-AGENT-006",
+      "contract": "Multimodal",
+      "sources": "source/tests",
+      "dshMapping": "vision child",
+      "acceptance": "text-only no silent degrade",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-AGENT-007",
+      "contract": "Junior implementation/research delegation",
+      "sources": "junior prompt/source",
+      "dshMapping": "child write + research allowlist",
+      "acceptance": "category recursion deny",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-PLAN-001",
+      "contract": "Prometheus primary plan role；permission map allows edit/bash/webfetch/question；`prometheus-md-only` 仅约束 Write/Edit 到 `.omo/*.md` 并给 delegation 加 warning，未硬禁普通 bash mutation",
+      "sources": "prompt/config/hook/tests",
+      "dshMapping": "same Session planning phase + compat guard；可选 shell hardening",
+      "acceptance": "Write/Edit path exact；delegation warning；bash 保持 compat 或以 deviation harden；no implementation before approval",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-PLAN-002",
+      "contract": "approval → Metis",
+      "sources": "ulw-plan workflow",
+      "dshMapping": "planning pipeline gate",
+      "acceptance": "Metis not before approval",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-PLAN-003",
+      "contract": "conditional Momus/Oracle review",
+      "sources": "workflow review_required",
+      "dshMapping": "policy gate",
+      "acceptance": "not universally invoked",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-PLAN-004",
+      "contract": "deterministic Plan IR/Renderer",
+      "sources": "DSH enhancement",
+      "dshMapping": "Plan-Compiler",
+      "acceptance": "exact Boulder grammar",
+      "status": "intentional-deviation",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-BOULDER-001",
+      "contract": "Boulder v2 + legacy mirror",
+      "sources": "`boulder-state/types.ts`",
+      "dshMapping": "Core adapter",
+      "acceptance": "unknown fields preserved",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-BOULDER-002",
+      "contract": "structured checklist parser",
+      "sources": "`plan-checklist.ts` + tests",
+      "dshMapping": "reuse Core",
+      "acceptance": "exact regex/fence/boundary",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-BOULDER-003",
+      "contract": "session origins/task sessions/worktree",
+      "sources": "state/storage",
+      "dshMapping": "repository",
+      "acceptance": "resume/reconcile",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-CONT-001",
+      "contract": "generic Todo continuation",
+      "sources": "hook source/tests",
+      "dshMapping": "turn-stopping + idle driver",
+      "acceptance": "full safeguard matrix",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-CONT-001A",
+      "contract": "all-complete latch 的测试意图优先于固定上游疑似缺陷：`idle-event.ts` 设置 latch 后调用真实 reset 会清 latch；现有 fake-store test 未暴露副作用",
+      "sources": "`idle-event.ts:133-138`、`session-state.ts:204-219`、`idle-event.test.ts` `#4013 P0.1`",
+      "dshMapping": "分离 reset-progress/clear-latch transition；DSH durable/replay policy",
+      "acceptance": "真实 store 连续 idle 不重入；Todo event 驱动 complete→reopen；并发；restart/replay",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-CONT-002",
+      "contract": "Atlas Boulder continuation",
+      "sources": "atlas hook",
+      "dshMapping": "work driver",
+      "acceptance": "final wave/child/blocker",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-CONT-003",
+      "contract": "stop continuation",
+      "sources": "command/guard",
+      "dshMapping": "durable stop state",
+      "acceptance": "countdown race stop",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-CONT-004",
+      "contract": "external blocker escape",
+      "sources": "Codex behavior",
+      "dshMapping": "blocked transition",
+      "acceptance": "no loop",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-VERIFY-001",
+      "contract": "task evidence",
+      "sources": "Atlas/current tests",
+      "dshMapping": "evidence store",
+      "acceptance": "stale/failed rejected",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-VERIFY-002",
+      "contract": "Final Verification Wave",
+      "sources": "Boulder/Atlas tests",
+      "dshMapping": "verification state",
+      "acceptance": "complete only after F tasks",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-STATE-001",
+      "contract": "Todo single Session snapshot",
+      "sources": "DSH todo/write",
+      "dshMapping": "projection only",
+      "acceptance": "not project authority",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-STATE-002",
+      "contract": "Session Log replay/audit",
+      "sources": "DSH session",
+      "dshMapping": "OMO events",
+      "acceptance": "crash recovery",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-STATE-003",
+      "contract": "Boulder project authority",
+      "sources": "Core",
+      "dshMapping": "file/repository",
+      "acceptance": "cross Session/worktree",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-GOAL-001",
+      "contract": "durable goal event + process-local activation",
+      "sources": "DSH goal",
+      "dshMapping": "auxiliary status",
+      "acceptance": "replay/fork/start remain disarmed；only direct top-level human resume may rearm；OMO driver forbidden",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-RULE-001",
+      "contract": "rules discovery/security",
+      "sources": "rules-engine",
+      "dshMapping": "context resolver",
+      "acceptance": "precedence/path traversal",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-AGENTSMD-001",
+      "contract": "hierarchical AGENTS",
+      "sources": "agents-md-core",
+      "dshMapping": "native-aware adapter",
+      "acceptance": "no duplicate injection",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-SKILL-001",
+      "contract": "skill discovery/precedence/filter",
+      "sources": "skills-loader-core",
+      "dshMapping": "DSH Skill Registry",
+      "acceptance": "collision/disabled/agent scope",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-HASH-001",
+      "contract": "read annotation + stale edit",
+      "sources": "hashline-core",
+      "dshMapping": "tool enhancer/guard",
+      "acceptance": "stale/ambiguous fail",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-COMMENT-001",
+      "contract": "comment checker all edit paths",
+      "sources": "core/hook tests",
+      "dshMapping": "post-execute/final gate",
+      "acceptance": "apply patch/lazy init",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-MEM-001",
+      "contract": "durable memory",
+      "sources": "memory-core",
+      "dshMapping": "Host service",
+      "acceptance": "scope/delete/privacy",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-MEM-002",
+      "contract": "Senpi fork reflection 继承 parent prefix/cwd 且省略 tool/extension/context restrictions，存在 authority expansion",
+      "sources": "`prepareReflectionForkSpawn`、`runner-fork-spawn.test.ts`",
+      "dshMapping": "context inheritance 与 capability re-authorization 分离；isolated fallback",
+      "acceptance": "task/Team/extension/credential/parent-write denial；cache/isolation output equivalence；no leak",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-TEAM-001",
+      "contract": "teams/tasks/mailboxes/worktree",
+      "sources": "team-core",
+      "dshMapping": "Host + child backend",
+      "acceptance": "no dual authority",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-TEAM-002",
+      "contract": "Hyperplan main lead owns debate/distillation；foreground plan child owns sequencing/verification and cannot read Team mailbox",
+      "sources": "`hyperplan/SKILL.md`",
+      "dshMapping": "actual-roster TeamRun + owned handoff DTO",
+      "acceptance": "planner not team member；verbatim output/questions；lead no pre-plan",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-TEAM-003",
+      "contract": "Hyperplan docs permit 4-member degraded roster but later hard-code 5；security-research separately requires 5 with replacement",
+      "sources": "Hyperplan/security-research Skills",
+      "dshMapping": "workflow-specific roster policy",
+      "acceptance": "5 normal；4 Hyperplan degraded barriers/cleanup；security remains 5",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-OPENCLAW-001",
+      "contract": "gateway/hooks/replies",
+      "sources": "openclaw-core/schema",
+      "dshMapping": "optional Host integration",
+      "acceptance": "credential/outage/malicious input",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-MON-001",
+      "contract": "monitor lifecycle/tools/status",
+      "sources": "monitor source/tests",
+      "dshMapping": "Host observer + projection",
+      "acceptance": "no authority mutation",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-UI-001",
+      "contract": "current agent/work/status",
+      "sources": "OMO UI behavior",
+      "dshMapping": "DSH projections/Slots",
+      "acceptance": "cold replay/current state",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-REL-001",
+      "contract": "config migration；unified runtime `[opencode]` untyped 与 generated editor schema substitution 的已知差异",
+      "sources": "config schemas/build script",
+      "dshMapping": "dry-run migrator + DSH adapter validator",
+      "acceptance": "unknown fields/idempotency；runtime/editor differential fixtures",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-REL-002",
+      "contract": "package/release gates",
+      "sources": "scripts/workflows",
+      "dshMapping": "pack/SBOM/compat",
+      "acceptance": "final manifest verified；Senpi compatibility 不得从 publish 缺失",
+      "status": "not-started",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-REL-003",
+      "contract": "Core/adapter/package layer classification 与 dependency graph",
+      "sources": "extraction guard、registration audit、实际 imports",
+      "dshMapping": "centralized classification + manifest/import graph",
+      "acceptance": "all dependency maps；unresolved/undeclared/undefined layer fail；全 package coverage",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-REL-004",
+      "contract": "每个最终 manifest variant/alias 的 packed payload；P1 fixture：`model-core` types 指向不存在的 root `index.d.ts`",
+      "sources": "payload verifier、publish aliases、`model-core/package.json`",
+      "dshMapping": "exact/required allowlist + clean consumer",
+      "acceptance": "manifest mutation 后 re-pack；所有 target 存在；runtime/type import；`tsc --noEmit`；exports/types/bin/license",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-REL-005",
+      "contract": "generated schema freshness",
+      "sources": "schema build/workflow",
+      "dshMapping": "PR/CI/release fail-on-diff",
+      "acceptance": "不自动修复/提交；独立 DSH `$id`",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    },
+    {
+      "id": "PAR-REL-006",
+      "contract": "Hook QA coverage 不能由错误 21-point 文档或默认 2-event Codex smoke 代表；stale background task file 不是 lifecycle truth",
+      "sources": "QA scripts/docs、`.agents/background-tasks.json`",
+      "dshMapping": "generated behavior coverage + residue scanner",
+      "acceptance": "Stop/SubagentStop/start-work/continuation explicit tests；runtime residue excluded",
+      "status": "verified-contract",
+      "conformanceProfile": "opencode-compat",
+      "scope": "in-scope"
+    }
+  ],
+  "corePackages": [
+    {
+      "name": "`utils`",
+      "disposition": "直接复用",
+      "acceptance": "无 harness import"
+    },
+    {
+      "name": "`model-core`",
+      "disposition": "复用算法，DSH model registry adapter",
+      "acceptance": "availability/capability/fallback fixtures"
+    },
+    {
+      "name": "`prompts-core`",
+      "disposition": "直接复用 loader/variant；新增 DSH variants",
+      "acceptance": "prompt manifest"
+    },
+    {
+      "name": "`boulder-state`",
+      "disposition": "直接复用",
+      "acceptance": "exact parser/storage/replay"
+    },
+    {
+      "name": "`delegate-core`",
+      "disposition": "复用 retry/model selection algorithm",
+      "acceptance": "DSH child lifecycle adapter"
+    },
+    {
+      "name": "`omo-config-core`",
+      "disposition": "复用 schema/loader，Host-only Node dependencies",
+      "acceptance": "DSH overlay validator"
+    },
+    {
+      "name": "`rules-engine`",
+      "disposition": "直接复用",
+      "acceptance": "security boundary"
+    },
+    {
+      "name": "`agents-md-core`",
+      "disposition": "复用匹配，避免 DSH native duplicate",
+      "acceptance": "nested fixture"
+    },
+    {
+      "name": "`comment-checker-core`",
+      "disposition": "直接复用",
+      "acceptance": "write/edit/apply paths"
+    },
+    {
+      "name": "`hashline-core`",
+      "disposition": "直接复用",
+      "acceptance": "stale validation"
+    },
+    {
+      "name": "`memory-core`",
+      "disposition": "复用 domain，适配 storage/tools",
+      "acceptance": "scope/delete/locks"
+    },
+    {
+      "name": "`team-core`",
+      "disposition": "复用 domain，适配 child/worktree/tool",
+      "acceptance": "mailbox/task authority"
+    },
+    {
+      "name": "`skills-loader-core`",
+      "disposition": "复用 discovery/filter，适配 DSH Registry",
+      "acceptance": "precedence/invocation"
+    },
+    {
+      "name": "`mcp-client-core`",
+      "disposition": "仅保留 OMO Skill-MCP 语义；优先 DSH MCP",
+      "acceptance": "schema/lifecycle"
+    },
+    {
+      "name": "`lsp-core`",
+      "disposition": "算法复用或 DSH native equivalent",
+      "acceptance": "result differential"
+    },
+    {
+      "name": "`mcp-stdio-core`",
+      "disposition": "仅确有外部 stdio 需求时复用",
+      "acceptance": "cancellation/cleanup"
+    },
+    {
+      "name": "`tmux-core`",
+      "disposition": "Team/特殊 terminal 可选；优先 DSH Terminal",
+      "acceptance": "no duplicate PTY authority"
+    },
+    {
+      "name": "`claude-code-compat-core`",
+      "disposition": "按 config compatibility 需求",
+      "acceptance": "hook fixture"
+    },
+    {
+      "name": "`openclaw-core`",
+      "disposition": "复用 domain，Host adapter",
+      "acceptance": "network/credentials"
+    },
+    {
+      "name": "`telemetry-core`",
+      "disposition": "评估 reuse；必须符合 DSH privacy/settings",
+      "acceptance": "opt-out/redaction"
+    }
+  ],
+  "hooks": {
+    "configurable": [
+      {
+        "name": "todo-continuation-enforcer",
+        "dispositionCode": "A",
+        "dshComponent": "Continuation Driver"
+      },
+      {
+        "name": "session-notification",
+        "dispositionCode": "N/A",
+        "dshComponent": "Session projection/notification"
+      },
+      {
+        "name": "comment-checker",
+        "dispositionCode": "A",
+        "dshComponent": "Post Tool + Final Gate"
+      },
+      {
+        "name": "tool-output-truncator",
+        "dispositionCode": "N/A",
+        "dshComponent": "spill/result pruner + OMO policy"
+      },
+      {
+        "name": "question-label-truncator",
+        "dispositionCode": "A",
+        "dshComponent": "question adapter"
+      },
+      {
+        "name": "directory-agents-injector",
+        "dispositionCode": "N/A",
+        "dshComponent": "native AGENTS + core matcher"
+      },
+      {
+        "name": "directory-readme-injector",
+        "dispositionCode": "A",
+        "dshComponent": "context resolver"
+      },
+      {
+        "name": "empty-task-response-detector",
+        "dispositionCode": "A",
+        "dshComponent": "task validator"
+      },
+      {
+        "name": "think-mode",
+        "dispositionCode": "C/A",
+        "dshComponent": "prompt/model variant"
+      },
+      {
+        "name": "model-fallback",
+        "dispositionCode": "A",
+        "dshComponent": "model router"
+      },
+      {
+        "name": "anthropic-context-window-limit-recovery",
+        "dispositionCode": "C",
+        "dshComponent": "provider-specific recovery"
+      },
+      {
+        "name": "preemptive-compaction",
+        "dispositionCode": "N/A",
+        "dshComponent": "DSH compaction policy"
+      },
+      {
+        "name": "rules-injector",
+        "dispositionCode": "A",
+        "dshComponent": "rules context"
+      },
+      {
+        "name": "background-notification",
+        "dispositionCode": "N/A",
+        "dshComponent": "Job/subagent settlement"
+      },
+      {
+        "name": "auto-update-checker",
+        "dispositionCode": "I",
+        "dshComponent": "package update service"
+      },
+      {
+        "name": "codegraph-bootstrap",
+        "dispositionCode": "I",
+        "dshComponent": "optional integration"
+      },
+      {
+        "name": "ast-grep-sg-provision",
+        "dispositionCode": "I",
+        "dshComponent": "tool provisioning"
+      },
+      {
+        "name": "startup-toast",
+        "dispositionCode": "I",
+        "dshComponent": "nested update UI toggle"
+      },
+      {
+        "name": "keyword-detector",
+        "dispositionCode": "A",
+        "dshComponent": "command/input transform"
+      },
+      {
+        "name": "agent-usage-reminder",
+        "dispositionCode": "A",
+        "dshComponent": "prompt/runtime reminder"
+      },
+      {
+        "name": "non-interactive-env",
+        "dispositionCode": "N/A",
+        "dshComponent": "shell adapter"
+      },
+      {
+        "name": "interactive-bash-session",
+        "dispositionCode": "N/A",
+        "dshComponent": "DSH Terminal"
+      },
+      {
+        "name": "tool-pair-validator",
+        "dispositionCode": "A",
+        "dshComponent": "tool post validator"
+      },
+      {
+        "name": "monitor-status-injector",
+        "dispositionCode": "A",
+        "dshComponent": "monitor context"
+      },
+      {
+        "name": "goal",
+        "dispositionCode": "N/A",
+        "dshComponent": "DSH Goal + OMO evaluator"
+      },
+      {
+        "name": "category-skill-reminder",
+        "dispositionCode": "A",
+        "dshComponent": "task router"
+      },
+      {
+        "name": "compaction-context-injector",
+        "dispositionCode": "A",
+        "dshComponent": "resume context"
+      },
+      {
+        "name": "compaction-todo-preserver",
+        "dispositionCode": "N/A",
+        "dshComponent": "log Todo + OMO snapshot"
+      },
+      {
+        "name": "claude-code-hooks",
+        "dispositionCode": "C",
+        "dshComponent": "Hook bridge"
+      },
+      {
+        "name": "auto-slash-command",
+        "dispositionCode": "N/A",
+        "dshComponent": "DSH Commands"
+      },
+      {
+        "name": "edit-error-recovery",
+        "dispositionCode": "A",
+        "dshComponent": "post tool recovery"
+      },
+      {
+        "name": "json-error-recovery",
+        "dispositionCode": "A",
+        "dshComponent": "tool argument recovery"
+      },
+      {
+        "name": "delegate-task-retry",
+        "dispositionCode": "A",
+        "dshComponent": "task runtime"
+      },
+      {
+        "name": "prometheus-md-only",
+        "dispositionCode": "A",
+        "dshComponent": "monotonic tool guard"
+      },
+      {
+        "name": "sisyphus-junior-notepad",
+        "dispositionCode": "A",
+        "dshComponent": "notepad_append"
+      },
+      {
+        "name": "team-tool-gating",
+        "dispositionCode": "A",
+        "dshComponent": "team policy"
+      },
+      {
+        "name": "no-sisyphus-gpt",
+        "dispositionCode": "C",
+        "dshComponent": "compatibility route guard"
+      },
+      {
+        "name": "no-hephaestus-non-gpt",
+        "dispositionCode": "C",
+        "dshComponent": "compatibility route guard"
+      },
+      {
+        "name": "hephaestus-agents-md-injector",
+        "dispositionCode": "A",
+        "dshComponent": "role context"
+      },
+      {
+        "name": "start-work",
+        "dispositionCode": "A",
+        "dshComponent": "command + role/Boulder"
+      },
+      {
+        "name": "atlas",
+        "dispositionCode": "A",
+        "dshComponent": "work/continuation/verification"
+      },
+      {
+        "name": "unstable-agent-babysitter",
+        "dispositionCode": "A",
+        "dshComponent": "task monitor"
+      },
+      {
+        "name": "task-resume-info",
+        "dispositionCode": "A",
+        "dshComponent": "child descriptor/context"
+      },
+      {
+        "name": "stop-continuation-guard",
+        "dispositionCode": "A",
+        "dshComponent": "durable stop"
+      },
+      {
+        "name": "tasks-todowrite-disabler",
+        "dispositionCode": "A",
+        "dshComponent": "role tool policy"
+      },
+      {
+        "name": "runtime-fallback",
+        "dispositionCode": "A",
+        "dshComponent": "request-error state machine"
+      },
+      {
+        "name": "write-existing-file-guard",
+        "dispositionCode": "N/A",
+        "dshComponent": "fs observation/tool guard"
+      },
+      {
+        "name": "notepad-write-guard",
+        "dispositionCode": "A",
+        "dshComponent": "append-only tool guard"
+      },
+      {
+        "name": "bash-file-read-guard",
+        "dispositionCode": "A",
+        "dshComponent": "shell policy"
+      },
+      {
+        "name": "hashline-read-enhancer",
+        "dispositionCode": "A",
+        "dshComponent": "hashline tool adapter"
+      },
+      {
+        "name": "read-image-resizer",
+        "dispositionCode": "A/N",
+        "dshComponent": "attachment/vision adapter"
+      },
+      {
+        "name": "todo-description-override",
+        "dispositionCode": "A",
+        "dshComponent": "OMO task semantics"
+      },
+      {
+        "name": "webfetch-redirect-guard",
+        "dispositionCode": "A",
+        "dshComponent": "web adapter"
+      },
+      {
+        "name": "fsync-skip-warning",
+        "dispositionCode": "C/A",
+        "dshComponent": "filesystem correctness warning"
+      },
+      {
+        "name": "plan-format-validator",
+        "dispositionCode": "A",
+        "dshComponent": "Plan Validator"
+      },
+      {
+        "name": "legacy-plugin-toast",
+        "dispositionCode": "C",
+        "dshComponent": "migration UI"
+      }
+    ],
+    "constructed": [],
+    "exceptions": [],
+    "extractionWarning": ""
+  },
+  "deviations": [
+    {
+      "id": "DEV-001",
+      "design": "Structured Plan-Compiler",
+      "why": "当前 OMO 不是此固定多模型 IR pipeline",
+      "defaultSwitch": "可选后逐步默认",
+      "evidence": "quality/eval 不低于 upstream"
+    },
+    {
+      "id": "DEV-002",
+      "design": "Atlas 禁止业务文件直写/统一机器证据 release gate",
+      "why": "current Atlas source 未硬禁所有 write/edit，部分 completion policy 可能是 advisory",
+      "defaultSwitch": "`atlas-compat` 与 `atlas-deny-business-files` 分开报告；hardening 不填 compat",
+      "evidence": "parity + hardening A/B + per-profile conformance"
+    },
+    {
+      "id": "DEV-003",
+      "design": "Junior maxDepth=0 strict mode",
+      "why": "current Junior 允许 research delegation",
+      "defaultSwitch": "compat allowlist 默认；strict opt-in",
+      "evidence": "task corpus"
+    },
+    {
+      "id": "DEV-004",
+      "design": "DSH AgentTeams backend",
+      "why": "OMO team-core 是原 authority",
+      "defaultSwitch": "optional backend，single authority",
+      "evidence": "team differential"
+    },
+    {
+      "id": "DEV-005",
+      "design": "DSH Goal 辅助",
+      "why": "OMO continuation 不等同通用 Goal driver",
+      "defaultSwitch": "optional internal support",
+      "evidence": "completion correctness"
+    }
+  ],
+  "counts": {
+    "capabilities": 60,
+    "corePackages": 20,
+    "hooksConfigurable": 56,
+    "deviations": 5
+  }
+}
