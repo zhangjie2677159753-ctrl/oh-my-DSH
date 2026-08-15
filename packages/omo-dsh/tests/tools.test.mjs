@@ -70,7 +70,9 @@ test("cooperative cancellation at checkpoint never claims success", () => {
     execute: () => { sideEffect = true; return "deployed" },
   })
   assert.equal(cancelled.status, "cancelled")
-  assert.equal(cancelled.sideEffectsPossible, undefined)
+  // cooperative cancellation cannot prove where the stop landed, so the
+  // outcome must flag that side effects may already exist.
+  assert.equal(cancelled.sideEffectsPossible, true)
 })
 
 test("checkpoint throws only when cancelled", () => {

@@ -95,13 +95,15 @@ export function validateToolPolicy(registryNames, policy) {
  * startup-validated. `deny` outranks `allow`; escalation is advisory.
  */
 export function resolveToolDecision(policy, role, tool) {
-  let decision = policy.default ?? "deny"
+  let allowed = false
+  let denied = false
   let escalate
   for (const rule of policy.rules ?? []) {
     const applies = rule.roles ? rule.roles.includes(role) : true
     if (!applies) continue
-    if ((rule.deny ?? []).includes(tool)) { decision = "deny"; escalate = rule.escalate ?? escalate }
-    else if ((rule.allow ?? []).includes(tool) && decision !== "deny") decision = "allow"
+    if ((rule.deny ?? []).includes(tool)) { denied = true; escalate = rule.escalate ?? escalate }
+    if ((rule.allow ?? []).includes(tool)) allowed = true
   }
+  const decision = denied ? "deny" : allowed ? "allow" : (policy.default ?? "deny")
   return { decision, escalate, role, tool }
 }
