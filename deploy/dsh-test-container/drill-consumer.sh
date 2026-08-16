@@ -6,6 +6,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+IMAGE_TAG="${DSH_IMAGE_TAG:-omo-dsh-test}"
 OUT="${DRILL_OUT:-/tmp/omo-drill}"
 mkdir -p "$OUT"
 
@@ -20,7 +21,7 @@ HOME_PATH="$(DSH_TEST_MODEL=openai/gpt-oss-120b "$ROOT/deploy/dsh-test-container
 # 3. Discovery in the clean consumer (no repo mount, no node_modules overlay).
 docker run --rm --network=host --user "$(id -u):$(id -g)" --entrypoint node \
   -e DSH_HOME=/tmp/dsh-home -v "$HOME_PATH:/tmp/dsh-home" \
-  omo-dsh-test --input-type=module -e '
+  "$IMAGE_TAG" --input-type=module -e '
 const { discoverPresets } = await import("file:///dsh/packages/preset/agent-presets/lib/index.js")
 const { join } = await import("node:path")
 const root = { path: join(process.env.DSH_HOME, ".agent-presets"), writable: true }
@@ -34,7 +35,7 @@ console.log("consumer discovery ok")
 # 4. Plugin module load in the consumer (exports + section + guard surface).
 docker run --rm --network=host --user "$(id -u):$(id -g)" --entrypoint node \
   -e DSH_HOME=/tmp/dsh-home -v "$HOME_PATH:/tmp/dsh-home" \
-  omo-dsh-test --input-type=module -e '
+  "$IMAGE_TAG" --input-type=module -e '
 const mod = await import("file:///dsh/omo-plugin/omo-role-plugin.mjs")
 const ok = typeof mod.apply === "function" && mod.name === "omo-role" && Array.isArray(mod.inject)
 console.log(JSON.stringify({ name: mod.name, inject: mod.inject, hasApply: typeof mod.apply === "function" }))
