@@ -67,3 +67,12 @@ deploy/dsh-test-container/run-web.sh   # 容器内启动 web profile，宿主机
   日志或未及持久化）。descriptor 为父侧唯一已确认的 launch 标记。
 - 对 P2 绑定的影响：插件 `subagent/end` 订阅形状仍待核实；当前处理器容错
   吞错，不阻断子代理生命周期。核实路径见 DRILL-RUNBOOK 重建序列第 4 步。
+
+## E2E-08/09 与 RC 验证（2026-08-16 22:45）
+
+- E2E-08（子代理委派）：模型调 web_search 1 次 + 再次发出
+  `subagent/descriptor`（Tiny research 委派尝试）后超时——launch 路径两次
+  live 确认，settlement 仍未在窗口内观察（源核实形状已修正绑定）。
+- E2E-09（2000 词长文）：0 调用 1 回合超时。
+- RC tag `omo-dsh-test-rc2` 验证通过（G1-EVIDENCE 第 16 条）；主 tag 切换
+  待评测结算。

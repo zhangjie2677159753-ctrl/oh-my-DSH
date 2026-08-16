@@ -84,6 +84,17 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
     - 消费者内插件模块加载：`{name:"omo-role",inject:["tools","systemPrompt"],hasApply:true}`；
     - 证据：`/tmp/omo-drill/consumer-discovery.jsonl` + `consumer-plugin.jsonl`。
 
+16. [x] **RC 镜像验证轮**（2026-08-16，`omo-dsh-test-rc2`，主 tag 全程未动）：
+    - 构建 113s（层缓存）；`DSH_IMAGE_TAG=rc2 drill-consumer.sh` 全绿
+      （discovery `{"id":"omo","broken":false}` + 插件加载含新导入
+      dynamic-sections/notification）；
+    - G6' 动态段探针（gpt-oss-120b）：`omo_role(prometheus, g6-rc)` →
+      role 事件 + `omo_role_status` 确认，**会话日志零插件错误**——动态段
+      随角色变更的 dispose+重注册路径无异常；
+    - 子代理 launch 标记二次 live 观察：E2E-08 场景日志再现
+      `subagent/descriptor`（label "Tiny research: latest Node.js LTS version"）。
+    - 主 tag 切换：待 17 场景评测结算后执行（runbook 重建序列）。
+
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
 - 双 Session + `omo/role` 事件 + flush 的生命周期（当前 preset 尚未挂接 role 事件插件，
