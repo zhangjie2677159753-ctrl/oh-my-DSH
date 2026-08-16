@@ -107,6 +107,13 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
     - 证据：/tmp/omo-probe10-*.jsonl（父/子双日志）。
     - 遗留：P2 的下一回合 pending 注入仍需 prompt-section 绑定（事件面已完整）。
 
+18. [x] **P2 通知注入绑定**（2026-08-16，rc6 镜像 + opencode-go/deepseek-v4-flash）：
+    - 单会话全序列：subagent 调用 → 父侧 `omo/notification`（post-execute）
+      → pending 推入 + `omo:notifications` 段刷新 → **下一回合**模型调用
+      `omo_role_status` 正常 → `turn/end` 注入一次后清空；全程零插件错误；
+    - 子侧审计通知同现（child id 完整）；
+    - 证据：/tmp/omo-probe11-out.txt + 父/子双日志（turn/end 事件可见）。
+
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
 - 双 Session + `omo/role` 事件 + flush 的生命周期（当前 preset 尚未挂接 role 事件插件，
