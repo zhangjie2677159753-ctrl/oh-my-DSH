@@ -105,6 +105,11 @@ check("E29/E31 drill scripts pass (migration + rollback state machines)", () => 
   execFileSync("bash", ["deploy/dsh-test-container/drill-rollback.sh"], { cwd: root, encoding: "utf8" })
 })
 
+check("G4 differential evidence layer passes (normalizers + comparison engine)", () => {
+  const out = execFileSync(process.execPath, ["--test", "tools/differential/evidence.test.mjs"], { cwd: root, encoding: "utf8" })
+  if (!/# fail 0/.test(out)) throw new Error("differential evidence tests failed")
+})
+
 if (failures.length > 0) {
   console.error(`G1 preflight FAILED with ${failures.length} failure(s)`)
   process.exit(1)
