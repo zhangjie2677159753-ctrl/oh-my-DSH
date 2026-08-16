@@ -38,7 +38,7 @@
   "digests": {
     "packages/omo-dsh/agent-presets/omo/G1-DEPLOYMENT-CHECKLIST.md": "05c67154586e22d0cc84e3e1986cb2eed00c46b1c4f1fd01ee60645af18b57c3",
     "packages/omo-dsh/agent-presets/omo/README.md": "d9480feb5105daea538dd362ee6afc4ca80afea52f8b8d8aa70bef3245f628cd",
-    "packages/omo-dsh/agent-presets/omo/agent.cordis.yml": "f2808f666a95ed9074c92ada4ffb90066b4d90a97f8343ebcfc7367658ab055d",
+    "packages/omo-dsh/agent-presets/omo/agent.cordis.yml": "6a336d46e6750d75315697051ff0c4358f25a07d8825e07415aa69adc98d22f6",
     "packages/omo-dsh/agent-presets/omo/omo-role-plugin.mjs": "e8ec3ab9db24de7a4c07b0b969d3aec7739f1af5daad8f2879c5180f73d12fad",
     "packages/omo-dsh/agent-presets/omo/preset.yml": "a5c2f74fc98008af42de4c0e91e8fe1c6f425f7fbd79867f70b78ce9181ee7fe",
     "packages/omo-dsh/src/atlas/work-policy.mjs": "40a5f8058ea8d5357425c8d7d4c49f8a12b993f92d75de0f77ca730bf7a73616",
@@ -70,7 +70,7 @@
     "packages/omo-dsh/src/context/rules.mjs": "acdafc6dcdaf7cc18fcb4bd590229caca1ca76e738a1ff33f2234ed6551967d9",
     "packages/omo-dsh/src/continuation/DSH-BINDING.md": "0527c3b04a9cfcee40911c0b8dcc325f104133539f89557f7e7f026bb6f19d78",
     "packages/omo-dsh/src/continuation/driver.mjs": "1b0e841a70ed11612abf2d552e70e42e4fff8386ec520ff8167482a14ad29d2b",
-    "packages/omo-dsh/src/dsh-plugin/omo-role-plugin.mjs": "bd140c423b1d058593d14df1b744884b4dcf63b4108172f9f8994ad1f626eeee",
+    "packages/omo-dsh/src/dsh-plugin/omo-role-plugin.mjs": "09b0522817710d998b56efc862179bf8d34c8efeae40f6a16d2e1f3d4d0b6f6e",
     "packages/omo-dsh/src/guards/adapters.mjs": "e8eca1d834977cad2bc01295b468aed5b625021b6cb19a58b9d514fc06bc0f1e",
     "packages/omo-dsh/src/guards/comment-checker.mjs": "78d37183922cf5b74eaa46368a124c7d373592f355e2e8d40c9d4e4f94fe24f2",
     "packages/omo-dsh/src/guards/files.mjs": "305ad5fe4794dd184db9fbe590e6942d19140ab75d1820a062f7041f439d4a2d",
