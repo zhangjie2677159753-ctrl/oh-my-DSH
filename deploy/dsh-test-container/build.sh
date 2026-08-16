@@ -55,6 +55,32 @@ cp "$ROOT/packages/omo-dsh/src/compat/tools.mjs" \
    "$ROOT/packages/omo-dsh/src/compat/session.mjs" \
    "$STAGE/omo-plugin/packages-omo-dsh/compat/"
 
+# TEST-IMAGE-ONLY integration (documented in G1-EVIDENCE.md): the stock
+# headless bundle composes no preset roster; its own comment says a deployment
+# that configures one must join it in the agent's setup. We patch the SNAPSHOT
+# (never the checkout) so headless sessions mount the `omo` preset the same
+# way the web session path does. Source shape must match the pinned SHA.
+node - "$STAGE/src/packages/bundle/headless/src/index.ts" <<'NODE'
+const fs = require('fs')
+const file = process.argv[2]
+let source = fs.readFileSync(file, 'utf8')
+const anchor = 'setup: (agentCtx) => {'
+if (!source.includes(anchor)) {
+  console.error('build.sh: headless bundle setup anchor missing; SHA drift?')
+  process.exit(1)
+}
+source = source.replace(
+  anchor,
+  `setup: async (agentCtx) => {
+      const presetMount = agentCtx.get('agentPresets') as { mount(ctx: unknown, id: string): Promise<unknown> } | undefined
+      if (presetMount !== undefined) {
+        await presetMount.mount(agentCtx, 'omo')
+      }`,
+)
+fs.writeFileSync(file, source)
+console.log('build.sh: headless bundle patched to mount omo preset in setup')
+NODE
+
 echo "Building image omo-dsh-test (proxy: 127.0.0.1:7890) ..."
 docker build \
   --network=host \

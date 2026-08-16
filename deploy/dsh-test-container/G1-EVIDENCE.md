@@ -38,6 +38,16 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
 10. [x] 终验复跑（2026-08-16）：镜像重建 → boot 200 → discovery healthy →
     插件注入面 `["tools","systemPrompt"]` → 守卫决策 `prometheusBash:false` →
     停止无残留。
+11. [x] 真实模型回合解锁（NVIDIA NIM，owner 授权 `--env-file` 注入，key 零落地）：
+    - 容器内 hand-declared `nvidia` 路由（api: openai-completions, baseURL NIM）
+      首次真实回合输出 `OK`；
+    - headless bundle 在镜像快照中接入 `agentPresets.mount(agentCtx, 'omo')`
+      （仅测试镜像；上游注释明确部署须在此处 join preset）；
+    - 会话日志证据：`omo_role_status` 出现在挂载会话的工具目录（kimi run ×4）；
+    - 挂载会话内工具管线实跑：`tool/call` + `tool/result` 各 1（llama-3.3-70b）；
+    - 模型端仍有缺口：NIM deepseek-v4-flash-0731 工具回合挂起、llama 误把
+      omo_role_status 当 skill——需换工具调用更强的模型（openai/gpt-oss-120b）
+      或调 prompt，下一轮继续。
 
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
