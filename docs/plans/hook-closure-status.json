@@ -1,0 +1,466 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-16T06:36:39.082Z",
+  "source": "docs/plans/hook-inventory.lock.json + generator tools/generate-hook-closure.mjs",
+  "total": 56,
+  "statusCounts": {
+    "contract-level": 27,
+    "pending-binding": 13,
+    "pending-fixture": 1,
+    "compat-only": 6,
+    "native-equivalent": 5,
+    "out-of-scope-batch-a": 3,
+    "nested-toggle": 1
+  },
+  "rows": [
+    {
+      "name": "todo-continuation-enforcer",
+      "disposition": {
+        "dshComponent": "continuation/driver.mjs",
+        "status": "contract-level",
+        "tests": "lifecycle-planning-continuation.test.mjs"
+      }
+    },
+    {
+      "name": "session-notification",
+      "disposition": {
+        "dshComponent": "host session/event projection",
+        "status": "pending-binding",
+        "tests": null
+      }
+    },
+    {
+      "name": "comment-checker",
+      "disposition": {
+        "dshComponent": "guards/files.mjs + comment rules (fixture pending)",
+        "status": "pending-fixture",
+        "tests": null
+      }
+    },
+    {
+      "name": "tool-output-truncator",
+      "disposition": {
+        "dshComponent": "host spill/result pruner",
+        "status": "pending-binding",
+        "tests": null
+      }
+    },
+    {
+      "name": "question-label-truncator",
+      "disposition": {
+        "dshComponent": "question adapter",
+        "status": "pending-binding",
+        "tests": null
+      }
+    },
+    {
+      "name": "directory-agents-injector",
+      "disposition": {
+        "dshComponent": "context/rules.mjs",
+        "status": "contract-level",
+        "tests": "context-guards-memory.test.mjs"
+      }
+    },
+    {
+      "name": "directory-readme-injector",
+      "disposition": {
+        "dshComponent": "context/rules.mjs",
+        "status": "pending-binding",
+        "tests": null
+      }
+    },
+    {
+      "name": "empty-task-response-detector",
+      "disposition": {
+        "dshComponent": "tasks/task.mjs + reconciler",
+        "status": "contract-level",
+        "tests": "task.test.mjs"
+      }
+    },
+    {
+      "name": "think-mode",
+      "disposition": {
+        "dshComponent": "model-binding promptFamily",
+        "status": "pending-binding",
+        "tests": null
+      }
+    },
+    {
+      "name": "model-fallback",
+      "disposition": {
+        "dshComponent": "compat/routing.mjs fallback machine",
+        "status": "contract-level",
+        "tests": "routing.test.mjs"
+      }
+    },
+    {
+      "name": "anthropic-context-window-limit-recovery",
+      "disposition": {
+        "dshComponent": "provider-specific",
+        "status": "compat-only",
+        "tests": null
+      }
+    },
+    {
+      "name": "preemptive-compaction",
+      "disposition": {
+        "dshComponent": "DSH compaction policy",
+        "status": "native-equivalent",
+        "tests": null
+      }
+    },
+    {
+      "name": "rules-injector",
+      "disposition": {
+        "dshComponent": "context/rules.mjs",
+        "status": "contract-level",
+        "tests": "context-guards-memory.test.mjs"
+      }
+    },
+    {
+      "name": "background-notification",
+      "disposition": {
+        "dshComponent": "Job/subagent settlement",
+        "status": "native-equivalent",
+        "tests": null
+      }
+    },
+    {
+      "name": "auto-update-checker",
+      "disposition": {
+        "dshComponent": "package update service",
+        "status": "out-of-scope-batch-a",
+        "tests": null
+      }
+    },
+    {
+      "name": "codegraph-bootstrap",
+      "disposition": {
+        "dshComponent": "optional integration",
+        "status": "out-of-scope-batch-a",
+        "tests": null
+      }
+    },
+    {
+      "name": "ast-grep-sg-provision",
+      "disposition": {
+        "dshComponent": "tool provisioning",
+        "status": "out-of-scope-batch-a",
+        "tests": null
+      }
+    },
+    {
+      "name": "startup-toast",
+      "disposition": {
+        "dshComponent": "nested auto-update toggle",
+        "status": "nested-toggle",
+        "tests": null
+      }
+    },
+    {
+      "name": "keyword-detector",
+      "disposition": {
+        "dshComponent": "command/input transform",
+        "status": "pending-binding",
+        "tests": null
+      }
+    },
+    {
+      "name": "agent-usage-reminder",
+      "disposition": {
+        "dshComponent": "prompt reminder",
+        "status": "pending-binding",
+        "tests": null
+      }
+    },
+    {
+      "name": "non-interactive-env",
+      "disposition": {
+        "dshComponent": "shell adapter",
+        "status": "native-equivalent",
+        "tests": null
+      }
+    },
+    {
+      "name": "interactive-bash-session",
+      "disposition": {
+        "dshComponent": "DSH Terminal",
+        "status": "native-equivalent",
+        "tests": null
+      }
+    },
+    {
+      "name": "tool-pair-validator",
+      "disposition": {
+        "dshComponent": "compat/tools.mjs post hooks",
+        "status": "contract-level",
+        "tests": "tools.test.mjs"
+      }
+    },
+    {
+      "name": "monitor-status-injector",
+      "disposition": {
+        "dshComponent": "monitor/policy.mjs projection",
+        "status": "contract-level",
+        "tests": "team-monitor-openclaw.test.mjs"
+      }
+    },
+    {
+      "name": "goal",
+      "disposition": {
+        "dshComponent": "compat/goals-todos.mjs + DSH goal",
+        "status": "contract-level",
+        "tests": "goals-todos.test.mjs"
+      }
+    },
+    {
+      "name": "category-skill-reminder",
+      "disposition": {
+        "dshComponent": "task router + skills registry",
+        "status": "pending-binding",
+        "tests": null
+      }
+    },
+    {
+      "name": "compaction-context-injector",
+      "disposition": {
+        "dshComponent": "compaction/resume-context.mjs",
+        "status": "contract-level",
+        "tests": "reconciler-resume.test.mjs"
+      }
+    },
+    {
+      "name": "compaction-todo-preserver",
+      "disposition": {
+        "dshComponent": "compaction/resume-context.mjs",
+        "status": "contract-level",
+        "tests": "reconciler-resume.test.mjs"
+      }
+    },
+    {
+      "name": "claude-code-hooks",
+      "disposition": {
+        "dshComponent": "hook bridge",
+        "status": "compat-only",
+        "tests": null
+      }
+    },
+    {
+      "name": "auto-slash-command",
+      "disposition": {
+        "dshComponent": "DSH Commands",
+        "status": "native-equivalent",
+        "tests": null
+      }
+    },
+    {
+      "name": "edit-error-recovery",
+      "disposition": {
+        "dshComponent": "guards/files.mjs recoverJson",
+        "status": "contract-level",
+        "tests": "context-guards-memory.test.mjs"
+      }
+    },
+    {
+      "name": "json-error-recovery",
+      "disposition": {
+        "dshComponent": "guards/files.mjs recoverJson",
+        "status": "contract-level",
+        "tests": "context-guards-memory.test.mjs"
+      }
+    },
+    {
+      "name": "delegate-task-retry",
+      "disposition": {
+        "dshComponent": "compat/routing.mjs",
+        "status": "contract-level",
+        "tests": "routing.test.mjs"
+      }
+    },
+    {
+      "name": "prometheus-md-only",
+      "disposition": {
+        "dshComponent": "roles/policy-registry.mjs fileGuard",
+        "status": "contract-level",
+        "tests": "roles.test.mjs"
+      }
+    },
+    {
+      "name": "sisyphus-junior-notepad",
+      "disposition": {
+        "dshComponent": "guards/files.mjs notepad policy",
+        "status": "contract-level",
+        "tests": "context-guards-memory.test.mjs"
+      }
+    },
+    {
+      "name": "team-tool-gating",
+      "disposition": {
+        "dshComponent": "team/policy.mjs",
+        "status": "contract-level",
+        "tests": "team-monitor-openclaw.test.mjs"
+      }
+    },
+    {
+      "name": "no-sisyphus-gpt",
+      "disposition": {
+        "dshComponent": "route guard",
+        "status": "compat-only",
+        "tests": null
+      }
+    },
+    {
+      "name": "no-hephaestus-non-gpt",
+      "disposition": {
+        "dshComponent": "route guard",
+        "status": "compat-only",
+        "tests": null
+      }
+    },
+    {
+      "name": "hephaestus-agents-md-injector",
+      "disposition": {
+        "dshComponent": "context/rules.mjs role scoping",
+        "status": "pending-binding",
+        "tests": null
+      }
+    },
+    {
+      "name": "start-work",
+      "disposition": {
+        "dshComponent": "work/start-work.mjs",
+        "status": "contract-level",
+        "tests": "start-work-atlas.test.mjs"
+      }
+    },
+    {
+      "name": "atlas",
+      "disposition": {
+        "dshComponent": "atlas/work-policy.mjs",
+        "status": "contract-level",
+        "tests": "start-work-atlas.test.mjs"
+      }
+    },
+    {
+      "name": "unstable-agent-babysitter",
+      "disposition": {
+        "dshComponent": "tasks/reconciler.mjs",
+        "status": "contract-level",
+        "tests": "reconciler-resume.test.mjs"
+      }
+    },
+    {
+      "name": "task-resume-info",
+      "disposition": {
+        "dshComponent": "compaction/resume-context.mjs",
+        "status": "contract-level",
+        "tests": "reconciler-resume.test.mjs"
+      }
+    },
+    {
+      "name": "stop-continuation-guard",
+      "disposition": {
+        "dshComponent": "continuation/driver.mjs stopRequested",
+        "status": "contract-level",
+        "tests": "lifecycle-planning-continuation.test.mjs"
+      }
+    },
+    {
+      "name": "tasks-todowrite-disabler",
+      "disposition": {
+        "dshComponent": "roles/policy-registry.mjs denyTodoTools",
+        "status": "contract-level",
+        "tests": "roles.test.mjs"
+      }
+    },
+    {
+      "name": "runtime-fallback",
+      "disposition": {
+        "dshComponent": "compat/routing.mjs",
+        "status": "contract-level",
+        "tests": "routing.test.mjs"
+      }
+    },
+    {
+      "name": "write-existing-file-guard",
+      "disposition": {
+        "dshComponent": "guards/files.mjs read-before-write",
+        "status": "contract-level",
+        "tests": "context-guards-memory.test.mjs"
+      }
+    },
+    {
+      "name": "notepad-write-guard",
+      "disposition": {
+        "dshComponent": "guards/files.mjs notepad policy",
+        "status": "contract-level",
+        "tests": "context-guards-memory.test.mjs"
+      }
+    },
+    {
+      "name": "bash-file-read-guard",
+      "disposition": {
+        "dshComponent": "shell policy",
+        "status": "pending-binding",
+        "tests": null
+      }
+    },
+    {
+      "name": "hashline-read-enhancer",
+      "disposition": {
+        "dshComponent": "guards/files.mjs checkHashline",
+        "status": "contract-level",
+        "tests": "context-guards-memory.test.mjs"
+      }
+    },
+    {
+      "name": "read-image-resizer",
+      "disposition": {
+        "dshComponent": "attachment/vision adapter",
+        "status": "pending-binding",
+        "tests": null
+      }
+    },
+    {
+      "name": "todo-description-override",
+      "disposition": {
+        "dshComponent": "task semantics",
+        "status": "pending-binding",
+        "tests": null
+      }
+    },
+    {
+      "name": "webfetch-redirect-guard",
+      "disposition": {
+        "dshComponent": "web adapter",
+        "status": "pending-binding",
+        "tests": null
+      }
+    },
+    {
+      "name": "fsync-skip-warning",
+      "disposition": {
+        "dshComponent": "filesystem correctness warning",
+        "status": "compat-only",
+        "tests": null
+      }
+    },
+    {
+      "name": "plan-format-validator",
+      "disposition": {
+        "dshComponent": "planning/plan-ir.mjs",
+        "status": "contract-level",
+        "tests": "plan-ir.test.mjs"
+      }
+    },
+    {
+      "name": "legacy-plugin-toast",
+      "disposition": {
+        "dshComponent": "migration UI",
+        "status": "compat-only",
+        "tests": null
+      }
+    }
+  ],
+  "note": "contract-level = pure module + tests; pending-binding = DSH runtime binding not started; unassigned must be resolved before E22 closes"
+}

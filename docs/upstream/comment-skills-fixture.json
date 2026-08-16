@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "omoSha": "038ed0cbbefe2b40677b63867aeea0d16bc303e0",
+  "generatedBy": "subagent_flash",
+  "commentChecker": {
+    "rules": [
+      {
+        "name": "apply_patch edit extraction",
+        "trigger": "tool.execute.after / PostToolUse where tool is apply_patch; checker extracts changed-file edits before/after so the binary can compare added vs existing code",
+        "behavior": "extractApplyPatchEdits reads file metadata from details.files / result.files / metadata.files (types  not delete), else parses the '*** Add/Update/Delete File:' + '*** Move to:' patch protocol with @@ context and +/− markers into CheckerEdit[] {filePath, before, after}. Add-file edits have before=''. Delete files are filtered out because they cannot introduce new comments.",
+        "source": "apply-patch-edits.ts:6-24; apply-patch-edits.ts:98-138"
+      },
+      {
+        "name": "write/edit/multiedit coverage",
+        "trigger": "PostToolUse after a successful write, edit, multiedit (or multi_edit); the tool must be edit-like",
+        "behavior": "extractCommentCheckRequests maps the tool to a CommentCheckRequest with tool_name Write/Edit/MultiEdit and a matching toolInput (content / old_string+new_string / edits[]). Non-edit tools return []. Tool failures (output text starts with 'error', contains 'error:', 'failed to', 'could not') are ignored so the checker never evaluates failed edits.",
+        "source": "../omo-codex/plugin/components/comment-checker/src/request-extractor.ts:5-15; request-extractor.ts:17-25"
+      },
+      {
+        "name": "report-only (no code mutation)",
+        "trigger": "checker decides hasComments=true (binary exits 2)",
+        "behavior": "The checker only reports: core runner returns CheckResult {hasComments, message}; opencode consumer appends the message to the tool's output string without touching the file, and the codex consumer returns a JSON {decision:'block', reason:...} so the MODEL fixes or explains the flagged comment. No CheckerEdit is ever applied back to disk by this pipeline.",
+        "source": "runner.ts:53-123; ../omo-opencode/src/hooks/comment-checker/cli-runner.ts:119-124; ../omo-codex/plugin/components/comment-checker/src/codex-hook.ts:73-79"
+      },
+      {
+        "name": "exit-code contract",
+        "trigger": "subprocess exits: 0 / 2 / other / timeout / missing binary",
+        "behavior": "exit 0 => clean EMPTY_RESULT {hasComments:false}. exit 2 => {hasComments:true, message:stderr} (the flagged-comments report). Any other exit code, spawning error, or timeout silently returns EMPTY_RESULT (no warning). Missing/unusable binary returns EMPTY_RESULT from the start.",
+        "source": "runner.ts:57-109; AGENTS.md:25-28; ../omo-codex/plugin/components/comment-checker/src/runner.ts:57-85"
+      },
+      {
+        "name": "net-new comment filter",
+        "trigger": "edit with oldString and newString (write/apply_patch caller path)",
+        "behavior": "Comment warnings are only emitted for edits that introduce NET-NEW comment syntax. hasNewCommentsOnly compares oldText/newText at line level; if the same comment already existed in oldString it is skipped (reduces false positives for in-place comment tweaks). Pure add-file content is treated as all-new by definition.",
+        "source": "../omo-opencode/src/hooks/comment-checker/cli-runner.ts:14-36; cli-runner.ts:102-106"
+      },
+      {
+        "name": "per-session dedup",
+        "trigger": "same session reports comments again",
+        "behavior": "At most one comment warning is emitted per session within a 30s dedup window, to prevent a deadloop where repeatedly re-introducing a comment re-warns each turn.",
+        "source": "../omo-opencode/src/hooks/comment-checker/cli-runner.ts:9-11; cli-runner.ts:108-115"
+      },
+      {
+        "name": "missing / unscopable binary is silent",
+        "trigger": "binary path null or non-existent; also remote HTTP skill sources",
+        "behavior": "Both editions emit no hook output when the @code-yeongyu/comment-checker binary cannot be resolved or is missing on the current platform, so agents keep working. Binary resolution prefers a cached path, then createRequire(package)/bin/<name>, then PATH lookup; opencode edition also lazily downloads it.",
+        "source": "runner.ts:29-51; ../omo-codex/plugin/components/comment-checker/src/runner.ts:87-117; ../omo-opencode/src/hooks/comment-checker/cli.ts:38-59"
+      },
+      {
+        "name": "bounded feedback / context protection",
+        "trigger": "checker produces a long warning, or transcript shows context pressure",
+        "behavior": "Codex hook caps hook feedback at 8000 chars normally, 1200 chars when the transcript contains context-compaction markers, truncating with a marker note to avoid overflowing the model context.",
+        "source": "../omo-codex/plugin/components/comment-checker/src/codex-hook.ts:32-42; codex-hook.ts:148-175"
+      }
+    ],
+    "autoFixesCode": false,
+    "notes": [
+      "comment-checker-core (packages/comment-checker-core/, src and tests ONLY) is a parser + subprocess runner: it parses apply_patch edits into CheckerEdit[] and pipes HookInput JSON to the external @code-yeongyu/comment-checker Go binary, then maps exit codes to CheckResult. It does NOT contain the pattern-level rules themselves (comment-sync check, banned comment patterns, TODO/assertion rules). Those live inside the external '@code-yeongyu/comment-checker' binary (github.com/code-yeongyu/go-claude-code-comment-checker), which is NOT in this source tree — so those specific rules were not extractable from the scoped directory and are not fabricated here.",
+      "The comment checker does NOT auto-fix or modify code comments; it only reports (appends/returns a warning) so the model corrects or explains it. autoFixesCode=false is grounded at runner.ts:53-123, cli-runner.ts:119-124, and codex-hook.ts:73-79.",
+      "Hashline association: comment-checker and hashline are UNRELATED modules. comment-checker-core and its consumers contain zero references to hashline; packages/hashline-core contains zero references to comment-checker. They coexist only as independent post-tool hooks in the same opencode pipeline (see omo-opencode/src/plugin/AGENTS.md:22). The AGENTS.md line lists 'truncation, comment-checker, hashline read tagging' as separate 'tool.execute.after' hooks.",
+      "The single test file in comment-checker-core (apply-patch-edits.test.ts, 29 lines) only validates legacy record semantics of getApplyPatchMetadataFiles accepting an array wrapper with a .files property.",
+      "resolveCommentCheckerBinary accepts a packageName override but defaults to '@code-yeongyu/comment-checker'; the actual binary name is platform-dependent (comment-checker.exe on win32 else comment-checker)."
+    ]
+  },
+  "skillsLoader": {
+    "facts": [
+      {
+        "fact": "Four-to-seven discovery scopes are enumerated by source locations and each LoadedSkill carries a 'scope'. Merger SCOPE_PRIORITY (highest win): opencode-project=6 > project=5 > opencode=4 > user=3 > config=2 > shared=1 = builtin=1.",
+        "source": "merger/scope-priority.ts:3-10; AGENTS.md(src/features/opencode-skill-loader/AGENTS.md):9-16"
+      },
+      {
+        "fact": "Same-named skill at a higher scope overrides lower; mergeSkills iterates all fileSystem skills and only replaces when the incoming skill's scope priority is strictly greater than the existing one.",
+        "source": "merger.ts:76-89; merger.test.ts:21-54"
+      },
+      {
+        "fact": "Project skill dirs are discovered by walking ancestors from the working directory up to the git worktree top: <.claude/skills> (scope 'project'), <.agents/skills> (scope 'project'), and <.opencode/skills> + <.opencode/skill> (scope 'opencode-project').",
+        "source": "shared/project-discovery-dirs.ts:110-135"
+      },
+      {
+        "fact": "User scopes: Claude user skills dir = getClaudeConfigDir()/skills with scope 'user'; agents global = ~/.agents/skills with scope 'user'; opencode global = getOpenCodeSkillDirs({binary:'opencode'}) with scope 'opencode'.",
+        "source": "loader.ts:20-24; loader.ts:62-66; loader.ts:149-155; loader.ts:181-184"
+      },
+      {
+        "fact": "Shared/built-in scope: shared skillsRootPath() loaded with scope 'shared'; the ~12 built-in skills (git-master, playwright, frontend, review-work, etc.) are created as scope 'builtin'.",
+        "source": "loader.ts:169-171; skill-discovery.ts:40-65"
+      },
+      {
+        "fact": "discoverAllSkills aggregate order: opencodeProject, opencodeGlobal, project(Claude), agentsProject, user(Claude), agentsGlobal, shared, then deduplicateSkillsByName keeps the FIRST occurrence — since scope priority dedup is applied by merger/mergeSkills in the runtime path, caller order plus explicit priority drives the effective winner.",
+        "source": "loader.ts:73-94; skill-deduplication.ts:3-12"
+      },
+      {
+        "fact": "Disable-list semantics: config `skills.disable` array, config entries with value false, and entries with `disable:true` are all collected (names lower-cased) into a disabled set and removed from the final skill map. A nested `disabled_skills` array is also honored (skill-disable-config.ts).",
+        "source": "merger.ts:16-36; merger.ts:114-120; skill-disable-config.ts:26-49"
+      },
+      {
+        "fact": "Enable-list semantics: if config `skills.enable` is non-empty, only skills whose name is in the enable set are retained (everything else deleted) — an allowlist that acts after disable handling.",
+        "source": "merger.ts:122-129"
+      },
+      {
+        "fact": "Config boolean entries: `entry: true` is a no-op marker that adds nothing by itself; `entry: false` deletes the skill and also deletes it even when a per-name isConfigEntryAllowed gate would skip it (delete runs even for disallowed names).",
+        "source": "merger.ts:58-73; merger.ts:91-112"
+      },
+      {
+        "fact": "Config object entries define skills inline via description/template/model/agent/subtask; `from:` loads an .md file inside the project root (rejected with a log if outside); `template:` without `from` is allowed; entries with neither produce null. All config entries are normalized to scope 'config'.",
+        "source": "merger/config-skill-entry-loader.ts:44-117; merger.ts:58-73"
+      },
+      {
+        "fact": "Category association: the skills loader does NOT assign skills to categories. 'category' appears only inside team-mode / task-related builtin-skill CONTENT (team-mode.ts, security-research SKILL.md) describing worker categories like quick/deep/ultrabrain, and skills are referenced from tasks via `load_skills=[...]`, not by a skill<->category rule in the loader. Project-skill-tool-references.test.ts asserts skills delegate via real tool names and do not fabricate a task category.",
+        "source": "../builtin-skills/skills/team-mode.ts:36-58; project-skill-tool-references.test.ts:26-50"
+      },
+      {
+        "fact": "Loading semantics: skills are discovered, parsed (YAML frontmatter + body), and rendered into CommandDefinition templates wrapped as <skill-instruction>...<user-request>$ARGUMENTS</user-request>. They are invoked EXPLICITLY — via getSkillByName/matchSkillByName lookup or slash-command/style loading (and referenced through load_skills in task calls) — they are NOT auto-injected into every model turn as always-on instructions; built-in skills may still be auto-exposed as skill commands.",
+        "source": "async-loader.ts:82-133; loader.ts:131-134; tools/skill/skill-matcher.ts:5-24; project-skill-tool-references.test.ts:26-50"
+      },
+      {
+        "fact": "Skill name conflict resolution on lookup: matchSkillByName first tries exact (case-insensitive) name; if exactly one skill has that short name after the last '/' it also matches that short name; `matchCommandByName` sorts by scope priority (project=4 > user=3 > opencode=2 > opencode-project=2 > shared/plugin/config/builtin=1) and returns the first exact name match.",
+        "source": "tools/skill/skill-matcher.ts:5-29; tools/skill/scope-priority.ts:1-10"
+      },
+      {
+        "fact": "Discovery depth/recursion: directory skills loaded from a dir tree (SKILL.md or <name>.md, max nested depth 2 in async-loader); config `sources` may be a path (optionally recursive up to MAX_RECURSIVE_DEPTH=10) or glob-filtered, or a single .md file; HTTP(s) source URLs are ignored (return empty).",
+        "source": "async-loader.ts:147-213; config-source-discovery.ts:61-96; config-source-discovery.ts:15-18"
+      },
+      {
+        "fact": "Provider-gated built-in skills: skills named agent-browser or playwright are only kept in the merged list when their name equals the selected browserProvider (default 'playwright'); otherwise discovered duplicates are filtered out and builtins for non-matching providers are skipped.",
+        "source": "skill-discovery.ts:67-82"
+      },
+      {
+        "fact": "A per-call result cache (keyed by directory+browserProvider+teamMode) is used for getAllSkills; the cache is bypassed whenever a non-empty disabledSkills set is passed to avoid stale disable results. Cached lists are stored even without disable filtering.",
+        "source": "skill-discovery.ts:27-38; skill-discovery.ts:85-94"
+      },
+      {
+        "fact": "opencode config can add skill sources via `skills.paths` and `skills.urls` arrays in .opencode/opencode.json(.c) and global config; paths/urls are collected with de-dup across matching config files.",
+        "source": "opencode-config-skills-reader.ts:16-63"
+      }
+    ],
+    "notes": [
+      "skills-loader-core (packages/skills-loader-core/, src and tests) is a harness-neutral skill DISCOVERY + MATCHING + MERGE layer; it does not itself read the file system for 'shipped/deployment' skills beyond the shared/builtin scopes, so the 'shipped' layer maps to the builtin ('builtin' scope) and shared ('shared' scope) sources here, both at priority 1 (lowest).",
+      "Two distinct SCOPE_PRIORITY tables exist: the merger uses builtin=1,shared=1,config=2,user=3,opencode=4,project=5,opencode-project=6 (merger/scope-priority.ts); the tools/skill matcher uses a slightly different table (project=4,user=3,opencode=2,opencode-project=2,shared=1,plugin=1,config=1,builtin=1). Do not mix them when reasoning about precedence; the merger table governs the runtime merged skill list, the matcher table governs /command lookup sorting.",
+      "Disable semantics use lower-cased alias matching, and a disabled/empty-name entry does not delete every matching alias of the same normalized name only (see isDisabledAlias — exact normalized compare, not partial).",
+      "About 'hashline' for the skills loader: no reference to hashline exists in skills-loader-core; hashline is an unrelated hash-anchored edit tool (packages/hashline-core), not part of skill discovery/loading.",
+      "Facts are grounded in src/*.ts files under packages/skills-loader-core and its tests; line numbers refer to relative paths within that package except where a ../omo-codex path prefix is present."
+    ]
+  },
+  "counts": {
+    "commentRules": 8,
+    "skillFacts": 17
+  },
+  "extractionNotes": [
+    "Task scope honored: comment-checker extracted from packages/comment-checker-core/ (src + tests) with consumers referenced where behavior (report-only, codex block decision) is defined outside the core package; skills-loader extracted from packages/skills-loader-core/ (src + tests).",
+    "autoFixesCode: The comment checker NEVER auto-modifies code comments; it only reports (appends warning / returns block decision) for the model to act on. Confirmed at comment-checker-core runner.ts:53-123, omo-opencode cli-runner.ts:119-124, and omo-codex codex-hook.ts:73-79.",
+    "Hashline: comment-checker and hashline are NOT associated. No cross-reference exists in either module's source. They only share the same tool.execute.after hook pipeline (see omo-opencode/src/plugin/AGENTS.md:22).",
+    "Skill discovery order (its own concrete scopes): opencode-project(6) > project(5) > opencode(4) > user(3) > config(2) > shared/builtin(1). The task's user/project/shipped phrasing maps to: user=user scope, project=project/opencode-project scopes, shipped=shared+builtin scopes (lowest priority).",
+    "The pattern-level comment rules that the question guessed at (comment-sync-after-edit, banned comment patterns, TODO/assertion rules) are NOT in the scoped comment-checker-core; they are implemented in the external '@code-yeongyu/comment-checker' Go binary which is not in this source tree. They were therefore recorded in notes and reported as not found rather than fabricated, per instructions.",
+    "All JSON field line sources were verified against the actual checked-out source (read tool), with ../omo-opencode and ../omo-codex prefixes used for consumer files outside the two scoped packages."
+  ]
+}
