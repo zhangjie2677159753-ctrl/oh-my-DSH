@@ -1,0 +1,312 @@
+{
+  "schemaVersion": 1,
+  "omoSha": "038ed0cbbefe2b40677b63867aeea0d16bc303e0",
+  "generatedBy": "subagent_flash",
+  "hooks": {
+    "session-notification": {
+      "found": true,
+      "facts": [
+        {
+          "fact": "触发：监听 session.idle / permission.ask|asked|updated|requested / tool.execute.before 中的 question/ask_user_question 工具、以及 session.created/message.updated/session.deleted 事件。session.idle 事件进入 idle 通知排程；permission 事件与思考类 question 工具立即发通知。",
+          "source": "session-notification.ts:101-175"
+        },
+        {
+          "fact": "默认常量：title=\"OpenCode\", message=\"Agent is ready for input\", questionMessage=\"Agent is asking a question\", permissionMessage=\"Agent needs permission to continue\", playSound=false, soundPath=\"\", idleConfirmationDelay=1500, skipIfIncompleteTodos=true, maxTrackedSessions=100, enforceMainSessionFilter=true。",
+          "source": "session-notification.ts:31-43"
+        },
+        {
+          "fact": "QUESTION_TOOLS = {question, ask_user_question, askuserquestion}；PERMISSION_EVENTS = {permission.ask, permission.asked, permission.updated, permission.requested}；PERMISSION_HINT_PATTERN = /\\b(permission|approve|approval|allow|deny|consent)\\b/i。question 工具文本命中 permission 提示则发 permissionMessage，否则发 questionMessage。",
+          "source": "session-notification.ts:74-76,158-159"
+        },
+        {
+          "fact": "行为：桌面端 OS 原生通知（darwin/linux/win32 分平台实现），可选播提示音（playSound && defaultSoundPath）。发送前经 scheduler 的 idle 确认延迟与 activityGracePeriodMs(=100) 过滤，避免发给仍有活动的会话。",
+          "source": "session-notification.ts:111-116,146-169; session-notification-scheduler.ts:27"
+        },
+        {
+          "fact": "过滤：subagent 会话（subagentSessions）不通知；enforceMainSessionFilter 为 true 时仅主会话（getMainSessionID）通知，其余跳过。",
+          "source": "session-notification.ts:87-96"
+        },
+        {
+          "fact": "行为：session.deleted 清理排程器中的会话；playSound 默认 false，仅当配置开启时在 permission/question 通知后播放默认音。若已启 skipIfIncompleteTodos 且有未完成 todo，则跳过 idle 通知。",
+          "source": "session-notification.ts:119,171-175; session-notification-scheduler.ts:119"
+        },
+        {
+          "fact": "默认启用：注册于 create-session-hooks，经 isHookEnabled('session-notification') 检查（默认启用，除非 config.disabled_hooks 列入）；另受外部通知插件检测影响——检测到外部 notifier 且未 force_enable 时跳过注册。",
+          "source": "plugin/hooks/create-session-hooks.ts:90-99"
+        }
+      ],
+      "constants": {
+        "title": "OpenCode",
+        "message": "Agent is ready for input",
+        "questionMessage": "Agent is asking a question",
+        "permissionMessage": "Agent needs permission to continue",
+        "playSound": false,
+        "idleConfirmationDelay": 1500,
+        "skipIfIncompleteTodos": true,
+        "maxTrackedSessions": 100,
+        "enforceMainSessionFilter": true,
+        "activityGracePeriodMs": 100,
+        "questionTools": ["question", "ask_user_question", "askuserquestion"]
+      }
+    },
+    "directory-readme-injector": {
+      "found": true,
+      "facts": [
+        {
+          "fact": "触发：tool.execute.after 且工具名为 read 时，对读取的文件路径从其所在目录向上查找并以递归方式注入父级 README.md 内容。",
+          "source": "directory-readme-injector/hook.ts:40-54"
+        },
+        {
+          "fact": "常量：README_FILENAME=\"README.md\"；存储目录 README_INJECTOR_STORAGE=join(OPENCODE_STORAGE,\"directory-readme\")。",
+          "source": "directory-readme-injector/constants.ts:1-7"
+        },
+        {
+          "fact": "行为：发现 README 后读文件、经动态截断器（truncator）截断，并追加 [Project README: <path>] 块；若被截断附 [Note: Content was truncated to save context window space...] 注释。按目录级去重缓存（sessionCaches + 存储），同一目录只注入一次。",
+          "source": "directory-readme-injector/injector.ts:46-73"
+        },
+        {
+          "fact": "行为：从 startDir 逐级向上到 rootDir 收集所有 README.md，返回逆序（根优先）；越出 rootDir 或到根即停。",
+          "source": "directory-readme-injector/finder.ts:12-36"
+        },
+        {
+          "fact": "行为：session.deleted / session.compacted 时清空该会话的注入缓存与被注入路径存储。",
+          "source": "directory-readme-injector/hook.ts:56-74"
+        },
+        {
+          "fact": "默认启用：经 isHookEnabled('directory-readme-injector') 检查（默认启用，除非 disabled_hooks 列入），注册于 create-tool-guard-hooks。",
+          "source": "plugin/hooks/create-tool-guard-hooks.ts:93-96"
+        }
+      ],
+      "constants": {
+        "readmeFilename": "README.md",
+        "storageDir": "OPENCODE_STORAGE/directory-readme"
+      }
+    },
+    "think-mode": {
+      "found": true,
+      "facts": [
+        {
+          "fact": "触发：chat.message 钩子；从用户文本提取 prompt 文本，若命中 think 关键词（英文 \\bultrathink\\b|\\bthink\\b 或多语言思考类词）则进入思考模式。代码块/行内代码先被剥离再检测。",
+          "source": "think-mode/detector.ts:1-49; think-mode/hook.ts:25-39"
+        },
+        {
+          "fact": "常量：英文模式关键词 /\\bultrathink\\b/i 与 /\\bthink\\b/i；多语言列表含 思考/考虑/考え/pensar/denken/думать/... 等约 40+ 词条；COMBINED_THINK_PATTERN 为英文+多语言联合正则（大小写不敏感）。",
+          "source": "think-mode/detector.ts:1-38"
+        },
+        {
+          "fact": "行为：检测到关键词后，若消息已有 string variant 或当前模型已是 high 变体则不动作；否则将 output.message.variant 设为 \"high\"（即高推理变体），记 state.requested=true/variantSet=true。",
+          "source": "think-mode/hook.ts:39-65"
+        },
+        {
+          "fact": "常量：HIGH_VARIANT_MAP 映射模型→其 -high 变体（Claude/Gemini/GPT-5/GPT-5.1/GPT-5.4/Antigravity 等）；ALREADY_HIGH 为这些 high 值的集合；base 以 -high 结尾视为已是 high 变体。",
+          "source": "think-mode/switcher.ts:45-100"
+        },
+        {
+          "fact": "行为：变体经 normalizeModelID 规范化并剥离 provider 前缀（vertex_ai/、openai/、aws/anthropic/ 等）后查表；找不到映射或已是 high 则返回 null 不切换。",
+          "source": "think-mode/switcher.ts:78-95"
+        },
+        {
+          "fact": "默认启用：经 isHookEnabled('think-mode') 检查（默认启用，除非 disabled_hooks 列入），注册于 create-session-hooks。",
+          "source": "plugin/hooks/create-session-hooks.ts:101-103"
+        }
+      ],
+      "constants": {
+        "englishPatterns": ["\\bultrathink\\b", "\\bthink\\b"],
+        "highVariant": "high",
+        "variantSuffix": "-high"
+      }
+    },
+    "keyword-detector": {
+      "found": true,
+      "facts": [
+        {
+          "fact": "触发：chat.message 钩子；从用户文本检测关键词（ultrawork/team/hyperplan/hyperplan-ultrawork 四类），命中则注入对应模式消息、显示 toast。系统指令、斜杠命令、synthetic/internal 文本、非 OMO agent 均跳过。",
+          "source": "keyword-detector/hook.ts:69-94,119-246; keyword-detector/detector.ts:44-71"
+        },
+        {
+          "fact": "常量（模式）：ultrawork /\\b(ultrawork|ulw)\\b/i；team /\\bteam[\\s_-]?mode\\b/i；hyperplan /\\bhyperplan\\b|(?<![\\w.])hpp\\b/i（hpp 负向后顾避免 .hpp 文件误触发）；hyperplan-ultrawork /\\b(?:hpp|hyperplan)\\s+(?:ulw|ultrawork)\\b|.../i。",
+          "source": "keyword-detector/constants.ts:14-53; keyword-detector/team/default.ts:10-12; keyword-detector/hyperplan/default.ts:20-22"
+        },
+        {
+          "fact": "行为：注入时在用户文本末尾追加 \"\\n\\n---\\n\\n<message>\"；先滤除组合中以 standalone 出现的关键词（suppressComboStandalones），滤除已注入过/已含在文本中的消息，对 planner agent 去掉 ultrawork/hyperplan 类关键词。",
+          "source": "keyword-detector/hook.ts:25-29,31-36,98-106,157-161,231-245"
+        },
+        {
+          "fact": "行为：默认模式超时（defaultMode.ultrawork）且未检测到关键词时，对主会话自动激活 ultrawwork 并弹 toast（Ultrawork Mode Activated）。检出关键词时各模式弹对应 toast（Ultrawork/Hyperplan/Hyperplan Ultrawork Mode Activated）。",
+          "source": "keyword-detector/hook.ts:119-141,163-229"
+        },
+        {
+          "fact": "行为：非主会话仅放行 ultrawork / hyperplan-ultrawork 类关键词；后台子代理会话（subagentSessions）跳过注入。",
+          "source": "keyword-detector/hook.ts:108-155"
+        },
+        {
+          "fact": "默认启用：经 isHookEnabled('keyword-detector') 检查（默认启用，除非 disabled_hooks 列入），注册于 create-transform-hooks；可被 keyword_detector.disabled_keywords / enabled_expansions 配置进一步裁剪。",
+          "source": "plugin/hooks/create-transform-hooks.ts:55-68"
+        }
+      ],
+      "constants": {
+        "patterns": {
+          "ultrawork": "\\b(ultrawork|ulw)\\b",
+          "team": "\\bteam[\\s_-]?mode\\b",
+          "hyperplan": "\\bhyperplan\\b|(?<![\\w.])hpp\\b",
+          "hyperplan-ultrawork": "\\b(?:hpp|hyperplan)\\s+(?:ulw|ultrawork)\\b|\\b(?:ulw|ultrawork)\\s+(?:hpp|hyperplan)\\b"
+        },
+        "toastDuration": 3000
+      }
+    },
+    "agent-usage-reminder": {
+      "found": true,
+      "facts": [
+        {
+          "fact": "触发：tool.execute.after；仅对 orchestrator agent（sisyphus/sisyphus-junior/atlas/hephaestus/prometheus）生效，子代理跳过；目标工具命中 TARGET_TOOLS 集合时追加提醒。",
+          "source": "agent-usage-reminder/hook.ts:36-49,80-91"
+        },
+        {
+          "fact": "常量：TARGET_TOOLS = {grep, safe_grep, glob, safe_glob, webfetch, context7_resolve-library-id, context7_query-docs, websearch_web_search_exa, context7_get-library-docs, grep_app_searchgithub}（全部小写匹配）；AGENT_TOOLS = {task, call_omo_agent}。",
+          "source": "agent-usage-reminder/constants.ts:9-26"
+        },
+        {
+          "fact": "常量：MAX_REMINDERS=3；REMINDER_MESSAGE 为一段建议改用 task(explore/librarian) 并行子代理的文案（含示例代码与 WHY/ALWAYS prefer 说明）。",
+          "source": "agent-usage-reminder/hook.ts:45; agent-usage-reminder/constants.ts:28-52"
+        },
+        {
+          "fact": "行为：若某个会话已用过 agent 工具（AGENT_TOOLS 命中）或提醒数 >= MAX_REMINDERS，则不再追加；否则把 REMINDER_MESSAGE 追加到工具输出，reminderCount++，状态持久化到 storage（JSON 文件，每会话一个）。",
+          "source": "agent-usage-reminder/hook.ts:93-112; agent-usage-reminder/storage.ts:16-36"
+        },
+        {
+          "fact": "行为：session.deleted 时 reset 该会话状态（清 sessionStates 与磁盘存储文件）。",
+          "source": "agent-usage-reminder/hook.ts:114-123"
+        },
+        {
+          "fact": "默认启用：经 isHookEnabled('agent-usage-reminder') 检查（默认启用，除非 disabled_hooks 列入），注册于 create-session-hooks。",
+          "source": "plugin/hooks/create-session-hooks.ts:154"
+        }
+      ],
+      "constants": {
+        "maxReminders": 3,
+        "orchestratorAgents": ["sisyphus", "sisyphus-junior", "atlas", "hephaestus", "prometheus"]
+      }
+    },
+    "category-skill-reminder": {
+      "found": true,
+      "facts": [
+        {
+          "fact": "触发：tool.execute.after 中目标 agent（sisyphus/sisyphus-junior/atlas 或名字含 sisyphus/atlas）连续 ≥3 次使用可委派工具且未用过委派工具、未显示过提醒时，排队一条提醒；同次对话后经 messages.transform 注入到最新用户文本前。",
+          "source": "category-skill-reminder/hook.ts:10-28,104-150"
+        },
+        {
+          "fact": "常量：TARGET_AGENTS = {sisyphus, sisyphus-junior, atlas}；DELEGATABLE_WORK_TOOLS = {edit, write, bash, read, grep, glob}；DELEGATION_TOOLS = {task, call_omo_agent}；提醒阈值 toolCallCount >= 3。",
+          "source": "category-skill-reminder/hook.ts:10-28,138-149"
+        },
+        {
+          "fact": "行为：提醒文案由 buildReminderMessage 生成：内置/自定义技能名列表（各最多列 8 条，超出显示 +N more），自定义技能优先（YOUR SKILLS PRIORITY），并给 task(category visual-engineering, load_skills=... ) 示例代码。",
+          "source": "category-skill-reminder/formatter.ts:11-37"
+        },
+        {
+          "fact": "行为：注入方式为在最新 user 消息的最后一个真实文本 part 之前插入 synthetic text part（id 前缀 prt_category_skill_reminder_），reminderShown=true 防止重复。使用委派工具把 delegationUsed=true 并取消待发提醒。",
+          "source": "category-skill-reminder/hook.ts:60-83,152-172"
+        },
+        {
+          "fact": "默认启用：经 isHookEnabled('category-skill-reminder') 检查（默认启用，除非 disabled_hooks 列入），注册于 create-skill-hooks，传 availableSkills 列表。",
+          "source": "plugin/hooks/create-skill-hooks.ts:34-37"
+        }
+      ],
+      "constants": {
+        "targetAgents": ["sisyphus", "sisyphus-junior", "atlas"],
+        "thresholdToolCalls": 3,
+        "skillNameListLimit": 8
+      }
+    },
+    "hephaestus-agents-md-injector": {
+      "found": true,
+      "facts": [
+        {
+          "fact": "触发：chat.message 钩子；仅对 hephaestus agent 生效（getAgentConfigKey(...) === 'hephaestus'），每个会话只注入一次（injectedSessions 集合去重）。",
+          "source": "hephaestus-agents-md-injector/hook.ts:62-69,92"
+        },
+        {
+          "fact": "行为：从 ctx.directory 起向上用 findAgentsMdUp 查找 AGENTS.md（含根目录 skipRoot=false），读取全部内容、经动态截断器截断，用 formatAgentsMdContextBlock 组装后前置拼接到首个真实用户文本 part 前（\"<blocks>\\n\\n---\\n\\n<original>\"）。",
+          "source": "hephaestus-agents-md-injector/hook.ts:72-92"
+        },
+        {
+          "fact": "行为：session.deleted / session.compacted 时清除会话注入标记与 agentsMd cache。",
+          "source": "hephaestus-agents-md-injector/hook.ts:95-107"
+        },
+        {
+          "fact": "默认启用：经 isHookEnabled('hephaestus-agents-md-injector') 检查（默认启用，除非 disabled_hooks 列入），注册于 create-session-hooks。",
+          "source": "plugin/hooks/create-session-hooks.ts:209"
+        }
+      ],
+      "constants": {
+        "targetAgent": "hephaestus",
+        "skipRoot": false
+      }
+    },
+    "bash-file-read-guard": {
+      "found": true,
+      "facts": [
+        {
+          "fact": "触发：tool.execute.before 且工具为 bash、命令为简单文件读取类（cat/head/tail，单参数、无管道/重定向/分号）时，在 output.message 写入警告文案。",
+          "source": "bash-file-read-guard.ts:17-42"
+        },
+        {
+          "fact": "常量：WARNING_MESSAGE = \"Prefer the Read tool over `cat`/`head`/`tail` for reading file contents. The Read tool provides line numbers and hash anchors for precise editing.\"。",
+          "source": "bash-file-read-guard.ts:5"
+        },
+        {
+          "fact": "常量：FILE_READ_PATTERNS 三条正则，分别匹配 cat/head/tail 的简单单文件读取命令（允许 head/tail 带 -n N 选项，负向先行排除以 - 开头的参数）。",
+          "source": "bash-file-read-guard.ts:7-11"
+        },
+        {
+          "fact": "行为：命中时 output.message = WARNING_MESSAGE（不改命令本身、不拒绝），并记日志 [bash-file-read-guard] warned ...。",
+          "source": "bash-file-read-guard.ts:36-41"
+        },
+        {
+          "fact": "默认启用：经 isHookEnabled('bash-file-read-guard') 检查（默认启用，除非 disabled_hooks 列入），注册于 create-tool-guard-hooks。",
+          "source": "plugin/hooks/create-tool-guard-hooks.ts:120-122"
+        }
+      ],
+      "constants": {
+        "warningMessage": "Prefer the Read tool over `cat`/`head`/`tail` for reading file contents. The Read tool provides line numbers and hash anchors for precise editing."
+      }
+    },
+    "todo-description-override": {
+      "found": true,
+      "facts": [
+        {
+          "fact": "触发：tool.definition 钩子，仅当 input.toolID === 'todowrite' 时改写 output.description 为 TODOWRITE_DESCRIPTION。",
+          "source": "todo-description-override/hook.ts:3-13"
+        },
+        {
+          "fact": "常量：TODOWRITE_DESCRIPTION 讲解 OpenCode todowrite schema 契约（content/status/priority；priority 为字符串 high/medium/low，禁止数字或 P0/P1/P2 标签），并强制要求每个 todo 标题编码 WHERE/WHY/HOW/EXPECTED RESULT 四要素，格式 \"[WHERE] [HOW] to [WHY] - expect [RESULT]\"。",
+          "source": "todo-description-override/description.ts:1-39"
+        },
+        {
+          "fact": "常量：粒度规则——每个 todo 必须是 1-3 次工具调用可完成的原子动作；一次只能有一个 in_progress；单步琐碎任务可跳过此工具。",
+          "source": "todo-description-override/description.ts:29-39"
+        },
+        {
+          "fact": "行为：仅覆盖描述文案（description），不改 parameters；用于让模型按上述格式编写 todo。",
+          "source": "todo-description-override/hook.ts:5-12"
+        },
+        {
+          "fact": "默认启用：经 isHookEnabled('todo-description-override') 检查（默认启用，除非 disabled_hooks 列入），注册于 create-tool-guard-hooks。",
+          "source": "plugin/hooks/create-tool-guard-hooks.ts:134-137"
+        }
+      ],
+      "constants": {}
+    }
+  },
+  "counts": {
+    "facts": 50
+  },
+  "extractionNotes": [
+    "所有 9 个 hook 均在 hooks/ 目录下找到（目录或同名文件），found 全部为 true。",
+    "默认启用状态统一判断：全部 9 个 hook 的注册均经 isHookEnabled(<name>) 守卫（= !pluginConfig.disabled_hooks?.has(name)），故除被列入 config.disabled_hooks 外全部默认启用；session-notification 另受外部通知插件检测/notification.force_enable 影响。判断依据 create-plugin-module.ts:280-282 与各 create-*-hooks.ts 注册点。",
+    "session-notification 的 QUESTION_TOOLS/PERMISSION_EVENTS 等常量来自源码 session-notification.ts:74-76；idle 时长/idleConfirmationDelay=1500、activityGracePeriodMs=100 默认值来自 config 默认与 scheduler.ts:27。",
+    "关键字列表（think-mode 的多语言词、keyword-detector 的模式、agent-usage-reminder 的 TARGET_TOOLS）均逐字取自 source 文件；未在固定文件位置的常量（如 toast 文案、REMINDER_MESSAGE、TODOWRITE_DESCRIPTION）因长度/跨库引用仅记录关键结论与关键子串。",
+    "hephaestus-agents-md-injector 的代理商号常量仅 'hephaestus' 一处，为字符串比较，记录于 constants.targetAgent。",
+    "agent-usage-reminder 的 orchestrator 集合、MAX_REMINDERS、TARGET_TOOLS/AGENT_TOOLS 均有精确行号（hook.ts:37-45、constants.ts:9-26）。",
+    "category-skill-reminder 的阈值 toolCallCount>=3、技能名列表截断 8 来自 hook.ts:138-149 与 formatter.ts:15-16。"
+  ]
+}
