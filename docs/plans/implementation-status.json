@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-16T12:44:30.719Z",
+  "generatedAt": "2026-08-16T13:01:43.523Z",
   "sourceOfTruth": [
     "docs/plans/task-dag.json",
     "packages/omo-dsh/tests/**",
@@ -145,13 +145,16 @@
     "liveGuardDeny": true
   },
   "openBlockers": [
-    "R16: DSH persistence restore refuses unknown non-ignorable session events"
+    "R16: DSH persistence restore refuses unknown non-ignorable session events (upstream registration surface P1; Boulder mirror reconciliation mitigation implemented)",
+    "G4: OMO-side differential replay needs a runnable fixed-SHA OpenCode environment",
+    "Eval throughput: gpt-oss-120b on NIM ~5-8 min/turn; scenarios time out at 1500s with 2-4 tool calls (recorded in deploy README)"
   ],
   "nextByDag": [
-    "G1 session-level lifecycle (credentials)",
+    "E28 model eval completion + summary rebuild + score report (running, ~5h)",
+    "run-eval.sh race fix application (patch prepared; apply after current run settles)",
+    "E22 live checklist (P1-P5) in container (after eval; image rebuild for plugin-side items)",
     "E04/E09/E14/E17 DSH runtime bindings (specs written)",
-    "E28 model eval execution (credentials)",
-    "E29-E31 live migration/release drills",
-    "E22 native-equivalent equivalence proofs"
+    "E29-E31 live drills: container resource checks (R5) + active-child migration (M5)",
+    "G4 differential black-box replay (blocked on OMO OpenCode runnable env)"
   ]
 }
