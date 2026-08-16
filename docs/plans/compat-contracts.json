@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "sourceDocument": "docs/plans/ACCEPTANCE-AND-EVALUATION.md section 4",
   "generatedBy": "local-node-extractor",
-  "generatedAt": "2026-08-16T14:00:45.565Z",
+  "generatedAt": "2026-08-16T14:02:29.949Z",
   "total": 35,
   "items": [
     {
@@ -65,8 +65,8 @@
       "id": "CT-09",
       "text": "inject vs steer vs followup。",
       "tests": [],
-      "status": "not-started",
-      "evidence": "DSH runtime behavior: inject vs steer vs followup — container verification pending"
+      "status": "contract-implemented",
+      "evidence": "compat/inbox.mjs: followup/steer/inject/send-wake state machine mirroring core/agent/src/runtime-types.ts; tests/inbox.test.mjs 6 tests (sole-owner turn, steer wake+consume, inject never-wakes, rejected-step park, cancel keepInbox, wake latch)"
     },
     {
       "id": "CT-10",

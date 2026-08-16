@@ -55,6 +55,7 @@
     "packages/omo-dsh/src/compat/README.md": "2219c6de3fc79d44c0f543ab7bc3b5300d4cfd21bd6f67ae7ff727e84d6cde51",
     "packages/omo-dsh/src/compat/dsh-api.mjs": "f7918b04e80d0667f1cbb81de1e5151433c96073072eb7b7023e324b419eba58",
     "packages/omo-dsh/src/compat/goals-todos.mjs": "70ed3d41e03bc02e8bb223b4a5de5007e77b1d6bbaebe457a6667affe11e2d75",
+    "packages/omo-dsh/src/compat/inbox.mjs": "45cb841f24b6ee31141605f35e7c0e4727c6ee533cd879b7ec2f93cd00a94db3",
     "packages/omo-dsh/src/compat/persistence.mjs": "a6047a6a847335a2732ed28c7071f6e7e741b25893cc3be2e7f45971fb58c056",
     "packages/omo-dsh/src/compat/projection.mjs": "ad9645ff1d9abc00439fd486b93c7d392e9d195cd1f1e587d304c293f72ba028",
     "packages/omo-dsh/src/compat/prompt.mjs": "5bd4fa70f4f42a25bfca162b66f01c4a39f6638aa0250d1f678f343bc7459a69",
