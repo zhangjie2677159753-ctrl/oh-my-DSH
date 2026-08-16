@@ -56,7 +56,7 @@
 - [x] 推送规划基线与 `plan-v1-omo-038ed0c-dsh-47f9438` 标签；GitHub 默认分支改为 `main`。
 - [x] Batch A 治理产物：upstream locks、`parity.json`、包分类、`hook-inventory.lock.json`、compat 合同 seed。
 - [x] OMO-0102 配置 Schema 校验器 + OMO-0103 Tool Schema Linter（19 项 `node --test` 全部通过）。
-- [x] compat 纯逻辑层与 Phase 2-8 策略模块：**66 个源模块、350 项 `node --test` 全部通过**（session/prompt/tools/routing/subagents/goals-todos/persistence/projection、角色 Runtime、task 控制面/编排、session 生命周期、agent inbox、Boulder/Planning/Continuation/Verification/Children/Context/Guards/Skills/Memory/Team/Monitor/OpenClaw/迁移/回滚）。
+- [x] compat 纯逻辑层与 Phase 2-8 策略模块：**62 个源模块、350 项 `node --test` 全部通过**（session/prompt/tools/routing/subagents/goals-todos/persistence/projection、角色 Runtime、task 控制面/编排、session 生命周期、agent inbox、Boulder/Planning/Continuation/Verification/Children/Context/Guards/Skills/Memory/Team/Monitor/OpenClaw/迁移/回滚）。
 - [x] 权限层按运行时真源纠偏：`tool-config-handler.ts` config-build 层覆盖 agent 源 map（六子代理 task:deny、Prometheus bash:deny、Junior 走 call_omo_agent legacy path 等）；fixture 入库。
 - [x] DSH 受控容器验证：镜像按固定 SHA 构建，web boot 200、preset discovery healthy、`omo_role` 工具 + 守卫瀑布 + `omo:identity` 身份段容器内加载成功；**真实模型会话 live 证据**：角色切换 + prometheus bash-deny 拒执（`deploy/dsh-test-container/G1-EVIDENCE.md` 第 12/13 条）。
 - [x] Hook 闭包：56 项 configurable 全部有处置（41 contract-level / 5 native / 6 compat-only / 3 out-of-scope / 1 nested，pending=0）；五项 native-equivalent 等价证明主体 + 5 个 compat 补丁模块已落（`docs/plans/NATIVE-EQUIVALENCE-PROOFS.md`）。
