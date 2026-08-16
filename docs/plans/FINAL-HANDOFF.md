@@ -19,7 +19,7 @@
 | 门 | preflight 10 项一键门（含 E30 载荷 digest 门、E29/E31 演练） | `node tools/g1-preflight.mjs` |
 | DSH 集成 | OMO preset + `omo_role`/`omo_role_status` + 守卫瀑布 + 身份段 + 动态段构建器（内容层） | `deploy/dsh-test-container/` |
 | 容器证据 | boot 200、discovery healthy、session 级 mount、**真实模型角色切换 + prometheus bash-deny 拒执**、零残留 | `G1-EVIDENCE.md` 1-13 条 |
-| 评测工程 | 17 场景执行中（NIM gpt-oss-120b）；机器证据解析（含 session-log 转录回退、重复调用计量）；summary 确定性重建；评分报告 + 机器硬门（6/9） | `run-eval.sh` / `rebuild-summary.mjs` / `score-eval.mjs` / `tools/check-hard-gates.mjs` |
+| 评测工程 | **双模型族**：opencode-go/deepseek-v4-flash 17 场景全完成（273 调用/211 回合/3 角色切换/6 硬门 PASS）；NIM gpt-oss-120b 收尾中；机器证据解析（session-log 转录回退、重复调用计量）；summary 确定性重建；评分报告 + 机器硬门（6/9） | `run-eval.sh` / `run-eval-opencode.sh` / `rebuild-summary.mjs` / `score-eval.mjs` / `tools/check-hard-gates.mjs` |
 | E22 | 五项 native-equivalent 等价证明 + 5 compat 补丁模块 + 上游 bug 登记（§5.9） | `NATIVE-EQUIVALENCE-PROOFS.md` |
 | G10 | memory/team/monitor/openclaw 四份宿主绑定规格 | 各 `DSH-BINDING.md` |
 
