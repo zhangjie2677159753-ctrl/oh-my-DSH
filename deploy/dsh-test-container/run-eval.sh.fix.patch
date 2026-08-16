@@ -1,0 +1,42 @@
+# run-eval.sh summary 写入竞态修复（apply-later patch）
+
+**背景**：当前 `run-eval.sh` 在启动时 `: > "$summary"` + `echo '['`，逐场景
+append 行，结尾 `echo ']'`。两个并发调用（bash-35 smoke + bash-36 full）共享
+`/tmp/omo-eval` 时互相截断/交错，summary.json 成为非法 JSON
+（2026-08-16 已发生）。本轮 eval（bash-36）仍在运行——**bash 边读边执行脚本，
+运行中禁止修改 `run-eval.sh`**；本 patch 在 bash-36 结算后应用。
+
+**修复方案**：每场景写独立 `$dir/row.json`，summary 由
+`rebuild-summary.mjs`（已就绪并测过：逐目录重解析 + 逐行抢救 seconds）
+在全部场景结束后确定性生成；并发运行不再共享可变数组文件。
+
+## Patch（结算后手工应用）
+
+1. 删除启动处截断块：
+   ```bash
+   : > "$summary"
+   echo '[' > "$summary"
+   first=1
+   ```
+2. `run_scenario` 末尾追加：
+   ```bash
+   printf '%s' "$row" > "$dir/row.json"
+   ```
+3. 主循环替换为：
+   ```bash
+   for id in $ids; do
+     prompt=$(node -e "…(不变)…")
+     echo "== $id =="
+     run_scenario "$id" "$prompt" >/dev/null
+   done
+   node "$ROOT/deploy/dsh-test-container/rebuild-summary.mjs" "$EVAL_OUT" "$summary"
+   echo "summary: $summary"
+   ```
+4. 保留 `parse-evidence.mjs` 调用不变（`run_scenario` 内部仍即时打印行，
+   便于直播观察；行文件是重建的唯一权威）。
+
+**验证**：并发跑两个不同 `START_ID` 的调用后，
+`node rebuild-summary.mjs /tmp/omo-eval` 输出行数 = 全部场景数、
+JSON 合法、seconds 无 0（除非真实 0）。
+
+**状态**：待 bash-36 结算后应用（见 `DRILL-RUNBOOK.md` 证据纪律）。
