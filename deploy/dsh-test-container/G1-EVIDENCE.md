@@ -58,6 +58,14 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
     - bash guard deny 的 live 观察仍差一步（gpt-oss 在 role call 后 stream 超时）；
     - 评测 harness 就绪（`run-eval.sh`/`parse-evidence.mjs`，逐场景 fresh session +
       机器证据 + transcript，summary 入库、raw 证据在 /tmp）。
+13. [x] **bash-deny live 观察补全**（2026-08-16，openai/gpt-oss-120b，独立 guard 探针）：
+    - 同一会话先 `tool/call: omo_role`（role=prometheus）→ `omo/role` 事件
+      `{role:"prometheus",revision:1,changedBy:"user",reason:"g1"}`；
+    - 随后 `tool/call: bash`（command `echo hi`）→ `tool/result`
+      `isError:true`，文本 `Error: omo role prometheus denies bash`——守卫**拒执**
+      而非静默通过，且未产生任何 shell 执行；
+    - 证据文件：`/tmp/omo-guard2.jsonl`（tool/call 与 tool/result 事件逐条）；
+      parity.json `PAR-ROLE-001.liveEvidence` 已回填。
 
 ## 仍未执行（需要真实模型会话，属后续部署门）
 

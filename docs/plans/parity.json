@@ -68,7 +68,16 @@
       "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
       "scope": "in-scope",
-      "implementationNote": "pure logic + node --test integration; DSH runtime binding still pending"
+      "implementationNote": "pure logic + node --test integration; DSH runtime binding still pending",
+      "liveEvidence": {
+        "at": "2026-08-16T12:24:34.961Z",
+        "facts": [
+          "live headless session (test image, NIM openai/gpt-oss-120b) called omo_role tool",
+          "omo/role event appended in-session: {role:prometheus, revision:1, changedBy:user, reason:g1}",
+          "tool/result confirmed role switch: \"OMO role: prometheus (revision 1)\"",
+          "pre-execute guard denied bash under prometheus: tool/result isError:true, text \"Error: omo role prometheus denies bash\" (no shell execution)"
+        ]
+      }
     },
     {
       "id": "PAR-ROLE-002",

@@ -1,38 +1,136 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-16T01:40:00+08:00",
-  "sourceOfTruth": ["docs/plans/task-dag.json", "packages/omo-dsh/tests/**", "docs/plans/parity.json", "docs/plans/hook-closure-status.json"],
+  "generatedAt": "2026-08-16T12:24:43.811Z",
+  "sourceOfTruth": [
+    "docs/plans/task-dag.json",
+    "packages/omo-dsh/tests/**",
+    "docs/plans/parity.json",
+    "docs/plans/hook-closure-status.json"
+  ],
   "modules": {
-    "compat": ["dsh-api", "session", "prompt", "tools", "routing", "subagents", "goals-todos", "persistence", "projection"],
-    "roles": ["policy-registry", "controller", "router", "commands", "model-binding", "lifecycle", "manifests", "guard-decision"],
-    "tasks": ["task", "concurrency", "reconciler", "spawn-request"],
-    "planning": ["pipeline", "plan-ir"],
-    "boulder": ["plan-checklist", "state", "repository"],
-    "continuation": ["driver"],
-    "verification": ["evidence"],
-    "work": ["start-work"],
-    "atlas": ["work-policy"],
-    "children": ["registry", "dsh-binding"],
-    "prompts": ["eval-plan", "eval-runner"],
-    "compaction": ["resume-context"],
-    "context": ["rules"],
-    "guards": ["files", "comment-checker", "adapters", "reminders"],
-    "skills": ["policy"],
-    "memory": ["policy"],
-    "team": ["policy"],
-    "monitor": ["policy"],
-    "openclaw": ["policy"],
-    "migration": ["config-mapper", "state-migrator"],
-    "release": ["rollback"],
-    "dsh-plugin": ["omo-role-plugin"]
+    "compat": [
+      "dsh-api",
+      "session",
+      "prompt",
+      "tools",
+      "routing",
+      "subagents",
+      "goals-todos",
+      "persistence",
+      "projection"
+    ],
+    "roles": [
+      "policy-registry",
+      "controller",
+      "router",
+      "commands",
+      "model-binding",
+      "lifecycle",
+      "manifests",
+      "guard-decision"
+    ],
+    "tasks": [
+      "task",
+      "concurrency",
+      "reconciler",
+      "spawn-request"
+    ],
+    "planning": [
+      "pipeline",
+      "plan-ir"
+    ],
+    "boulder": [
+      "plan-checklist",
+      "state",
+      "repository"
+    ],
+    "continuation": [
+      "driver"
+    ],
+    "verification": [
+      "evidence"
+    ],
+    "work": [
+      "start-work"
+    ],
+    "atlas": [
+      "work-policy"
+    ],
+    "children": [
+      "registry",
+      "dsh-binding"
+    ],
+    "prompts": [
+      "eval-plan",
+      "eval-runner"
+    ],
+    "compaction": [
+      "resume-context"
+    ],
+    "context": [
+      "rules"
+    ],
+    "guards": [
+      "files",
+      "comment-checker",
+      "adapters",
+      "reminders"
+    ],
+    "skills": [
+      "policy"
+    ],
+    "memory": [
+      "policy"
+    ],
+    "team": [
+      "policy"
+    ],
+    "monitor": [
+      "policy"
+    ],
+    "openclaw": [
+      "policy"
+    ],
+    "migration": [
+      "config-mapper",
+      "state-migrator"
+    ],
+    "release": [
+      "rollback"
+    ],
+    "dsh-plugin": [
+      "omo-role-plugin"
+    ]
   },
   "moduleCount": 47,
-  "suite": { "tests": 264, "pass": 264, "fail": 0, "runner": "node --test tests/**/*.test.mjs" },
+  "suite": {
+    "tests": 264,
+    "pass": 264,
+    "fail": 0,
+    "runner": "node --test tests/**/*.test.mjs"
+  },
   "preflight": "PASSED",
   "schemaLint": "OK (52 files)",
-  "taskDag": { "tasks": 122, "acyclic": true, "markdownDrift": 0 },
-  "parity": { "contractImplemented": 35, "verifiedContract": 10, "notStarted": 15, "implemented": 0 },
-  "hooks": { "contractLevel": 41, "nativeEquivalent": 5, "compatOnly": 6, "outOfScope": 3, "nestedToggle": 1, "pending": 0, "unassigned": 0 },
+  "taskDag": {
+    "tasks": 122,
+    "acyclic": true,
+    "markdownDrift": 0
+  },
+  "parity": {
+    "contractImplemented": 35,
+    "verifiedContract": 10,
+    "notStarted": 15,
+    "implemented": 0
+  },
+  "hooks": {
+    "contractLevel": 41,
+    "nativeEquivalent": 5,
+    "compatOnly": 6,
+    "outOfScope": 3,
+    "nestedToggle": 1,
+    "pending": 0,
+    "unassigned": 0
+  },
   "container": {
     "imageBuilt": true,
     "webBoot": true,
@@ -43,9 +141,12 @@
     "liveModelTurn": true,
     "liveToolExecution": true,
     "liveRoleSwitch": true,
-    "sessionLevelMount": "done (headless test image, preset mounted in agent setup)"
+    "sessionLevelMount": "done (headless test image, preset mounted in agent setup)",
+    "liveGuardDeny": true
   },
-  "openBlockers": ["R16: DSH persistence restore refuses unknown non-ignorable session events"],
+  "openBlockers": [
+    "R16: DSH persistence restore refuses unknown non-ignorable session events"
+  ],
   "nextByDag": [
     "G1 session-level lifecycle (credentials)",
     "E04/E09/E14/E17 DSH runtime bindings (specs written)",
