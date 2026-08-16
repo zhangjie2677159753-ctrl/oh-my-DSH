@@ -86,6 +86,15 @@ check("no secrets in production source", () => {
   }
 })
 
+check("E30 payload contract gate passes (digests pinned, no drift)", () => {
+  execFileSync(process.execPath, ["tools/verify-preset-payload.mjs"], { cwd: root, encoding: "utf8" })
+})
+
+check("E29/E31 drill scripts pass (migration + rollback state machines)", () => {
+  execFileSync("bash", ["deploy/dsh-test-container/drill-migration.sh"], { cwd: root, encoding: "utf8" })
+  execFileSync("bash", ["deploy/dsh-test-container/drill-rollback.sh"], { cwd: root, encoding: "utf8" })
+})
+
 if (failures.length > 0) {
   console.error(`G1 preflight FAILED with ${failures.length} failure(s)`)
   process.exit(1)
