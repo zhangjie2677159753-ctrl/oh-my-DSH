@@ -2,221 +2,257 @@
   "schemaVersion": 1,
   "sourceDocument": "docs/plans/ACCEPTANCE-AND-EVALUATION.md section 4",
   "generatedBy": "local-node-extractor",
-  "generatedAt": "2026-08-15T14:15:40.882Z",
+  "generatedAt": "2026-08-16T12:31:14.725Z",
   "total": 35,
   "items": [
     {
       "id": "CT-01",
       "text": "历史 Session read + live append。",
       "tests": [],
-      "status": "not-started"
+      "status": "contract-implemented",
+      "evidence": "tests/integration/vertical-slice.test.mjs: full lifecycle"
     },
     {
       "id": "CT-02",
       "text": "read/subscribe race 以 seq 去重。",
       "tests": [],
-      "status": "not-started"
+      "status": "contract-implemented",
+      "evidence": "tests/session.test.mjs: dedupeBySeq"
     },
     {
       "id": "CT-03",
       "text": "unknown required vs ignorable events。",
       "tests": [],
-      "status": "not-started"
+      "status": "contract-implemented",
+      "evidence": "tests/session.test.mjs: unknown required/ignorable"
     },
     {
       "id": "CT-04",
       "text": "seed replay 与 `session/end-seed`。",
       "tests": [],
-      "status": "not-started"
+      "status": "not-started",
+      "evidence": "DSH runtime behavior: seed replay + session/end-seed — container verification pending"
     },
     {
       "id": "CT-05",
       "text": "event observer 失败不回滚 commit。",
       "tests": [],
-      "status": "not-started"
+      "status": "not-started",
+      "evidence": "DSH runtime behavior: observer failure cannot roll back commit — container verification pending"
     },
     {
       "id": "CT-06",
       "text": "reentrant append 拒绝。",
       "tests": [],
-      "status": "not-started"
+      "status": "not-started",
+      "evidence": "DSH runtime behavior: reentrant append refusal — container verification pending"
     },
     {
       "id": "CT-07",
       "text": "scoped prompt shadow/dispose。",
       "tests": [],
-      "status": "not-started"
+      "status": "not-started",
+      "evidence": "DSH runtime behavior: scoped prompt shadow/dispose — container verification pending"
     },
     {
       "id": "CT-08",
       "text": "dynamic section order/interpolation。",
       "tests": [],
-      "status": "not-started"
+      "status": "not-started",
+      "evidence": "DSH runtime behavior: dynamic section order/interpolation — container verification pending"
     },
     {
       "id": "CT-09",
       "text": "inject vs steer vs followup。",
       "tests": [],
-      "status": "not-started"
+      "status": "not-started",
+      "evidence": "DSH runtime behavior: inject vs steer vs followup — container verification pending"
     },
     {
       "id": "CT-10",
       "text": "role snapshot 与 model route 同 step 原子。",
       "tests": [],
-      "status": "not-started"
+      "status": "contract-implemented",
+      "evidence": "tests/integration/role-roundtrip.test.mjs + prompt.test.mjs atomic boundary"
     },
     {
       "id": "CT-11",
       "text": "retry 与 fallback 分离。",
       "tests": [],
-      "status": "not-started"
+      "status": "contract-implemented",
+      "evidence": "tests/routing.test.mjs: retry/fallback separation"
     },
     {
       "id": "CT-12",
       "text": "removed header-delta/fallback semantics 拒绝。",
       "tests": [],
-      "status": "not-started"
+      "status": "not-started",
+      "evidence": "needs explicit fail-loud guard rejecting removed header-delta/fallback config keys"
     },
     {
       "id": "CT-13",
       "text": "pre/guard/execute/post ordering。",
       "tests": [],
-      "status": "not-started"
+      "status": "contract-implemented",
+      "evidence": "tests/tools.test.mjs: pre/guard/execute/post ordering"
     },
     {
       "id": "CT-14",
       "text": "monotonic deny 不可覆写。",
       "tests": [],
-      "status": "not-started"
+      "status": "contract-implemented",
+      "evidence": "tests/tools.test.mjs: monotonic deny"
     },
     {
       "id": "CT-15",
       "text": "cooperative cancellation 等待 settlement。",
       "tests": [],
-      "status": "not-started"
+      "status": "contract-implemented",
+      "evidence": "tests/tools.test.mjs + concurrency.test.mjs: cooperative cancellation settlement"
     },
     {
       "id": "CT-16",
       "text": "cancel keepInbox。",
       "tests": [],
-      "status": "not-started"
+      "status": "not-started",
+      "evidence": "task() facade lacks cancel-with-keepInbox binding (E09/E10 runtime)"
     },
     {
       "id": "CT-17",
       "text": "explicit Session flush success/failure。",
       "tests": [],
-      "status": "not-started"
+      "status": "contract-implemented",
+      "evidence": "tests/persistence.test.mjs + roles.test.mjs: explicit flush"
     },
     {
       "id": "CT-18",
       "text": "preset generation pinning。",
       "tests": [],
-      "status": "not-started"
+      "status": "not-started",
+      "evidence": "DSH runtime behavior: preset generation pinning — container verification pending"
     },
     {
       "id": "CT-19",
       "text": "recompose blankness 由 adapter 检查。",
       "tests": [],
-      "status": "not-started"
+      "status": "not-started",
+      "evidence": "DSH runtime behavior: recompose blankness adapter check — container verification pending"
     },
     {
       "id": "CT-20",
       "text": "preset leaked global Service 拒绝。",
       "tests": [],
-      "status": "not-started"
+      "status": "not-started",
+      "evidence": "DSH runtime behavior: preset leaked global Service refusal — container verification pending"
     },
     {
       "id": "CT-21",
       "text": "subagent capability 在启动前拒绝。",
       "tests": [],
-      "status": "not-started"
+      "status": "contract-implemented",
+      "evidence": "tests/subagents.test.mjs + spawn-request.test.mjs: fail before launch"
     },
     {
       "id": "CT-22",
       "text": "one-shot structured output。",
       "tests": [],
-      "status": "not-started"
+      "status": "contract-implemented",
+      "evidence": "tests/subagents.test.mjs: one-shot outputSchema passes"
     },
     {
       "id": "CT-23",
       "text": "continuable structured output 拒绝。",
       "tests": [],
-      "status": "not-started"
+      "status": "contract-implemented",
+      "evidence": "tests/subagents.test.mjs: continuable outputSchema rejected"
     },
     {
       "id": "CT-24",
       "text": "child send 只影响 later turn。",
       "tests": [],
-      "status": "not-started"
+      "status": "contract-implemented",
+      "evidence": "tests/subagents.test.mjs: send queues later turn only"
     },
     {
       "id": "CT-25",
       "text": "interrupt current turn、保留 descendants。",
       "tests": [],
-      "status": "not-started"
+      "status": "contract-implemented",
+      "evidence": "tests/subagents.test.mjs: interrupt current turn, preserve descendants"
     },
     {
       "id": "CT-26",
       "text": "Job stopping/capacity/process restart loss。",
       "tests": [],
-      "status": "not-started"
+      "status": "contract-implemented",
+      "evidence": "tests/reconciler-resume.test.mjs + concurrency.test.mjs: process-local jobs lost on restart"
     },
     {
       "id": "CT-27",
       "text": "Goal revision CAS/replay disarmed。",
       "tests": [],
-      "status": "not-started"
+      "status": "contract-implemented",
+      "evidence": "tests/goals-todos.test.mjs: goal CAS + replay disarmed"
     },
     {
       "id": "CT-28",
       "text": "Todo whole-list last-write-wins。",
       "tests": [],
-      "status": "not-started"
+      "status": "contract-implemented",
+      "evidence": "tests/goals-todos.test.mjs: Boulder-derived whole-list snapshot, write-on-change only"
     },
     {
       "id": "CT-29",
       "text": "transactional resume rollback。",
       "tests": [],
-      "status": "not-started"
+      "status": "contract-implemented",
+      "evidence": "tests/reconciler-resume.test.mjs + rollback-migration.test.mjs: transactional resume rollback"
     },
     {
       "id": "CT-30",
       "text": "Compaction surface replace 不删除 events。",
       "tests": [],
-      "status": "not-started"
+      "status": "contract-implemented",
+      "evidence": "tests/persistence.test.mjs + hardened-compaction-replay: canonical events preserved"
     },
     {
       "id": "CT-31",
       "text": "projection cold snapshot/delta/reset（UI 阶段）。",
       "tests": [],
-      "status": "not-started"
+      "status": "not-started",
+      "evidence": "UI 阶段: projection delta/reset not built (cold snapshot covered in projection.test.mjs)"
     },
     {
       "id": "CT-32",
       "text": "Slot presence/props/dispose（UI 阶段）。",
       "tests": [],
-      "status": "not-started"
+      "status": "not-started",
+      "evidence": "UI 阶段: Slot presence/props/dispose"
     },
     {
       "id": "CT-33",
       "text": "MCP schema normalization（启用时）。",
       "tests": [],
-      "status": "not-started"
+      "status": "not-started",
+      "evidence": "启用时: MCP schema normalization (schema discipline covered separately)"
     },
     {
       "id": "CT-34",
       "text": "LSP start/cancel/cleanup（启用时）。",
       "tests": [],
-      "status": "not-started"
+      "status": "not-started",
+      "evidence": "启用时: LSP start/cancel/cleanup"
     },
     {
       "id": "CT-35",
       "text": "Terminal readiness/partial-start cleanup（启用时）。",
       "tests": [],
-      "status": "not-started"
+      "status": "not-started",
+      "evidence": "启用时: Terminal readiness/partial-start cleanup (reminder formatting covered separately)"
     }
   ],
   "notes": [
-    "E2E/unit/replay/hard-gate 清单仍以源文档为准；本文件仅作为 compat 合同测试的行级 seed"
+    "E2E/unit/replay/hard-gate 清单仍以源文档为准；本文件仅作为 compat 合同测试的行级 seed",
+    "2026-08-16 status refresh: 19 contract-implemented (test-mapped), 16 not-started (DSH runtime/phase-gated); evidence column added per item"
   ]
 }
