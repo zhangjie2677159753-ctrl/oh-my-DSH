@@ -21,6 +21,10 @@ export const Config = z.object({})
 
 const ROLES = ['sisyphus', 'hephaestus', 'prometheus', 'atlas']
 
+// Guard decision + policy live in the baked omo-plugin tree so the same pure
+// function is unit-tested in the repo and executed by the DSH waterfall.
+const { decideTool } = await import('file:///dsh/omo-plugin/packages-omo-dsh/roles/guard-decision.mjs')
+
 function foldRole(session) {
   let role = 'sisyphus'
   let revision = 0
@@ -95,4 +99,17 @@ export function apply(ctx) {
     },
     presentCall: () => ({ card: 'generic', title: 'Read OMO role', kind: 'other', rawInput: null }),
   }))
+
+  // Monotonic tool guard on the tools/pre-execute waterfall: the frozen role
+  // fold decides; a deny here cannot be overridden by later listeners.
+  ctx.on('tools/pre-execute', (exec, next) => {
+    const agent = exec?.agent
+    if (!agent?.session) return next()
+    const { role } = foldRole(agent.session)
+    const decision = decideTool({ role, toolName: exec.name, args: exec.arguments ?? {} })
+    if (!decision.allow) {
+      return Promise.resolve({ kind: 'deny', reason: decision.reason })
+    }
+    return next()
+  })
 }

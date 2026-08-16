@@ -41,10 +41,19 @@ done
 
 cp "$ROOT/deploy/dsh-test-container/Dockerfile" "$STAGE/Dockerfile"
 
-# Bake the OMO role plugin into the image so its bare @deepseek-ai/* imports
-# resolve through the install's real node_modules.
-mkdir -p "$STAGE/omo-plugin"
+# Bake the OMO role plugin + its pure policy tree into the image so bare
+# @deepseek-ai/* imports resolve through the install's real node_modules and
+# relative imports keep their repo-relative structure.
+mkdir -p "$STAGE/omo-plugin" \
+         "$STAGE/omo-plugin/packages-omo-dsh/roles" \
+         "$STAGE/omo-plugin/packages-omo-dsh/compat"
 cp "$ROOT/packages/omo-dsh/src/dsh-plugin/omo-role-plugin.mjs" "$STAGE/omo-plugin/"
+cp "$ROOT/packages/omo-dsh/src/roles/guard-decision.mjs" \
+   "$ROOT/packages/omo-dsh/src/roles/policy-registry.mjs" \
+   "$STAGE/omo-plugin/packages-omo-dsh/roles/"
+cp "$ROOT/packages/omo-dsh/src/compat/tools.mjs" \
+   "$ROOT/packages/omo-dsh/src/compat/session.mjs" \
+   "$STAGE/omo-plugin/packages-omo-dsh/compat/"
 
 echo "Building image omo-dsh-test (proxy: 127.0.0.1:7890) ..."
 docker build \

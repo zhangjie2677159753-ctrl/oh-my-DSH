@@ -25,6 +25,11 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
 7. [x] 记录 R16：out-of-repo 事件可 live append，但 stock persistence restore 拒绝未标记
    ignorable 的未知类型且 append 无 ignorable 入口——Boulder 镜像 reconciliation
    作为回退，上游注册面是 P1 跟踪项（SOURCE-BASELINE §5.6、PARITY-MATRIX PAR-STATE-002）。
+8. [x] E04 工具守卫接入（第三轮）：
+   - 插件注册 `tools/pre-execute` waterfall 监听（`PreToolDecision` deny 形状按固定 SHA 源码）；
+   - `guard-decision.mjs` + policy 树烘焙进镜像，容器内实测：
+     `prometheusBash:false`、`prometheusSrcWrite:false`；
+   - 同一纯函数在仓库内 241 项测试覆盖（`guard-decision.test.mjs`）。
 
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
