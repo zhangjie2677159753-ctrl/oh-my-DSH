@@ -40,7 +40,10 @@
     "pluginModuleLoad": true,
     "guardWaterfallRegistered": true,
     "identitySectionRegistered": true,
-    "sessionLevelMount": "deployment-gate (model credentials / API channel required)"
+    "liveModelTurn": true,
+    "liveToolExecution": true,
+    "liveRoleSwitch": true,
+    "sessionLevelMount": "done (headless test image, preset mounted in agent setup)"
   },
   "openBlockers": ["R16: DSH persistence restore refuses unknown non-ignorable session events"],
   "nextByDag": [

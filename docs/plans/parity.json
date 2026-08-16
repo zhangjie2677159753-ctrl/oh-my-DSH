@@ -79,7 +79,15 @@
       "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
       "scope": "in-scope",
-      "implementationNote": "pure logic + node --test integration; DSH runtime binding still pending"
+      "implementationNote": "pure logic + node --test integration; DSH runtime binding still pending",
+      "liveEvidence": {
+        "at": "2026-08-16T12:07:05.617Z",
+        "facts": [
+          "live headless session mounted omo preset (agent-presets service + mount in setup, test image)",
+          "tool/call omo_role_status executed with result (session log)",
+          "tool/call omo_role appended omo/role event {role:prometheus, revision:1, changedBy:user} (session log)"
+        ]
+      }
     },
     {
       "id": "PAR-ROLE-003",
@@ -1078,7 +1086,7 @@
     "deviations": 5
   },
   "implementationSnapshot": {
-    "updatedAt": "2026-08-16T07:05:15.029Z",
+    "updatedAt": "2026-08-16T12:07:05.617Z",
     "suite": {
       "tests": 264,
       "pass": 264,

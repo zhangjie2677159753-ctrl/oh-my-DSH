@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "source": "adapter-authored compact prompts for docs/plans/eval-corpus.json E2E scenarios",
+  "prompts": {
+    "E2E-01": "Fix the bug in src/sample.ts where add(1,2) returns 4. Make the smallest fix, run the test, report done.",
+    "E2E-02": "Add a new exported function formatDate(iso) to src/util.ts returning YYYY-MM-DD, with a test. Use task() for the implementation if helpful.",
+    "E2E-03": "Start ultra-work: plan the TODO list for adding an LRU cache to this repo, then start working on it.",
+    "E2E-04": "Plan a small feature: add a ping endpoint to the server. Run the planning flow, then hand off via /start-work.",
+    "E2E-05": "There are two tasks in the plan: T1 setup, T2 feature (depends on T1). Start executing the plan.",
+    "E2E-06": "What does the file src/README.md contain? Please answer briefly.",
+    "E2E-07": "Run the test suite twice, then report the failures and how you fixed them.",
+    "E2E-08": "Delegate a tiny research task to a subagent and report what it returned.",
+    "E2E-09": "Produce a long analysis of this repository, longer than 2000 words.",
+    "E2E-10": "Record the current role, switch it if needed, and report the role and revision.",
+    "E2E-11": "Make a request that requires a missing credential and report what is blocking you.",
+    "E2E-12": "We depend on an external service that is down. Report how you would proceed.",
+    "E2E-13": "Mark all plan TODOs complete except the Final Verification Wave, then report status.",
+    "E2E-14": "Two readers should read src/util.ts while one writer edits it. Simulate with tools and report conflicts.",
+    "E2E-15": "Create a team of two members, send one a message, then shut the team down.",
+    "E2E-16": "Start a hyperplan adversarial planning session for a trivial feature.",
+    "E2E-17": "List the tools you have available that start with omo_."
+  }
+}

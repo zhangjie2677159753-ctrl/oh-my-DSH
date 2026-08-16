@@ -54,9 +54,11 @@ echo '[' > "$summary"
 first=1
 for id in $ids; do
   prompt=$(node -e "
+const prompts = require('$ROOT/docs/plans/eval-prompts.json').prompts
 const c = require('$CORPUS')
 const s = c.e2e.find(e => e.id === '$id')
-process.stdout.write('Scenario ' + s.title + '. Requirements: ' + s.steps.join(' '))
+const compact = prompts['$id']
+process.stdout.write(compact ?? ('Scenario ' + s.title + '. Requirements: ' + s.steps.join(' ')))
 ")
   echo "== $id =="
   row="$(run_scenario "$id" "$prompt")"
