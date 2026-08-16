@@ -93,9 +93,10 @@ export function apply(ctx) {
   // Static identity section in the agent scope; disposer-owned via ctx.effect.
   ctx.effect(() => ctx.systemPrompt.section(OMO_IDENTITY_SECTION), 'omo-role.identity-section')
 
-  // Dynamic sections: dispose + re-register on every role change so the
-  // current-role/guard-status/work text always matches the live fold.
+  // Dynamic sections: dispose + re-register on every role change or pending
+  // notification change so the prompt always matches the live fold.
   const sectionDisposers = []
+  const pendingNotifications = []
   function refreshDynamicSections(session) {
     for (const dispose of sectionDisposers.splice(0)) {
       try { dispose() } catch { /* section already gone */ }
@@ -106,6 +107,15 @@ export function apply(ctx) {
       guardState: { denials: collectDenials(session) },
       workState: { work: null }, // Boulder projection binding is a follow-up step
     })
+    if (pendingNotifications.length > 0) {
+      sections.push({
+        name: 'omo:notifications',
+        order: -10,
+        text: 'Background notifications:\n' + pendingNotifications
+          .map((n) => `- ${n.status}${n.summary ? ': ' + n.summary : ''}`)
+          .join('\n'),
+      })
+    }
     for (const section of sections) {
       sectionDisposers.push(ctx.systemPrompt.section({ name: section.name, order: section.order, text: section.text }))
     }
@@ -211,6 +221,17 @@ export function apply(ctx) {
     return next()
   })
 
+  // Inject-once semantics: pending notifications ride the next turn's prompt,
+  // then clear at its end (upstream chat.message injection analogue).
+  ctx.on('turn/end', () => {
+    try {
+      if (pendingNotifications.length > 0) {
+        pendingNotifications.length = 0
+        if (waterfallSession) refreshDynamicSections(waterfallSession)
+      }
+    } catch { /* section refresh must never break the turn */ }
+  })
+
   // Parent-side settlement notification: the subagent tool call itself runs in
   // the parent agent, so post-execute carries exec.agent = parent. Append the
   // owned notification to the PARENT session (P2 authoritative surface); the
@@ -219,12 +240,15 @@ export function apply(ctx) {
     try {
       if (exec?.name === 'subagent' && exec?.agent?.session?.append) {
         const failed = result?.error !== undefined && result?.error !== null
-        exec.agent.session.append('omo/notification', buildNotificationEvent({
+        const notification = buildNotificationEvent({
           childRole: null,
           childSessionId: null,
           status: failed ? 'failed' : 'completed',
           summary: failed ? String(result.error).slice(0, 512) : 'subagent settled',
-        }))
+        })
+        exec.agent.session.append('omo/notification', notification)
+        pendingNotifications.push(notification)
+        refreshDynamicSections(exec.agent.session)
       }
     } catch {
       // notification audit must never break tool execution
