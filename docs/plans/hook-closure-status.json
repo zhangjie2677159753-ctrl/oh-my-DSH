@@ -1,12 +1,11 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-16T06:36:39.082Z",
+  "generatedAt": "2026-08-16T06:59:21.334Z",
   "source": "docs/plans/hook-inventory.lock.json + generator tools/generate-hook-closure.mjs",
   "total": 56,
   "statusCounts": {
-    "contract-level": 27,
-    "pending-binding": 13,
-    "pending-fixture": 1,
+    "contract-level": 32,
+    "pending-binding": 9,
     "compat-only": 6,
     "native-equivalent": 5,
     "out-of-scope-batch-a": 3,
@@ -32,25 +31,25 @@
     {
       "name": "comment-checker",
       "disposition": {
-        "dshComponent": "guards/files.mjs + comment rules (fixture pending)",
-        "status": "pending-fixture",
-        "tests": null
+        "dshComponent": "guards/comment-checker.mjs",
+        "status": "contract-level",
+        "tests": "adapters.test.mjs"
       }
     },
     {
       "name": "tool-output-truncator",
       "disposition": {
-        "dshComponent": "host spill/result pruner",
-        "status": "pending-binding",
-        "tests": null
+        "dshComponent": "guards/adapters.mjs",
+        "status": "contract-level",
+        "tests": "adapters.test.mjs"
       }
     },
     {
       "name": "question-label-truncator",
       "disposition": {
-        "dshComponent": "question adapter",
-        "status": "pending-binding",
-        "tests": null
+        "dshComponent": "guards/adapters.mjs",
+        "status": "contract-level",
+        "tests": "adapters.test.mjs"
       }
     },
     {
@@ -416,9 +415,9 @@
     {
       "name": "read-image-resizer",
       "disposition": {
-        "dshComponent": "attachment/vision adapter",
-        "status": "pending-binding",
-        "tests": null
+        "dshComponent": "guards/adapters.mjs",
+        "status": "contract-level",
+        "tests": "adapters.test.mjs"
       }
     },
     {
@@ -432,9 +431,9 @@
     {
       "name": "webfetch-redirect-guard",
       "disposition": {
-        "dshComponent": "web adapter",
-        "status": "pending-binding",
-        "tests": null
+        "dshComponent": "guards/adapters.mjs",
+        "status": "contract-level",
+        "tests": "adapters.test.mjs"
       }
     },
     {

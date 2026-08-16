@@ -1,0 +1,231 @@
+{
+  "schemaVersion": 1,
+  "omoSha": "038ed0cbbefe2b40677b63867aeea0d16bc303e0",
+  "generatedBy": "subagent_flash",
+  "hooks": {
+    "tool-output-truncator": {
+      "facts": [
+        {
+          "fact": "在 tool.execute.after 事件中截断工具输出；仅当 experimental.truncate_all_tool_outputs 开启，或工具名命中 TRUNCATABLE_TOOLS 白名单时才截断",
+          "source": "packages/omo-opencode/src/hooks/tool-output-truncator.ts:44"
+        },
+        {
+          "fact": "输出字段必须为字符串才执行截断；非字符串直接返回",
+          "source": "packages/omo-opencode/src/hooks/tool-output-truncator.ts:45"
+        },
+        {
+          "fact": "whitelist：grep/Grep/safe_grep/glob/Glob/safe_glob/lsp_diagnostics/interactive_bash/Interactive_bash/skill_mcp/webfetch/WebFetch",
+          "source": "packages/omo-opencode/src/hooks/tool-output-truncator.ts:8-21"
+        },
+        {
+          "fact": "webfetch/WebFetch 有独立更小的 token 上限（WEBFETCH_MAX_TOKENS），其余工具用默认上限（DEFAULT_MAX_TOKENS）",
+          "source": "packages/omo-opencode/src/hooks/tool-output-truncator.ts:23-26"
+        },
+        {
+          "fact": "截断由共享 dynamicTruncator 完成；truncate 返回 { result, truncated }，仅当 truncated 为真时把 output 替换为截断结果",
+          "source": "packages/omo-opencode/src/hooks/tool-output-truncator.ts:48-56"
+        },
+        {
+          "fact": "截断过程抛出的错误被吞掉（Error 实例不重抛），避免 hook 崩溃",
+          "source": "packages/omo-opencode/src/hooks/tool-output-truncator.ts:57-61"
+        },
+        {
+          "fact": "动态截断算法：先取会话上下文实际用量；若用量可用，maxOutputTokens = min(remainingTokens * 0.5, targetMaxTokens)；否则兜底用保守截断 truncateToTokenLimit(output, targetMaxTokens, preserveHeaderLines)",
+          "source": "packages/omo-opencode/src/shared/dynamic-truncator.ts:42-61"
+        },
+        {
+          "fact": "当 maxOutputTokens <= 0 时（上下文耗尽），输出被替换为固定提示串（视为已截断）",
+          "source": "packages/omo-opencode/src/shared/dynamic-truncator.ts:54-59"
+        },
+        {
+          "fact": "token 估算按每 token 约 4 字符计算；截断保留前若干 header 行，超出部分丢行并追加截断提示",
+          "source": "packages/omo-opencode/src/shared/token-limit-truncator.ts:3-6"
+        },
+        {
+          "fact": "截断提示：多行时 \"[N more lines truncated due to context window limit]\"，行数不足 header 行时 \"[Output truncated due to context window limit]\"",
+          "source": "packages/omo-opencode/src/shared/token-limit-truncator.ts:68-71"
+        },
+        {
+          "fact": "获取上下文用量有 5 秒硬超时上限，防止挂死的 OpenCode RPC 阻塞所有调用 truncator 的 hook",
+          "source": "packages/omo-opencode/src/shared/context-window-usage.ts:13-18"
+        },
+        {
+          "fact": "模型缓存 key 根据 anthropicContext1MEnabled 区分 \"1m\" 与 \"200k\"，并拼接各模型的 context limit",
+          "source": "packages/omo-opencode/src/shared/context-window-usage.ts:51-63"
+        }
+      ],
+      "constants": {
+        "defaultMaxTokens": 50000,
+        "webfetchMaxTokens": 10000,
+        "truncatableTools": [
+          "grep",
+          "Grep",
+          "safe_grep",
+          "glob",
+          "Glob",
+          "safe_glob",
+          "lsp_diagnostics",
+          "interactive_bash",
+          "Interactive_bash",
+          "skill_mcp",
+          "webfetch",
+          "WebFetch"
+        ],
+        "toolSpecificMaxTokens": {
+          "webfetch": 10000,
+          "WebFetch": 10000
+        },
+        "charsPerTokenEstimate": 4,
+        "preserveHeaderLines": 3,
+        "truncationMessageTokensReserve": 50,
+        "remainingTokensFactor": 0.5,
+        "defaultTargetMaxTokensShared": 50000,
+        "contextWindowUsageFetchTimeoutMs": 5000,
+        "modelCacheKey1m": "1m",
+        "modelCacheKey200k": "200k",
+        "exhaustedOutputMarker": "[Output suppressed - context window exhausted]"
+      }
+    },
+    "question-label-truncator": {
+      "facts": [
+        {
+          "fact": "在 tool.execute.before 事件中，对 askuserquestion / ask_user_question 工具的参数做改写：把每个 question.options[].label 截断",
+          "source": "packages/omo-opencode/src/hooks/question-label-truncator/hook.ts:52-62"
+        },
+        {
+          "fact": "通过共享 replaceToolArgs 把改写后的 questions 写回工具参数",
+          "source": "packages/omo-opencode/src/hooks/question-label-truncator/hook.ts:60-61"
+        },
+        {
+          "fact": "截断规则：label 长度超出 maxLength 时保留前 (maxLength-3) 个字符并追加 \"...\"",
+          "source": "packages/omo-opencode/src/hooks/question-label-truncator/hook.ts:21-26"
+        },
+        {
+          "fact": "仅处理包含 questions 数组的参数；options 缺失时映射为空数组",
+          "source": "packages/omo-opencode/src/hooks/question-label-truncator/hook.ts:46-48,28-43"
+        }
+      ],
+      "constants": {
+        "maxLabelLength": 30,
+        "ellipsisSuffix": "..."
+      }
+    },
+    "webfetch-redirect-guard": {
+      "facts": [
+        {
+          "fact": "在 tool.execute.before 事件中对 webfetch 工具先做 redirect 预解析：手动跟随重定向，把解析后的最终 URL 写回参数",
+          "source": "packages/omo-opencode/src/hooks/webfetch-redirect-guard/hook.ts:72-113"
+        },
+        {
+          "fact": "预解析失败或超出最大重定向次数时，把该 (sessionID:callID) 记为 pending 失败，稍后在 tool.execute.after 用预留错误提示覆盖真实输出",
+          "source": "packages/omo-opencode/src/hooks/webfetch-redirect-guard/hook.ts:92-95,119-129"
+        },
+        {
+          "fact": "在 tool.execute.after 事件中，若输出以 \"error:\"（忽略大小写）开头且命中重定向死循环错误模式，也被改写为约定的重定向上限错误提示",
+          "source": "packages/omo-opencode/src/hooks/webfetch-redirect-guard/hook.ts:59-61,127-129"
+        },
+        {
+          "fact": "pending 失败条目会在下一次 before 事件时按 stale 超时清理（防止内存无限增长）",
+          "source": "packages/omo-opencode/src/hooks/webfetch-redirect-guard/hook.ts:46-53"
+        },
+        {
+          "fact": "请求以 redirect:\"manual\" 方式手动跟随；仅当响应状态命中重定向状态集且存在 location 头时才继续跟踪",
+          "source": "packages/omo-opencode/src/hooks/webfetch-redirect-guard/redirect-resolution.ts:62-87"
+        },
+        {
+          "fact": "location 相对 URL 用 new URL(location, currentUrl) 解析为绝对 URL",
+          "source": "packages/omo-opencode/src/hooks/webfetch-redirect-guard/redirect-resolution.ts:48-50"
+        },
+        {
+          "fact": "请求头带伪造的 Chrome User-Agent、按 format 构建的 Accept 头以及 Accept-Language",
+          "source": "packages/omo-opencode/src/hooks/webfetch-redirect-guard/redirect-resolution.ts:31-37"
+        },
+        {
+          "fact": "超时归一化：无效/非法 timeoutSeconds 回落为默认值，且上限封顶为 MAX_WEBFETCH_TIMEOUT_MS",
+          "source": "packages/omo-opencode/src/hooks/webfetch-redirect-guard/redirect-resolution.ts:40-46"
+        },
+        {
+          "fact": "webfetch 工具参数格式：markdown/text/html 之一，其余值回落到 markdown",
+          "source": "packages/omo-opencode/src/hooks/webfetch-redirect-guard/hook.ts:38-40"
+        }
+      ],
+      "constants": {
+        "maxWebFetchRedirects": 10,
+        "defaultWebFetchTimeoutMs": 30000,
+        "maxWebFetchTimeoutMs": 120000,
+        "staleTimeoutMs": 900000,
+        "redirectStatuses": [301, 302, 303, 307, 308],
+        "redirectErrorPatterns": ["/redirected too many times/i", "/too many redirects/i"],
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "defaultFormat": "markdown"
+      }
+    },
+    "read-image-resizer": {
+      "facts": [
+        {
+          "fact": "在 tool.execute.after 事件中，仅对 read 工具的图片附件做重采样；且仅当会话所用 provider 为 anthropic 时触发（防 API 因图片超限报错）",
+          "source": "packages/omo-opencode/src/hooks/read-image-resizer/hook.ts:121-128"
+        },
+        {
+          "fact": "从输出 attachments 抽取图片附件：mime 与 url 必须为字符串，且 mime 命中支持集；filename 可选",
+          "source": "packages/omo-opencode/src/hooks/read-image-resizer/hook.ts:34-65,24-33"
+        },
+        {
+          "fact": "对每张图：解析原始尺寸 -> 计算目标尺寸；超限才重采样；重采样失败则把该附件从 attachments 里移除（避免 API 错误）",
+          "source": "packages/omo-opencode/src/hooks/read-image-resizer/hook.ts:142-200,64-65"
+        },
+        {
+          "fact": "处理结果以追加文本附录（[Image Resize Info]/[Image Info]）形式写回 output.output，记录每张图的原尺寸、目标尺寸与 token 估算",
+          "source": "packages/omo-opencode/src/hooks/read-image-resizer/hook.ts:69-107,202-206"
+        },
+        {
+          "fact": "token 估算公式：ceil(width * height / TOKEN_DIVISOR)",
+          "source": "packages/omo-opencode/src/hooks/read-image-resizer/hook.ts:66-68"
+        },
+        {
+          "fact": "尺寸解析只读 base64 的头部（HEADER_BYTES=32768 字节）快速解析 PNG/GIF/JPEG/WebP 的宽高，不下载整图",
+          "source": "packages/omo-opencode/src/hooks/read-image-resizer/image-dimensions.ts:5-6,152-193"
+        },
+        {
+          "fact": "重采样优先用 sharp；sharp 不可用或形状不符时回落到纯 JS PNG fallback（仅支持 8 位图、用最近邻缩放 + 重新编码 PNG）",
+          "source": "packages/omo-opencode/src/hooks/read-image-resizer/image-resizer.ts:121-132; png-fallback-resizer.ts:11-96"
+        },
+        {
+          "fact": "目标尺寸算法：长边超过 maxLongEdge 时按比例缩到 maxLongEdge；否则视为 within-limits 不重采样",
+          "source": "packages/omo-opencode/src/hooks/read-image-resizer/image-resizer.ts:86-111"
+        },
+        {
+          "fact": "重采样后若文件（buffer）仍超过最大大小且格式支持调质量（jpeg/webp），按质量档位 80/60/40 逐步降低，首个达标者采用",
+          "source": "packages/omo-opencode/src/hooks/read-image-resizer/image-resizer.ts:157-171,52-54"
+        },
+        {
+          "fact": "重采样结果以 data:mimeType;base64,... 的数据 URL 写回附件 url",
+          "source": "packages/omo-opencode/src/hooks/read-image-resizer/image-resizer.ts:178-181"
+        }
+      ],
+      "constants": {
+        "supportedImageMimes": ["image/png", "image/jpeg", "image/gif", "image/webp"],
+        "tokenDivisor": 750,
+        "anthropicMaxLongEdge": 1568,
+        "anthropicMaxFileSizeBytes": 5242880,
+        "qualityFallbackSteps": [80, 60, 40],
+        "headerBytesForDimensionParse": 32768,
+        "onlyAnthropicProvider": true
+      }
+    }
+  },
+  "counts": {
+    "facts": 35
+  },
+  "extractionNotes": [
+    "tool-output-truncator 的 toolSpecificMaxTokens 显式覆盖 webfetch/WebFetch 为 WEBFETCH_MAX_TOKENS=10000（tool-output-truncator.ts:23-26）；其余工具名未覆盖时回落 DEFAULT_MAX_TOKENS=50000（tool-output-truncator.ts:48）。",
+    "tool-output-truncator 的 DEFAULT_TARGET_MAX_TOKENS 同时在 shared/dynamic-truncator.ts:15 定义（值 50000），与 hook 内 DEFAULT_MAX_TOKENS 相等，constants 中两者分别记录（defaultMaxTokens / defaultTargetMaxTokensShared）。",
+    "question-label-truncator 触发条件为工具名小写后等于 askuserquestion 或 ask_user_question（hook.ts:58）。",
+    "webfetch-redirect-guard 的 redirectErrorPatterns 以正则串形式记录（来自 constants.ts:6-9 的 as const 数组），非字面量字符串清单。",
+    "read-image-resizer 的 onlyAnthropicProvider 为行为开关（true），实际 provider 判定逻辑在 hook.ts:126（providerID === 'anthropic'）。",
+    "read-image-resizer 的 PNG fallback 仅支持 8 位深度 PNG、IHDR 中 compression/filter/interlace 必须为 0（png-fallback-resizer.ts:56-61, png-ihdr.ts:22），这些校验阈值已纳入对应 facts，无遗漏关键常量。",
+    "webfetch-redirect-guard 的 Accept 头字符串按 format 不同（markdown/text/html），原始含义参考 redirect-resolution.ts:20-29，已在 fact 中体现；未提取为单一常量取值。",
+    "source 路径均为相对仓库根 packages/omo-opencode/src/ 的相对路径。",
+    "所有四个 hook 的关键常量均存在，无需要写入 null 的条目。"
+  ]
+}
