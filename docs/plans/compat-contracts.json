@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "sourceDocument": "docs/plans/ACCEPTANCE-AND-EVALUATION.md section 4",
   "generatedBy": "local-node-extractor",
-  "generatedAt": "2026-08-16T13:46:47.585Z",
+  "generatedAt": "2026-08-16T14:00:45.565Z",
   "total": 35,
   "items": [
     {
@@ -30,36 +30,36 @@
       "id": "CT-04",
       "text": "seed replay 与 `session/end-seed`。",
       "tests": [],
-      "status": "not-started",
-      "evidence": "DSH runtime behavior: seed replay + session/end-seed — container verification pending"
+      "status": "contract-implemented",
+      "evidence": "compat/session-lifecycle.mjs: appendSeedMarker (re-mark skip) + locateLastEndSeed (LAST marker rule) + firstLiveSeq; tests/session-lifecycle.test.mjs"
     },
     {
       "id": "CT-05",
       "text": "event observer 失败不回滚 commit。",
       "tests": [],
-      "status": "not-started",
-      "evidence": "DSH runtime behavior: observer failure cannot roll back commit — container verification pending"
+      "status": "contract-implemented",
+      "evidence": "compat/session-lifecycle.mjs: commitThenNotify (commit-first, per-listener containment, later observers still run); tests/session-lifecycle.test.mjs"
     },
     {
       "id": "CT-06",
       "text": "reentrant append 拒绝。",
       "tests": [],
-      "status": "not-started",
-      "evidence": "DSH runtime behavior: reentrant append refusal — container verification pending"
+      "status": "contract-implemented",
+      "evidence": "compat/session-lifecycle.mjs: createAnnounceGuard + createAppendGuard (reentrant refuse mirrors DSH announce/append); tests/session-lifecycle.test.mjs"
     },
     {
       "id": "CT-07",
       "text": "scoped prompt shadow/dispose。",
       "tests": [],
-      "status": "not-started",
-      "evidence": "DSH runtime behavior: scoped prompt shadow/dispose — container verification pending"
+      "status": "contract-implemented",
+      "evidence": "compat/prompt.mjs createSectionRegistry: name-keyed shadow (last-write-wins + previous disposer invoked), dispose removes one, stale disposers inert, (order,insertion) sort; tests/prompt.test.mjs 4 tests"
     },
     {
       "id": "CT-08",
       "text": "dynamic section order/interpolation。",
       "tests": [],
-      "status": "not-started",
-      "evidence": "DSH runtime behavior: dynamic section order/interpolation — container verification pending"
+      "status": "contract-implemented",
+      "evidence": "compat/prompt.mjs SECTION_ORDER + assemblePrompt (role/modelFamily/revision/boundary hash) + roles/dynamic-sections.mjs builders; prompt.test.mjs + dynamic-sections.test.mjs"
     },
     {
       "id": "CT-09",

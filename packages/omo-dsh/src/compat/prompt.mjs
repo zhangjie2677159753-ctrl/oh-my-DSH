@@ -106,3 +106,52 @@ export function captureAssemblyBoundary(roleState, route, promptResult) {
 export function sha256(text) {
   return createHash("sha256").update(text, "utf8").digest("hex")
 }
+
+/**
+ * Section registry mirroring DSH systemPrompt.section semantics (CT-07):
+ * - sections are keyed by NAME: registering the same name SHADOWS the
+ *   previous registration (last-write-wins, the previous disposer is invoked)
+ * - dispose() removes exactly one registration; disposing an unknown or
+ *   already-shadowed registration is a no-op (stale disposers are inert)
+ * - list() returns registrations sorted by (order, insertion)
+ */
+export function createSectionRegistry() {
+  const byName = new Map()
+  let insertion = 0
+  return {
+    state: () => [...byName.values()].map((r) => ({ name: r.name, order: r.order, active: r.active })),
+    register(section) {
+      if (!section || typeof section.name !== "string" || section.name.length === 0) {
+        throw new TypeError("section.name: required non-empty string")
+      }
+      if (typeof section.text !== "string") throw new TypeError(`section ${section.name}.text: expected string`)
+      const order = typeof section.order === "number" ? section.order : 0
+      const previous = byName.get(section.name)
+      if (previous && previous.active) {
+        previous.active = false
+        try { previous.dispose() } catch { /* shadowed section teardown failure is contained */ }
+      }
+      let active = true
+      const record = {
+        name: section.name,
+        order,
+        insertion: insertion++,
+        active,
+        text: section.text,
+        dispose() {
+          if (!active) return // stale disposers are inert
+          active = false
+          if (byName.get(section.name) === record) byName.delete(section.name)
+        },
+      }
+      byName.set(section.name, record)
+      return record.dispose
+    },
+    list() {
+      return [...byName.values()]
+        .filter((r) => r.active)
+        .sort((a, b) => a.order - b.order || a.insertion - b.insertion)
+        .map((r) => ({ name: r.name, order: r.order, text: r.text }))
+    },
+  }
+}

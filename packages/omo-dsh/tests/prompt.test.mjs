@@ -78,3 +78,41 @@ test("section order keys are the ten documented omo sections", () => {
     "omo:role", "omo:verification-policy",
   ])
 })
+
+// --- CT-07: scoped shadow/dispose section registry ---
+
+test("section registry shadows by name (last-write-wins) and invokes the previous disposer", async () => {
+  const { createSectionRegistry } = await import("../src/compat/prompt.mjs")
+  const registry = createSectionRegistry()
+  registry.register({ name: "omo:role", order: 20, text: "sisyphus text" })
+  registry.register({ name: "omo:role", order: 20, text: "prometheus text" })
+  const list = registry.list()
+  assert.equal(list.length, 1)
+  assert.equal(list[0].text, "prometheus text")
+})
+
+test("section registry dispose removes exactly one registration and stale disposers are inert", async () => {
+  const { createSectionRegistry } = await import("../src/compat/prompt.mjs")
+  const registry = createSectionRegistry()
+  const dispose = registry.register({ name: "omo:role", order: 20, text: "t" })
+  dispose()
+  assert.equal(registry.list().length, 0)
+  dispose() // stale disposer: no-op, no throw
+  assert.equal(registry.list().length, 0)
+})
+
+test("section registry sorts by (order, insertion)", async () => {
+  const { createSectionRegistry } = await import("../src/compat/prompt.mjs")
+  const registry = createSectionRegistry()
+  registry.register({ name: "b", order: 20, text: "b" })
+  registry.register({ name: "a", order: 10, text: "a" })
+  registry.register({ name: "c", order: 20, text: "c" })
+  assert.deepEqual(registry.list().map((s) => s.name), ["a", "b", "c"])
+})
+
+test("section registry rejects malformed sections", async () => {
+  const { createSectionRegistry } = await import("../src/compat/prompt.mjs")
+  const registry = createSectionRegistry()
+  assert.throws(() => registry.register({}), /section.name/)
+  assert.throws(() => registry.register({ name: "x" }), /\.text/)
+})
