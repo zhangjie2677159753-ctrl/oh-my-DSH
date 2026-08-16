@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "sourceDocument": "docs/plans/PARITY-MATRIX.md",
   "generatedBy": "local-node-extractor (subagent_flash backend failed twice)",
-  "generatedAt": "2026-08-16T14:07:24.001Z",
+  "generatedAt": "2026-08-16T15:32:41.473Z",
   "profiles": [
     "opencode-compat",
     "senpi-compat",
@@ -92,11 +92,11 @@
       "scope": "in-scope",
       "implementationNote": "pure logic + node --test integration; DSH runtime binding still pending",
       "liveEvidence": {
-        "at": "2026-08-16T12:07:05.617Z",
+        "at": "2026-08-16T15:32:41.473Z",
         "facts": [
-          "live headless session mounted omo preset (agent-presets service + mount in setup, test image)",
-          "tool/call omo_role_status executed with result (session log)",
-          "tool/call omo_role appended omo/role event {role:prometheus, revision:1, changedBy:user} (session log)"
+          "live headless probe (gpt-oss-120b): omo_role tool appended omo/role {role:prometheus, revision:1, changedBy:user}",
+          "E2E-04 corpus live (opencode-go/deepseek-v4-flash, 195s, 37 calls): prometheus planning role switch (reason \"Prometheus owns planning before a /start-work handoff\") THEN hephaestus implementation role switch (reason \"/start-work handoff after Prometheus planning: implement the ping endpoint\") — the /start-work transition semantics observed end-to-end in a real session",
+          "evidence: /tmp/omo-eval-ocg/E2E-04/session.jsonl (omo/role events revision 1→2)"
         ]
       }
     },
