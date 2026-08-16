@@ -110,6 +110,10 @@ check("G4 differential evidence layer passes (normalizers + comparison engine)",
   if (!/# fail 0/.test(out)) throw new Error("differential evidence tests failed")
 })
 
+check("task DAG validates (122 ids, acyclic, markdown drift)", () => {
+  execFileSync(process.execPath, ["tools/validate-task-dag.mjs"], { cwd: root, encoding: "utf8" })
+})
+
 if (failures.length > 0) {
   console.error(`G1 preflight FAILED with ${failures.length} failure(s)`)
   process.exit(1)
