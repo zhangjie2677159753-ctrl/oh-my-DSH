@@ -119,10 +119,14 @@ export function apply(ctx) {
   //   subagent/end   -> SubagentRunEndInfo {runId, provider, id, local,
   //                       stopReason: completed|aborted|error|max-tokens|refusal,
   //                       lastAssistantMessage?}
-  //   listener args: (info, parent: Agent)
-  ctx.on('subagent/end', (info, parent) => {
+  // Scoped dispatch (subagent/src/lifecycle.ts): listeners receive ONLY info —
+  // the parent carrier keys the scope, it is NOT a listener argument. The
+  // parent session is therefore captured from the pre-execute guard below
+  // (every tool call — including the subagent tool itself — passes through).
+  let parentSession = null
+  ctx.on('subagent/end', (info) => {
     try {
-      const session = parent?.session
+      const session = parentSession
       if (!session?.append) return
       const stopReason = info?.stopReason ?? 'error'
       const notification = buildNotificationEvent({
@@ -194,6 +198,7 @@ export function apply(ctx) {
   // fold decides; a deny here cannot be overridden by later listeners.
   ctx.on('tools/pre-execute', (exec, next) => {
     const agent = exec?.agent
+    if (agent?.session) parentSession = agent.session
     if (!agent?.session) return next()
     const { role } = foldRole(agent.session)
     const decision = decideTool({ role, toolName: exec.name, args: exec.arguments ?? {} })
