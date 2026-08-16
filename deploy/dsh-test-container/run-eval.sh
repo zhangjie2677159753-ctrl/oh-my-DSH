@@ -35,8 +35,10 @@ run_scenario() {
   else
     echo '{}' > "$dir/session.jsonl"
   fi
-  node "$ROOT/deploy/dsh-test-container/parse-evidence.mjs" \
-    "$dir/session.jsonl" "$dir/transcript.txt" "$id" "$((t1-t0))"
+  row="$(node "$ROOT/deploy/dsh-test-container/parse-evidence.mjs" \
+    "$dir/session.jsonl" "$dir/transcript.txt" "$id" "$((t1-t0))")"
+  printf '%s' "$row" > "$dir/row.json"
+  printf '%s' "$row"
   rm -rf "$home" 2>/dev/null || true
 }
 
@@ -49,9 +51,6 @@ if ('$MAX_SCENARIOS' !== 'all') list = list.slice(0, Number('$MAX_SCENARIOS'))
 process.stdout.write(list.join(' '))
 ")
 
-: > "$summary"
-echo '[' > "$summary"
-first=1
 for id in $ids; do
   prompt=$(node -e "
 const prompts = require('$ROOT/docs/plans/eval-prompts.json').prompts
@@ -61,10 +60,7 @@ const compact = prompts['$id']
 process.stdout.write(compact ?? ('Scenario ' + s.title + '. Requirements: ' + s.steps.join(' ')))
 ")
   echo "== $id =="
-  row="$(run_scenario "$id" "$prompt")"
-  [ "$first" = 0 ] && echo ',' >> "$summary"
-  printf '%s' "$row" >> "$summary"
-  first=0
+  run_scenario "$id" "$prompt" >/dev/null
 done
-echo ']' >> "$summary"
+node "$ROOT/deploy/dsh-test-container/rebuild-summary.mjs" "$EVAL_OUT" "$summary"
 echo "summary: $summary"
