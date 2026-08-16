@@ -120,13 +120,16 @@ export function apply(ctx) {
   //                       stopReason: completed|aborted|error|max-tokens|refusal,
   //                       lastAssistantMessage?}
   // Scoped dispatch (subagent/src/lifecycle.ts): listeners receive ONLY info —
-  // the parent carrier keys the scope, it is NOT a listener argument. The
-  // owning agent is instead read from ctx.agent (core/agent/src/index.ts:
-  // the association is an own property of Agent.ctx and inherited by derived
-  // contexts, which is exactly where the preset mounts).
+  // the parent carrier keys the scope, it is NOT a listener argument, and the
+  // preset mount context does not expose ctx.agent (live-observed rc3/rc4).
+  // The CHILD-scope instance therefore captures its session from the guard
+  // waterfall (rc3 pattern); the PARENT-side authoritative notification is
+  // produced by the tools/post-execute listener below, whose exec.agent is
+  // the delegating parent for the subagent tool call itself.
+  let waterfallSession = null
   ctx.on('subagent/end', (info) => {
     try {
-      const session = ctx.agent?.session
+      const session = waterfallSession
       if (!session?.append) return
       const stopReason = info?.stopReason ?? 'error'
       const notification = buildNotificationEvent({
@@ -198,11 +201,33 @@ export function apply(ctx) {
   // fold decides; a deny here cannot be overridden by later listeners.
   ctx.on('tools/pre-execute', (exec, next) => {
     const agent = exec?.agent
+    if (agent?.session) waterfallSession = agent.session
     if (!agent?.session) return next()
     const { role } = foldRole(agent.session)
     const decision = decideTool({ role, toolName: exec.name, args: exec.arguments ?? {} })
     if (!decision.allow) {
       return Promise.resolve({ kind: 'deny', reason: decision.reason })
+    }
+    return next()
+  })
+
+  // Parent-side settlement notification: the subagent tool call itself runs in
+  // the parent agent, so post-execute carries exec.agent = parent. Append the
+  // owned notification to the PARENT session (P2 authoritative surface); the
+  // subagent/end listener above covers the child-side audit trail.
+  ctx.on('tools/post-execute', (exec, result, next) => {
+    try {
+      if (exec?.name === 'subagent' && exec?.agent?.session?.append) {
+        const failed = result?.error !== undefined && result?.error !== null
+        exec.agent.session.append('omo/notification', buildNotificationEvent({
+          childRole: null,
+          childSessionId: null,
+          status: failed ? 'failed' : 'completed',
+          summary: failed ? String(result.error).slice(0, 512) : 'subagent settled',
+        }))
+      }
+    } catch {
+      // notification audit must never break tool execution
     }
     return next()
   })
