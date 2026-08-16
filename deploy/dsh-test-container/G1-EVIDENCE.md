@@ -35,6 +35,9 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
    - `omo:identity`（order -50，persona 之前）经 `ctx.effect(() => ctx.systemPrompt.section(...))` 注册；
    - 容器加载验证：`inject:["tools","systemPrompt"]`、`hasIdentitySection:true`；
    - 动态 per-role section 待 scope→agent 映射核实后接入（`src/continuation/DSH-BINDING.md`）。
+10. [x] 终验复跑（2026-08-16）：镜像重建 → boot 200 → discovery healthy →
+    插件注入面 `["tools","systemPrompt"]` → 守卫决策 `prometheusBash:false` →
+    停止无残留。
 
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
