@@ -13,11 +13,12 @@ const [summaryFile = '/tmp/omo-eval/summary.json', outFile = join(here, '..', '.
 const rows = JSON.parse(readFileSync(summaryFile, 'utf8'))
 const model = process.env.DSH_TEST_MODEL ?? 'openai/gpt-oss-120b'
 
+const evaldir = join(dirname(summaryFile))
 const lines = [
-  `# Model Eval Report（NIM ${model}）`,
+  `# Model Eval Report（${model}）`,
   '',
   `生成时间：${new Date().toISOString()}`,
-  `证据目录：/tmp/omo-eval（transcript + session.jsonl 每场景一份）`,
+  `证据目录：${evaldir}（transcript + session.jsonl 每场景一份）`,
   '',
   '## 机器指标',
   '',
@@ -39,7 +40,6 @@ lines.push(`- 角色切换事件：${roleSwitches}`)
 lines.push(`- 助手回合总数：${assistantTurns}`)
 lines.push('', '## Hard Gates（机器可测子集）', '')
 try {
-  const evaldir = join(dirname(summaryFile))
   const gateOut = execFileSync(process.execPath, [join(here, '..', '..', 'tools', 'check-hard-gates.mjs'), evaldir], { encoding: 'utf8' })
   lines.push('```text')
   lines.push(gateOut.trim())
