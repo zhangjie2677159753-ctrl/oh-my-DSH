@@ -69,7 +69,14 @@ cat > "$STAGE/omo-plugin/tool-terminal-row.mjs" <<'SHIM'
 export * from '@deepseek-ai/dsh-tool-terminal'
 SHIM
 cat > "$STAGE/omo-plugin/terminal-service-row.mjs" <<'SHIM'
-export * from '@deepseek-ai/dsh-terminal'
+// The dsh-terminal package exports the TerminalSessionService CLASS, not a
+// Cordis plugin. This row wraps it: constructing the service registers it as
+// ctx.terminals inside the preset's isolate realm group.
+import { TerminalSessionService } from '@deepseek-ai/dsh-terminal'
+export const name = 'omo-terminal-service'
+export function apply(ctx) {
+  new TerminalSessionService(ctx)
+}
 SHIM
 
 # TEST-IMAGE-ONLY integration (documented in G1-EVIDENCE.md): the stock
