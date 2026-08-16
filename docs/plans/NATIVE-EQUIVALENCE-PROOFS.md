@@ -290,8 +290,8 @@
 
 | 检查项 | 结果 | 证据位置 | 日期 |
 |---|---|---|---|
-| P1-1..P1-4 | 未执行 | - | - |
-| P2-1..P2-3 | 未执行 | - | - |
-| P3-1..P3-3 | 未执行 | - | - |
-| P4-1..P4-4 | 未执行 | - | - |
-| P5-1..P5-4 | 未执行 | - | - |
+| P1-1..P1-4（compaction） | 未执行：需长会话压力；compat 配置（0.78/0.16）已入 `compaction/policy-config.mjs` + 测试 | - | - |
+| P2-1..P2-3（notification） | 绑定代码就绪（插件 `subagent/end` → `omo/notification`），**镜像重建后验证**；subagent/end 事件形状未 live 观察（探针未触发） | - | - |
+| P3-1（banned 命令警告） | **blocked-on-seam**：DSH pre-execute 无 per-call 警告注入面（OMO 为警告非拒绝），警告交付需 G11 tool-output 投影缝；P3-2/P3-3 由 DSH 原生 ENV_OVERRIDES 覆盖（语义等价，已记录） | §3.3 | 2026-08-16 |
+| P4-1..P4-4（terminal） | 未执行：需模型使用 tool:pty；提醒文本构建器已入 `compat/terminal.mjs` + 测试 | - | - |
+| P5-1..P5-4（slash-command） | 未执行：UI 派发面，headless 无命令输入；模板执行器已入 `skills/slash-command.mjs` + 测试 | - | - |
