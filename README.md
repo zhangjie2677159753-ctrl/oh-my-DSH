@@ -66,8 +66,10 @@
 - [x] E28 机器硬门检查器：`tools/check-hard-gates.mjs`（权限/破坏性/审批绑定/模式合法性/密钥扫描/License 六门机器可测，余三门如实标 n/a）并集成进评测报告生成。
 - [x] G4 黑盒双端回放设计：`docs/plans/DIFFERENTIAL-REPLAY-PLAN.md`（执行待 OMO 侧 OpenCode 环境）。
 - [x] G6/G7 纯逻辑补齐：task 控制面（interrupt/send DTO，CT-16）、task 编排步骤计划（预算 FIFO/拒满）、动态角色 prompt 段构建器（current-role/guard-status/work）。
-- [x] **模型评测双模型族完成**：opencode-go/deepseek-v4-flash 17 场景 30 分钟全跑完（273 调用/211 回合/3 角色切换/6 硬门 PASS，`MODEL-EVAL-REPORT-OPENCODE-GO.md`）；NIM gpt-oss-120b 评测收尾中（低吞吐、多数超时——如实记录的评测变量）。
-- [x] **核心工作流 live 证据**：E2E-04 真实会话内 prometheus 规划 → `/start-work` 交接 → hephaestus 实现（revision 1→2，parity PAR-ROLE-002）；P2 结算通知父/子双落地（G1-EVIDENCE 17）；G6' RC 动态段零错误（G1-EVIDENCE 16）。
+- [x] **模型评测双模型族完成**：opencode-go/deepseek-v4-flash 17 场景 30 分钟全跑完（273 调用/211 回合/3 角色切换/6 硬门 PASS，`MODEL-EVAL-REPORT-OPENCODE-GO.md`）；NIM gpt-oss-120b 收尾（低吞吐如实，`MODEL-EVAL-REPORT-NIM.md`）。
+- [x] **核心工作流 live 证据**：E2E-04 真实会话内 prometheus 规划 → `/start-work` 交接 → hephaestus 实现（revision 1→2，parity PAR-ROLE-002）；P2 结算通知父/子双落地 + 注入段（G1-EVIDENCE 17/18）；G6' RC 动态段零错误（G1-16）。
+- [x] **P4 终端族 live 闭环**：preset pty-family isolate 组（terminal-service 包装 + terminal-bash + tool-terminal），`terminal_open` 启动 pty-1 + `terminal_list` 列出（G1-EVIDENCE 19）；容器权限预设镜像宿主部署（同时修复历次 E2E 的 sandbox 拒执根因）。
+- [x] **主镜像切换**：`omo-dsh-test:latest` = 全部已验证内容（组合冒烟：角色+终端一次通过，G1-EVIDENCE 20）；run-eval 竞态修复应用（row 文件 + 确定性重建）。
 - [ ] 按 `task-dag.json` 完成剩余 DSH 运行时绑定与发布门；差距清单 `docs/plans/GA-GAP-ANALYSIS.md`，终验收口 `docs/plans/FINAL-HANDOFF.md`。
 
 > 注意：本仓库不保存 API Token、密码或带凭据的远端 URL。任何在聊天、Issue 或日志中公开过的令牌都应立即撤销并重新签发。
