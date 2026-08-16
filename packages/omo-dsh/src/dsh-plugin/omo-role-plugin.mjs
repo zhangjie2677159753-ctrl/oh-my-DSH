@@ -12,6 +12,15 @@
 // mark it. Until DSH grows an event-type registration surface, the OMO layer
 // owns role semantics (compat/session.mjs fold) and mirrors the snapshot to
 // Boulder storage as the durable fallback.
+//
+// Round-33 extension (image rebuild deferred until the live eval settles):
+//   - dynamic per-role sections (omo:current-role / omo:guard-status /
+//     omo:work) refreshed on every omo/role change
+//   - subagent/end settlement -> `omo/notification` session event (P2 audit
+//     surface; next-turn prompt injection stays a follow-up step)
+//   - non-interactive-env banned-command WARNING has NO pre-execute delivery
+//     seam in DSH (PreToolDecision is allow/deny/ask only; OMO warns but
+//     still executes) — recorded in NATIVE-EQUIVALENCE-PROOFS.md §3.3.
 import { defineTool } from '@deepseek-ai/dsh-tools'
 import z from '@deepseek-ai/schemastery'
 
@@ -22,9 +31,7 @@ export const Config = z.object({})
 const ROLES = ['sisyphus', 'hephaestus', 'prometheus', 'atlas']
 
 // Static OMO identity section, ordered before the persona slot (0) so every
-// joined session starts with the OMO authority contract. Per-role dynamic
-// sections stay pending until the scope→agent mapping is verified at the
-// fixed SHA (see src/continuation/DSH-BINDING.md).
+// joined session starts with the OMO authority contract.
 export const OMO_IDENTITY_SECTION = {
   name: 'omo:identity',
   order: -50,
@@ -37,9 +44,12 @@ export const OMO_IDENTITY_SECTION = {
   ].join('\n'),
 }
 
-// Guard decision + policy live in the baked omo-plugin tree so the same pure
-// function is unit-tested in the repo and executed by the DSH waterfall.
+// Guard decision + dynamic section builders live in the baked omo-plugin tree
+// so the same pure functions are unit-tested in the repo and executed by the
+// DSH runtime.
 const { decideTool } = await import('file:///dsh/omo-plugin/packages-omo-dsh/roles/guard-decision.mjs')
+const { buildDynamicSections } = await import('file:///dsh/omo-plugin/packages-omo-dsh/roles/dynamic-sections.mjs')
+const { settlementToNotification } = await import('file:///dsh/omo-plugin/packages-omo-dsh/children/notification.mjs')
 
 function foldRole(session) {
   let role = 'sisyphus'
@@ -51,6 +61,20 @@ function foldRole(session) {
     }
   }
   return { role, revision }
+}
+
+function collectDenials(session) {
+  // Report the role policy's known denials for the guard-status section.
+  // decideTool is per-call; the section lists the POLICY-LEVEL denials for the
+  // current role by probing the representative tools (cheap, deterministic).
+  const { role } = foldRole(session)
+  const probes = ['bash', 'interactive_bash', 'task', 'write']
+  const denials = []
+  for (const toolName of probes) {
+    const decision = decideTool({ role, toolName })
+    if (!decision.allow) denials.push({ toolName, allow: false, reason: decision.reason })
+  }
+  return denials
 }
 
 const statusOutput = {
@@ -68,6 +92,45 @@ const statusOutput = {
 export function apply(ctx) {
   // Static identity section in the agent scope; disposer-owned via ctx.effect.
   ctx.effect(() => ctx.systemPrompt.section(OMO_IDENTITY_SECTION), 'omo-role.identity-section')
+
+  // Dynamic sections: dispose + re-register on every role change so the
+  // current-role/guard-status/work text always matches the live fold.
+  const sectionDisposers = []
+  function refreshDynamicSections(session) {
+    for (const dispose of sectionDisposers.splice(0)) {
+      try { dispose() } catch { /* section already gone */ }
+    }
+    const { role, revision } = foldRole(session)
+    const sections = buildDynamicSections({
+      roleState: { role, revision, modelFamily: 'deepseek-v4' },
+      guardState: { denials: collectDenials(session) },
+      workState: { work: null }, // Boulder projection binding is a follow-up step
+    })
+    for (const section of sections) {
+      sectionDisposers.push(ctx.systemPrompt.section({ name: section.name, order: section.order, text: section.text }))
+    }
+  }
+
+  // Settlement -> notification audit event (P2 first half). The next-turn
+  // prompt injection of pending notifications is a follow-up step; the event
+  // itself is durable and foldable.
+  ctx.on('subagent/end', (event) => {
+    try {
+      const data = event?.data ?? event ?? {}
+      const agent = data.agent
+      const session = agent?.session
+      if (!session?.append) return
+      const notification = settlementToNotification({
+        childRole: data.role ?? null,
+        childSessionId: data.sessionId ?? null,
+        ok: data.ok !== false,
+        error: data.error ?? null,
+      })
+      session.append('omo/notification', notification)
+    } catch {
+      // settlement audit must never break the subagent lifecycle
+    }
+  })
 
   ctx.tools.register(defineTool({
     name: 'omo_role',
@@ -102,6 +165,7 @@ export function apply(ctx) {
         reason: args.reason,
         changedAt: new Date().toISOString(),
       })
+      refreshDynamicSections(session)
       return { role: args.role, revision }
     },
     presentCall: args => ({ card: 'generic', title: 'Switch OMO role', kind: 'other', rawInput: args.role }),

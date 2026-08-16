@@ -160,9 +160,12 @@
 
 ### 3.3 残余缺口与 compat 补丁
 
-1. **banned 命令警告**：DSH 无等价面 → `guards/files.mjs` 旁的
-   `tools/pre-execute` compat guard（`omo_noninteractive_guard`）复刻上游 banned
-   正则与 message 文本（`non-interactive-env` 常量表已入库 `guards/`）。
+1. **banned 命令警告**：DSH 无等价面 → 纯逻辑 `guards/non-interactive.mjs` 已复刻
+   上游正则与 message 文本（`NATIVE-EQUIVALENCE-PROOFS.md` §3 + 测试覆盖）。
+   **交付缝缺口（2026-08-16 记录）**：DSH `tools/pre-execute` 的
+   `PreToolDecision` 仅 allow/deny/ask，无 per-call 警告注入面；OMO 的警告是
+   "提示但仍执行"，不能用 deny 替代。警告交付需 tool-output 投影缝
+   （UI/工具结果增强，G11 阶段），此前 P3-1 live 项标注 blocked-on-seam。
 2. **git 专用 env 条目**（DEBIAN_FRONTEND/GCM_INTERACTIVE/EDITOR=: 等）：DSH
    全局 ENV_OVERRIDES 未覆盖；compat 层不重复注入（DSH 的 PAGER/GIT_PAGER/TERM=dumb
    已消除同类挂起风险），差异记录为"语义等价、条目收缩"，GA 门不阻塞。

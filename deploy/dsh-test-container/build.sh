@@ -46,14 +46,18 @@ cp "$ROOT/deploy/dsh-test-container/Dockerfile" "$STAGE/Dockerfile"
 # relative imports keep their repo-relative structure.
 mkdir -p "$STAGE/omo-plugin" \
          "$STAGE/omo-plugin/packages-omo-dsh/roles" \
-         "$STAGE/omo-plugin/packages-omo-dsh/compat"
+         "$STAGE/omo-plugin/packages-omo-dsh/compat" \
+         "$STAGE/omo-plugin/packages-omo-dsh/children"
 cp "$ROOT/packages/omo-dsh/src/dsh-plugin/omo-role-plugin.mjs" "$STAGE/omo-plugin/"
 cp "$ROOT/packages/omo-dsh/src/roles/guard-decision.mjs" \
    "$ROOT/packages/omo-dsh/src/roles/policy-registry.mjs" \
+   "$ROOT/packages/omo-dsh/src/roles/dynamic-sections.mjs" \
    "$STAGE/omo-plugin/packages-omo-dsh/roles/"
 cp "$ROOT/packages/omo-dsh/src/compat/tools.mjs" \
    "$ROOT/packages/omo-dsh/src/compat/session.mjs" \
    "$STAGE/omo-plugin/packages-omo-dsh/compat/"
+cp "$ROOT/packages/omo-dsh/src/children/notification.mjs" \
+   "$STAGE/omo-plugin/packages-omo-dsh/children/"
 
 # TEST-IMAGE-ONLY integration (documented in G1-EVIDENCE.md): the stock
 # headless bundle composes no preset roster; its own comment says a deployment
