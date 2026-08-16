@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "sourceDocument": "docs/plans/PARITY-MATRIX.md",
   "generatedBy": "local-node-extractor (subagent_flash backend failed twice)",
-  "generatedAt": "2026-08-15T14:12:43.348Z",
+  "generatedAt": "2026-08-16T12:44:12.929Z",
   "profiles": [
     "opencode-compat",
     "senpi-compat",
@@ -114,9 +114,10 @@
       "sources": "`prompts-core`、Prometheus/Atlas prompt source/tests",
       "dshMapping": "ordered sections/compiler",
       "acceptance": "manifest/hash/policy snapshots；不得虚构 upstream Prometheus family variant",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "compat/prompt.mjs assemblePrompt (ordered sections + role/modelFamily + boundary hash) + roles/manifests.mjs adapter texts (no fabricated upstream family variants) + model-binding routes; runtime injection pending"
     },
     {
       "id": "PAR-MODEL-001",
@@ -156,9 +157,10 @@
       "sources": "delegate sync executor",
       "dshMapping": "one-shot foreground",
       "acceptance": "partial/error/result footer",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "tasks/task.mjs normalization/footer + orchestration.mjs foreground lifecycle (launch→await-settle); DSH runtime binding pending"
     },
     {
       "id": "PAR-TASK-003",
@@ -166,9 +168,10 @@
       "sources": "background manager",
       "dshMapping": "DSH Job + descriptor",
       "acceptance": "process-local semantics explicit",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "spawn-request.mjs + descriptor job kind + concurrency budget; process-local semantics explicit in makeDescriptor/assertDurableDescriptor"
     },
     {
       "id": "PAR-TASK-004",
@@ -176,9 +179,10 @@
       "sources": "OMO resume/task control + DSH provider capabilities",
       "dshMapping": "DSH child Session discovery + capability-based reactivation/new Turn",
       "acceptance": "send/interrupt；cold discover；reattach/reactivate/unsupported/lost 分支",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "children/dsh-binding.mjs continuable-session + tasks/control.mjs send/interrupt DTOs + reconciler cold discovery; live DSH probe pending"
     },
     {
       "id": "PAR-TASK-005",
@@ -186,9 +190,10 @@
       "sources": "senpi-task/core",
       "dshMapping": "task runtime",
       "acceptance": "cap/queue/budget tests",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "concurrency.mjs cap/queue/budget + orchestration.mjs queue-full refusal + nextGranted promotion tests; progress/residency runtime pending"
     },
     {
       "id": "PAR-AGENT-001",
