@@ -53,8 +53,11 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
       tool-fs-search 必填 config、镜像内插件树 chmod a+rX；
     - 会话日志权威证据：`tool/call: omo_role_status` + `tool/result`（模型真实调用
       OMO 工具并执行成功）；
-    - `omo_role` 切换与 prometheus 下 bash guard deny 的实跑在 `g1-guard.sh`
-      （本轮进行中，结果见后续轮次证据）。
+    - **角色切换 live 证据**：`tool/call: omo_role` →
+      `role event: {"role":"prometheus","revision":1,"changedBy":"user","reason":"g1"}`；
+    - bash guard deny 的 live 观察仍差一步（gpt-oss 在 role call 后 stream 超时）；
+    - 评测 harness 就绪（`run-eval.sh`/`parse-evidence.mjs`，逐场景 fresh session +
+      机器证据 + transcript，summary 入库、raw 证据在 /tmp）。
 
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
