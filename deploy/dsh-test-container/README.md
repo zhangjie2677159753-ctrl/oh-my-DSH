@@ -57,3 +57,13 @@ deploy/dsh-test-container/run-web.sh   # 容器内启动 web profile，宿主机
 - bash-39：要求模型委派 subagent 列出文件——模型选择直接 `glob`（1 次调用）
   未触发 `subagent/start`。subagent/end 事件形状仍未经 live 观察；插件结算
   处理器保持容错吞错设计，形状核实与 P2 注入绑定留待评测后镜像重建轮。
+
+## 子代理探针二次结果（2026-08-16 22:30）
+
+- bash-40：模型按要求调用 `subagent` 工具（launch 成功）→ 父会话日志出现
+  `subagent/descriptor` 事件：`{version:2, mode:"one-shot", provider:"spawn",
+  label:"list workspace files"}`；随后 llm/retry ×2 + 900s 超时被 kill，
+  `subagent/start`/`subagent/end` 未在父日志切片中出现（可能属 child 会话
+  日志或未及持久化）。descriptor 为父侧唯一已确认的 launch 标记。
+- 对 P2 绑定的影响：插件 `subagent/end` 订阅形状仍待核实；当前处理器容错
+  吞错，不阻断子代理生命周期。核实路径见 DRILL-RUNBOOK 重建序列第 4 步。
