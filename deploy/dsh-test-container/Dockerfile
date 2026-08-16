@@ -11,7 +11,7 @@ ENV HTTP_PROXY=${HTTP_PROXY} \
     NO_PROXY=localhost,127.0.0.1 \
     COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 
-RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates python3 make g++ \
+RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates python3 make g++ bubblewrap \
     && rm -rf /var/lib/apt/lists/*
 
 RUN corepack enable && corepack prepare pnpm@11.7.0 --activate
