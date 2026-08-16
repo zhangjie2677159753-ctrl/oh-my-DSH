@@ -64,5 +64,9 @@ OpenCode（fixed SHA）环境（OpenCode CLI + OMO 插件装载）；DSH 侧已�
 ## 7. 就绪度
 
 - DSH 端 runner：**已就绪**（`run-eval.sh`/`parse-evidence.mjs`，机器证据 + 转录已跑通）；
-- 证据 schema 投影：两端规范化器待实现（`tools/differential/*.mjs`，执行环境就绪后补）；
+- 证据 schema 投影：**已实现**（`tools/differential/evidence.mjs`：共享 schema +
+  DSH 规范化器（真实 session.jsonl 格式）+ OMO 规范化器（声明式输入合同，
+  见模块内 `OMO_LOG_INPUT_CONTRACT`，执行前需对照真实 OpenCode 导出核对）+
+  比较引擎（machine-exact/semantic-tolerant/documented-deviation 三类规则）；
+  9 项测试并入 g1-preflight 第 12 项）；
 - OMO 端：**阻塞**——需可运行 OpenCode fixed-SHA 环境（owner 提供或批准构建）。
