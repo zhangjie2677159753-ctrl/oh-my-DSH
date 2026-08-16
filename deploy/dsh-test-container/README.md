@@ -39,3 +39,15 @@ deploy/dsh-test-container/run-web.sh   # 容器内启动 web profile，宿主机
   tool-calling 模型即 gpt-oss-120b。
 - 若 owner 提供更快的 tool-calling 模型路由，可重跑场景获得更厚的行为
   证据（harness 已就绪，改 `DSH_TEST_MODEL` 即可）。
+
+## 行为证据进展（2026-08-16 21:40 更新）
+
+- E2E-04（规划流 + /start-work 交接）：模型 live 切到 prometheus
+  （reason="Switch to Prometheus to perform planning..."），8 次工具调用含
+  `omo_role`/`glob`/`read`/`ask_user_question`（规划访谈语义的 DSH 原生工具），
+  8 个助手回合后超时——**规划角色切换达成，交接未达**（1500s 上限）。
+- E2E-05：0 次工具调用，`pi-ai stream idle timeout after 300000ms`
+  （模型流空闲超时，未产出任何回合）。
+- 模式：角色切换类行为在 ~25 分钟内可达；多步工作流（规划→交接→执行）
+  受吞吐限制无法在单场景内闭环。E22 live 检查单中依赖插件重建的项
+  仍待评测后执行。
