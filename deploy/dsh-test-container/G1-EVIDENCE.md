@@ -95,6 +95,18 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
       `subagent/descriptor`（label "Tiny research: latest Node.js LTS version"）。
     - 主 tag 切换：待 17 场景评测结算后执行（runbook 重建序列）。
 
+17. [x] **P2 结算绑定 live 闭环**（2026-08-16，rc5 镜像 + opencode-go/deepseek-v4-flash）：
+    - 父会话日志（含 "Call the subagent" 原始指令 + subagent 工具调用）出现
+      `omo/notification` `{source:"subagent-end", childSessionId:null,
+      status:"completed", summary:"subagent settled"}`——post-execute 监听器
+      父侧权威落地；
+    - 子会话日志同时出现 `{childSessionId:"<child-id>", status:"completed"}`——
+      subagent/end 监听器子侧审计落地（info.id 语义与源码一致）；
+    - 迭代链：rc3（通知落子会话→定位 pre-execute 未捕获父会话）→ rc4
+      （ctx.agent 不可用于 mount 上下文，live 实证）→ rc5（双监听器闭环）；
+    - 证据：/tmp/omo-probe10-*.jsonl（父/子双日志）。
+    - 遗留：P2 的下一回合 pending 注入仍需 prompt-section 绑定（事件面已完整）。
+
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
 - 双 Session + `omo/role` 事件 + flush 的生命周期（当前 preset 尚未挂接 role 事件插件，
