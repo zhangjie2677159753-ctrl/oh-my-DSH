@@ -100,10 +100,11 @@ cat >> "$HEADLESS_PATCH" <<'EOF'
 EOF
 echo 'build.sh: headless bundle patch extended with agent-presets insert'
 
-echo "Building image omo-dsh-test (proxy: 127.0.0.1:7890) ..."
+IMAGE_TAG="${DSH_IMAGE_TAG:-omo-dsh-test}"
+echo "Building image $IMAGE_TAG (proxy: 127.0.0.1:7890) ..."
 docker build \
   --network=host \
   --build-arg HTTP_PROXY=http://127.0.0.1:7890 \
   --build-arg HTTPS_PROXY=http://127.0.0.1:7890 \
-  -t omo-dsh-test \
+  -t "$IMAGE_TAG" \
   "$STAGE"
