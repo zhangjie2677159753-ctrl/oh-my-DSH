@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "sourceDocument": "docs/plans/PARITY-MATRIX.md",
   "generatedBy": "local-node-extractor (subagent_flash backend failed twice)",
-  "generatedAt": "2026-08-16T14:04:59.417Z",
+  "generatedAt": "2026-08-16T14:07:24.001Z",
   "profiles": [
     "opencode-compat",
     "senpi-compat",
@@ -641,7 +641,7 @@
       "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
       "scope": "in-scope",
-      "implementationNote": "tools/verify-preset-payload.mjs (digest allowlist gate) + g1-preflight 12 checks + E29/E31 drills + schema-freshness lock check; clean-consumer verification pending"
+      "implementationNote": "tools/verify-preset-payload.mjs (digest allowlist gate, 77 files) + g1-preflight 12 checks + E29/E31 drills + schema-freshness lock check; clean-consumer drill PASSED (fresh home discovery + plugin load, G1-EVIDENCE item 15)"
     },
     {
       "id": "PAR-REL-003",

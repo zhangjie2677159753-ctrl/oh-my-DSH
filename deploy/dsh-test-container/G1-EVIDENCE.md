@@ -77,6 +77,13 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
       已回填。深行为证据来源说明：17 场景 E2E 因模型吞吐（5-8 分钟/回合）
       多超时未达行为目标，定向探针承担行为证据（见 README 吞吐观察）。
 
+15. [x] **G13 干净消费者演练**（2026-08-16，`drill-consumer.sh`，无模型调用）：
+    - 载荷 digest 门通过（77 文件 pinned）；
+    - 仅含 preset 三文件的全新 DSH_HOME（无 repo 挂载、无 node_modules overlay）：
+      `discoverPresets` → `{"id":"omo","broken":false}`；
+    - 消费者内插件模块加载：`{name:"omo-role",inject:["tools","systemPrompt"],hasApply:true}`；
+    - 证据：`/tmp/omo-drill/consumer-discovery.jsonl` + `consumer-plugin.jsonl`。
+
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
 - 双 Session + `omo/role` 事件 + flush 的生命周期（当前 preset 尚未挂接 role 事件插件，
