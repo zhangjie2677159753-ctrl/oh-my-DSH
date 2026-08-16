@@ -56,14 +56,17 @@
 - [x] 推送规划基线与 `plan-v1-omo-038ed0c-dsh-47f9438` 标签；GitHub 默认分支改为 `main`。
 - [x] Batch A 治理产物：upstream locks、`parity.json`、包分类、`hook-inventory.lock.json`、compat 合同 seed。
 - [x] OMO-0102 配置 Schema 校验器 + OMO-0103 Tool Schema Linter（19 项 `node --test` 全部通过）。
-- [x] compat 纯逻辑层与 Phase 2-8 策略模块：**52 个源模块、306 项 `node --test` 全部通过**（session/prompt/tools/routing/subagents/goals-todos/persistence/projection、角色 Runtime、task/Boulder/Planning/Continuation/Verification/Children/Context/Guards/Skills/Memory/Team/Monitor/OpenClaw/迁移/回滚）。
+- [x] compat 纯逻辑层与 Phase 2-8 策略模块：**60 个源模块、327 项 `node --test` 全部通过**（session/prompt/tools/routing/subagents/goals-todos/persistence/projection、角色 Runtime、task 控制面/编排、Boulder/Planning/Continuation/Verification/Children/Context/Guards/Skills/Memory/Team/Monitor/OpenClaw/迁移/回滚）。
 - [x] 权限层按运行时真源纠偏：`tool-config-handler.ts` config-build 层覆盖 agent 源 map（六子代理 task:deny、Prometheus bash:deny、Junior 走 call_omo_agent legacy path 等）；fixture 入库。
 - [x] DSH 受控容器验证：镜像按固定 SHA 构建，web boot 200、preset discovery healthy、`omo_role` 工具 + 守卫瀑布 + `omo:identity` 身份段容器内加载成功；**真实模型会话 live 证据**：角色切换 + prometheus bash-deny 拒执（`deploy/dsh-test-container/G1-EVIDENCE.md` 第 12/13 条）。
 - [x] Hook 闭包：56 项 configurable 全部有处置（41 contract-level / 5 native / 6 compat-only / 3 out-of-scope / 1 nested，pending=0）；五项 native-equivalent 等价证明主体 + 5 个 compat 补丁模块已落（`docs/plans/NATIVE-EQUIVALENCE-PROOFS.md`）。
-- [x] compat 合同 35 项状态诚实刷新：19 contract-implemented（逐项测试证据）、16 not-started（DSH 运行时行为/UI/启用时阶段）（`docs/plans/compat-contracts.json`）。
+- [x] compat 合同 35 项状态诚实刷新：20 contract-implemented（逐项测试证据）、15 not-started（DSH 运行时行为/UI/启用时阶段）（`docs/plans/compat-contracts.json`）。
 - [x] E29/E31 真机演练脚本（迁移 M1-M5、回滚 R1-R5）制备并本机跑通（`deploy/dsh-test-container/drill-*.sh` + `DRILL-RUNBOOK.md`）；容器资源检查步骤待执行。
 - [x] E30 载荷契约门：`tools/verify-preset-payload.mjs` + `deploy/payload-manifest.json`（67 文件 digest 锁定、denylist 结构性禁密、入口点语法检查）。
-- [ ] 模型评测 17 场景执行中（NIM openai/gpt-oss-120b，容器内逐场景 fresh session；`run-eval.sh`）。
+- [x] E28 机器硬门检查器：`tools/check-hard-gates.mjs`（权限/破坏性/审批绑定/模式合法性/密钥扫描/License 六门机器可测，余三门如实标 n/a）并集成进评测报告生成。
+- [x] G4 黑盒双端回放设计：`docs/plans/DIFFERENTIAL-REPLAY-PLAN.md`（执行待 OMO 侧 OpenCode 环境）。
+- [x] G6/G7 纯逻辑补齐：task 控制面（interrupt/send DTO，CT-16）、task 编排步骤计划（预算 FIFO/拒满）、动态角色 prompt 段构建器（current-role/guard-status/work）。
+- [ ] 模型评测 17 场景执行中（NIM openai/gpt-oss-120b，容器内逐场景 fresh session；`run-eval.sh`；每场景约 25 分钟）。
 - [ ] 按 `task-dag.json` 完成剩余 DSH 运行时绑定与发布门；差距清单 `docs/plans/GA-GAP-ANALYSIS.md`，终验收口 `docs/plans/FINAL-HANDOFF.md`。
 
 > 注意：本仓库不保存 API Token、密码或带凭据的远端 URL。任何在聊天、Issue 或日志中公开过的令牌都应立即撤销并重新签发。
