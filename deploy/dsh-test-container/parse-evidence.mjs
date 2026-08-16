@@ -29,10 +29,18 @@ const calls = []
 const roleEvents = []
 let assistantTurns = 0
 let lastAssistantText = ''
+const callSignatureCounts = new Map()
 for (const line of lines) {
   try {
     const ev = JSON.parse(line)
-    if (ev.type === 'tool/call') calls.push(ev.data?.name)
+    if (ev.type === 'tool/call') {
+      calls.push(ev.data?.name)
+      // efficiency support metric: identical (name+args) repeated calls
+      let args = ''
+      try { args = JSON.stringify(JSON.parse(ev.data?.arguments ?? '{}')) } catch { args = String(ev.data?.arguments ?? '') }
+      const sig = `${ev.data?.name ?? '?'} ${args}`
+      callSignatureCounts.set(sig, (callSignatureCounts.get(sig) ?? 0) + 1)
+    }
     if (ev.type === 'omo/role') roleEvents.push(ev.data)
     if (ev.type === 'assistant/message') {
       assistantTurns += 1
@@ -44,6 +52,7 @@ for (const line of lines) {
 const transcript = readFileSync(transcriptFile, 'utf8').trim()
 const fromLog = transcript.length === 0 && lastAssistantText.length > 0
 const tailText = fromLog ? lastAssistantText : transcript
+const repeats = [...callSignatureCounts.values()].filter((n) => n > 1)
 console.log(JSON.stringify({
   id,
   seconds: Number(seconds ?? 0),
@@ -54,4 +63,6 @@ console.log(JSON.stringify({
   transcriptLength: tailText.length,
   transcriptTail: tailText.slice(-200),
   transcriptSource: fromLog ? 'session-log' : 'stdout',
+  repeatedCalls: repeats.reduce((a, b) => a + b, 0),
+  repeatGroups: repeats.length,
 }))
