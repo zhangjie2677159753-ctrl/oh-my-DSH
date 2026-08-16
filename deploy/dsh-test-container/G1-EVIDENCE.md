@@ -66,6 +66,16 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
       而非静默通过，且未产生任何 shell 执行；
     - 证据文件：`/tmp/omo-guard2.jsonl`（tool/call 与 tool/result 事件逐条）；
       parity.json `PAR-ROLE-001.liveEvidence` 已回填。
+14. [x] **角色→Todo→状态 单一会话管线探针**（2026-08-16，openai/gpt-oss-120b）：
+    - 同一 headless 会话内三步连发全部落地：
+      `omo_role(role=prometheus, reason=eval-probe)` → `omo/role` 事件
+      `{role:"prometheus",revision:1,changedBy:"user",reason:"eval-probe"}`；
+      `todo_write([{content:"T1 setup LRU cache",status:"pending"}])` →
+      `todo/write` 事件（owned 列表原样）；`omo_role_status` → 确认
+      prometheus revision 1；
+    - 证据文件：`/tmp/omo-probe3.jsonl`；parity.json `PAR-STATE-001.liveEvidence`
+      已回填。深行为证据来源说明：17 场景 E2E 因模型吞吐（5-8 分钟/回合）
+      多超时未达行为目标，定向探针承担行为证据（见 README 吞吐观察）。
 
 ## 仍未执行（需要真实模型会话，属后续部署门）
 

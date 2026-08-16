@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "sourceDocument": "docs/plans/PARITY-MATRIX.md",
   "generatedBy": "local-node-extractor (subagent_flash backend failed twice)",
-  "generatedAt": "2026-08-16T12:44:12.929Z",
+  "generatedAt": "2026-08-16T13:12:20.725Z",
   "profiles": [
     "opencode-compat",
     "senpi-compat",
@@ -429,7 +429,16 @@
       "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
       "scope": "in-scope",
-      "implementationNote": "pure logic + node --test integration; DSH runtime binding still pending"
+      "implementationNote": "pure logic + node --test integration; DSH runtime binding still pending",
+      "liveEvidence": {
+        "at": "2026-08-16T13:12:20.725Z",
+        "facts": [
+          "live headless probe (bash-38, NIM gpt-oss-120b): same session tool/call omo_role -> omo/role event {role:prometheus, revision:1, reason:eval-probe}",
+          "tool/call todo_write {todos:[{content:\"T1 setup LRU cache\",status:\"pending\"}]} -> todo/write event with the same owned list",
+          "tool/call omo_role_status confirmed role prometheus revision 1",
+          "evidence: /tmp/omo-probe3.jsonl"
+        ]
+      }
     },
     {
       "id": "PAR-STATE-002",
