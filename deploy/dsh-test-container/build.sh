@@ -59,6 +59,16 @@ cp "$ROOT/packages/omo-dsh/src/compat/tools.mjs" \
 cp "$ROOT/packages/omo-dsh/src/children/notification.mjs" \
    "$STAGE/omo-plugin/packages-omo-dsh/children/"
 
+# P4: terminal-family entry shims + real-entry symlinks so the preset's
+# absolute file-backed rows resolve bare @deepseek-ai/* specifiers through
+# the install's workspace packages (same pattern as dsh-tools above).
+cat > "$STAGE/omo-plugin/terminal-bash-row.mjs" <<'SHIM'
+export * from '@deepseek-ai/dsh-terminal-bash'
+SHIM
+cat > "$STAGE/omo-plugin/tool-terminal-row.mjs" <<'SHIM'
+export * from '@deepseek-ai/dsh-tool-terminal'
+SHIM
+
 # TEST-IMAGE-ONLY integration (documented in G1-EVIDENCE.md): the stock
 # headless bundle composes no preset roster; its own comment says a deployment
 # that configures one must join it in the agent's setup. We patch the SNAPSHOT

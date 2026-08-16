@@ -62,10 +62,10 @@
 # sessions replace upstream's tmux tracking; the reminder builder lives in
 # compat/terminal.mjs.
 - id: terminal-bash
-  name: '@deepseek-ai/dsh-terminal-bash'
+  name: /dsh/omo-plugin/terminal-bash-row.mjs
 
 - id: tool-terminal
-  name: '@deepseek-ai/dsh-tool-terminal'
+  name: /dsh/omo-plugin/tool-terminal-row.mjs
 
 # ── OMO role runtime (E04 first integration) ────────────────────────────────
 # File-backed row resolved from this preset directory; registers omo_role and
