@@ -33,6 +33,13 @@
 | R4 | 重跑 runner | 从失败步继续，最终收敛 | `drill-out/r4-resume.json` |
 | R5 | 回滚后残余资源检查 | 无遗留 child/终端/镜像引用；`reconstructTimeline` 与事实一致 | `drill-out/r5-clean.json` |
 
+## G13 干净消费者演练（已执行）
+
+`drill-consumer.sh`（无模型调用）：载荷 digest 门 → 全新 DSH_HOME discovery →
+插件模块加载。2026-08-16 通过：`{"id":"omo","broken":false}` +
+`{name:"omo-role",inject:["tools","systemPrompt"],hasApply:true}`；
+证据 `/tmp/omo-drill/consumer-*.jsonl`，结论入 G1-EVIDENCE 第 15 条。
+
 ## 证据纪律
 
 - 所有 drill 输出放 `/tmp/omo-drill/`（不进仓库）；结论与文件摘录进
