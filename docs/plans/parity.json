@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "sourceDocument": "docs/plans/PARITY-MATRIX.md",
   "generatedBy": "local-node-extractor (subagent_flash backend failed twice)",
-  "generatedAt": "2026-08-16T13:12:20.725Z",
+  "generatedAt": "2026-08-16T14:04:59.417Z",
   "profiles": [
     "opencode-compat",
     "senpi-compat",
@@ -35,9 +35,10 @@
       "sources": "Git commit/tag/hash manifest/branch rules",
       "dshMapping": "pre-implementation gate",
       "acceptance": "no untracked plan；secret/history/remote scan；PR protection",
-      "status": "not-started",
+      "status": "verified-contract",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "baseline tag plan-v1-omo-038ed0c-dsh-47f9438 exists; plan docs committed; secret scan in g1-preflight; no-untracked-plan discipline recorded"
     },
     {
       "id": "PAR-GOV-004",
@@ -45,9 +46,10 @@
       "sources": "plan task IDs/Gates/Batches",
       "dshMapping": "`task-dag.json` + drift validator",
       "acceptance": "all IDs/deps exist；acyclic；no orphan/range omission/placeholder",
-      "status": "not-started",
+      "status": "verified-contract",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "docs/plans/task-dag.json: 122 task IDs + dependency rules, acyclic, drift 0 (validated by node script); all IDs/deps exist"
     },
     {
       "id": "PAR-CORE-001",
@@ -104,9 +106,10 @@
       "sources": "DSH Session replay target",
       "dshMapping": "role fold",
       "acceptance": "process restart restore",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "compat/session.mjs reduceRoleFold replays role fold from the log (resume semantics); LIVE process-restart restore blocked by R16 (Boulder mirror fallback implemented)"
     },
     {
       "id": "PAR-PROMPT-001",
@@ -125,9 +128,10 @@
       "sources": "`model-core/src/agent-model-requirements.ts` + tests",
       "dshMapping": "capability aliases + model router",
       "acceptance": "candidate order/override/current model/variant/fallback differential",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "roles/model-binding.mjs ROLE_ROUTE_DEFAULTS/CATEGORY_ROUTE_DEFAULTS + capability alias checks + routing fallback machine (tests/routing.test.mjs); differential fixtures vs model-core (docs/upstream)"
     },
     {
       "id": "PAR-MODEL-002",
@@ -278,9 +282,10 @@
       "sources": "prompt/config/hook/tests",
       "dshMapping": "same Session planning phase + compat guard；可选 shell hardening",
       "acceptance": "Write/Edit path exact；delegation warning；bash 保持 compat 或以 deviation harden；no implementation before approval",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "policy-registry prometheus: allow edit/webfetch/question/task, deny bash/interactive_bash/call_omo_agent/todo, md-only Write narrowing at guard layer; planning pipeline (pipeline.mjs + plan-ir.mjs) + tests"
     },
     {
       "id": "PAR-PLAN-002",
@@ -373,9 +378,10 @@
       "sources": "atlas hook",
       "dshMapping": "work driver",
       "acceptance": "final wave/child/blocker",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "continuation/driver.mjs Atlas continuation + atlas/work-policy.mjs dependency gate; tests/lifecycle-planning-continuation.test.mjs + start-work-atlas.test.mjs"
     },
     {
       "id": "PAR-CONT-003",
@@ -383,9 +389,10 @@
       "sources": "command/guard",
       "dshMapping": "durable stop state",
       "acceptance": "countdown race stop",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "continuation/driver.mjs stop-requested state + upstream constants (countdown 2000/abort 3000/cooldown 5000/compaction 60000/stagnation 3/failures 5/reset 300000); tests"
     },
     {
       "id": "PAR-CONT-004",
@@ -467,9 +474,10 @@
       "sources": "DSH goal",
       "dshMapping": "auxiliary status",
       "acceptance": "replay/fork/start remain disarmed；only direct top-level human resume may rearm；OMO driver forbidden",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "compat/goals-todos.mjs goal CAS (revisions advance exactly one) + replay fold stays disarmed; tests/goals-todos.test.mjs"
     },
     {
       "id": "PAR-RULE-001",
@@ -610,7 +618,8 @@
       "acceptance": "cold replay/current state",
       "status": "not-started",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "UI 阶段: current agent/work/status projection — Slot registration pending (Inspect live Slot contract when implemented)"
     },
     {
       "id": "PAR-REL-001",
@@ -629,9 +638,10 @@
       "sources": "scripts/workflows",
       "dshMapping": "pack/SBOM/compat",
       "acceptance": "final manifest verified；Senpi compatibility 不得从 publish 缺失",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "tools/verify-preset-payload.mjs (digest allowlist gate) + g1-preflight 12 checks + E29/E31 drills + schema-freshness lock check; clean-consumer verification pending"
     },
     {
       "id": "PAR-REL-003",
