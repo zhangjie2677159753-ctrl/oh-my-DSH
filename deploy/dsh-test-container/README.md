@@ -25,3 +25,17 @@ deploy/dsh-test-container/run-web.sh   # 容器内启动 web profile，宿主机
 1. build 成功、`dsh web` 在容器内健康启动；
 2. 日志确认 OMO preset 被 roster 发现且挂载无错误；
 3. mount/unmount、资源计数由 headless/API 步骤逐步补齐（后续轮次）。
+
+## 评测吞吐观察（2026-08-16，NIM openai/gpt-oss-120b）
+
+- 每场景上限 1500s；实测每场景仅 2-4 次工具调用、2-4 个助手回合即超时
+  （单回合 ~5-8 分钟）。E2E-01/02/03 均超时，行为目标（如 E2E-03 规划流、
+  E2E-04 /start-work 交接）多数未达。
+- 定位：模型端延迟为评测变量（`score-eval` 诚实边界已声明），不作为
+  OMO 适配器缺陷；但深行为场景（角色切换/委派/交接）的证据主要来自
+  定向探针（`G1-EVIDENCE.md` 12/13 条），而非 17 场景全量。
+- 候选模型已排查：deepseek-v4-flash-0731 工具回合挂起、mistral-small-4
+  410、kimi-k2.6 404、llama-3.3-70b 误路由 skill 工具——当前唯一可用
+  tool-calling 模型即 gpt-oss-120b。
+- 若 owner 提供更快的 tool-calling 模型路由，可重跑场景获得更厚的行为
+  证据（harness 已就绪，改 `DSH_TEST_MODEL` 即可）。
