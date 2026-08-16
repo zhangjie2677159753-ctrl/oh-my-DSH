@@ -76,3 +76,17 @@ deploy/dsh-test-container/run-web.sh   # 容器内启动 web profile，宿主机
 - E2E-09（2000 词长文）：0 调用 1 回合超时。
 - RC tag `omo-dsh-test-rc2` 验证通过（G1-EVIDENCE 第 16 条）；主 tag 切换
   待评测结算。
+
+## OpenCode GO 模型路由（2026-08-16 23:00，用户授权方向）
+
+- 容器内 `opencode-go`（pi-ai 内建目录 provider，api/baseURL 由目录填充）+
+  `deepseek-v4-flash`：settings 仅声明 apiKeyEnv + 模型表；key 经
+  `/tmp/omo-ocg-env`（0600，来自宿主凭据存储，全程不回显）注入
+  `docker --env-file`。
+- 冒烟探针（bash-44）一次通过：`omo_role(prometheus)` → 角色事件；
+  `bash echo hi` → `Error: omo role prometheus denies bash`；全程数分钟内
+  完成（无 1500s 超时）。
+- 完整 17 场景评测启动：`run-eval-opencode.sh`（EVAL_OUT=/tmp/omo-eval-ocg，
+  bash-45）；E2E-01 于 2 分钟内完成——与 NIM gpt-oss-120b（每场景 25 分钟
+  且多超时）形成第二个模型族数据点（modelEvalMatrix 用途）。
+- 与 NIM 评测（bash-36，/tmp/omo-eval）并行，互不干扰。
