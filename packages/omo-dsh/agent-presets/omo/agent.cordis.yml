@@ -56,6 +56,17 @@
 - id: tool-ask-user
   name: '@deepseek-ai/dsh-tool-ask-user'
 
+# ── Persistent PTY (E22 native-equivalent #4: interactive-bash-session) ──────
+# terminal-bash registers the shell backend on ctx.terminals; tool-terminal
+# exposes the six model-facing PTY tools (terminal_open & friends). Owner-scoped
+# sessions replace upstream's tmux tracking; the reminder builder lives in
+# compat/terminal.mjs.
+- id: terminal-bash
+  name: '@deepseek-ai/dsh-terminal-bash'
+
+- id: tool-terminal
+  name: '@deepseek-ai/dsh-tool-terminal'
+
 # ── OMO role runtime (E04 first integration) ────────────────────────────────
 # File-backed row resolved from this preset directory; registers omo_role and
 # omo_role_status tools that append/fold `omo/role` session events.
