@@ -29,8 +29,11 @@ pending-binding 与 unassigned 均为 0。
 
 preemptive-compaction（DSH compaction policy）、background-notification（Job/subagent settlement）、
 non-interactive-env（shell adapter）、interactive-bash-session（DSH Terminal）、
-auto-slash-command（DSH Commands）。每项需在 session 级容器验证中记录
-"上游行为 → DSH 原生行为"的等价观察，未完成前 GA 门不放行。
+auto-slash-command（DSH Commands）。等价证明主体已落
+`docs/plans/NATIVE-EQUIVALENCE-PROOFS.md`（上游行为+DSH 原生机制逐条行号引用、
+映射表、compat 补丁与 live 检查单）；每项还需在 session 级容器验证中记录
+"上游行为 → DSH 原生行为"的等价观察并回填该文件的 Live Evidence 块，
+未完成前 GA 门不放行。
 
 ## 例外项（constructed 面）
 

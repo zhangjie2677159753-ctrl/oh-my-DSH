@@ -349,6 +349,35 @@ DSH 运行时对 `Session.append` 不检查 `KNOWN_SESSION_EVENT_TYPES`（live a
 - file-backed preset 行（`name: ./omo-role-plugin.mjs`）由 include loader 接受；
 - 插件模块在容器内可加载：exports `name/inject/apply/Config`；裸导入通过 `omo-plugin/node_modules/@deepseek-ai/*` 真实 entry symlink 解决（整目录 symlink 不行，entry symlink 可以）。
 
+### 5.8 DSH 原生机制事实（E22 native-equivalent 五项证明的数据基础）
+
+逐项证明与 live 检查单在 `docs/plans/NATIVE-EQUIVALENCE-PROOFS.md`；此处锁定 DSH 侧事实：
+
+- Compaction：`ctx.compaction`（`CompactionEngine`）触发器仅 `pressure | context-overflow`；
+  默认后端 `compaction-basic`：`DEFAULT_THRESHOLD_RATIO = 0.8`、`DEFAULT_RETAIN_RATIO = 0.16`，
+  per-model policy override，校验 retain < threshold；context-overflow 可强制低于阈值压缩；
+  成功替换 surface span 为单 summary 节点并带 `compactCheckpointSource` 事务身份。
+- Bash 环境：`bash-local` 每次执行注入 `ENV_OVERRIDES = {NO_COLOR:'1', TERM:'dumb',
+  PAGER:'cat', GIT_PAGER:'cat'}`（可信调用方显式 env 可覆盖）；无 banned 交互命令警告面。
+- 交互终端：`ctx.terminals`（`TerminalSessionService`）owner-scoped PTY 注册表
+  （named session、`list(owner)`、owner 生命周期自动清理）+ 模型工具 `tool:pty`（`terminal_open`）。
+- 子代理结算事件：`subagent/start`、`subagent/end`、`subagent/descriptor`；无
+  message.part.delta 级转发面（background-notification 语义收缩到结算级）。
+- Slash 命令：`ctx.commands.register({name,description,handler})`；执行产生持久
+  `command/run`/`command/done` 配对事件；命令由人输入经 UI 派发（唯一 source 变体 `user`），
+  不改写模型消息。Skills：`skills` 服务 + `tool-skill`，显式调用注入 `instructions` 上下文。
+
+### 5.9 已核验的上游缺陷（行为回放偏差登记）
+
+- **non-interactive-env 索引错位（上游 bug）**：`hooks/non-interactive-env/
+  non-interactive-env-hook.ts` 的 `detectBannedCommand` 用**过滤后** pattern 列表的下标
+  去取**未过滤** `SHELL_COMMAND_PATTERNS.banned[i]`；i≥7 时错位——`git add -p` 的警告文本
+  会是 `'python (REPL)'`，`git rebase -i` 会报 `'node (REPL)'`。omo-dsh 复刻**意图**
+  （警告报出实际命中的命令名），偏差登记在
+  `packages/omo-dsh/src/guards/non-interactive.mjs` 与 `NATIVE-EQUIVALENCE-PROOFS.md` §3。
+- **idle-event completion-latch 矛盾（#4013 P0.1）**：见 §4（既有条目）。
+
+
 ## 6. 目标设计与有意增强
 
 以下是本项目决定，不是现行 OMO 的逐字事实：
