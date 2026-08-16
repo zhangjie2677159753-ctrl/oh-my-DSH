@@ -19,6 +19,8 @@ RUN corepack enable && corepack prepare pnpm@11.7.0 --activate
 WORKDIR /dsh
 COPY src/ .
 COPY omo-plugin/ /dsh/omo-plugin/
+# The plugin tree must be world-readable: the container runs as the host uid.
+RUN chmod -R a+rX /dsh/omo-plugin
 # The preset plugin's bare @deepseek-ai/* imports resolve through real
 # package-entry symlinks (Node ESM follows entry symlinks, but not a wholly
 # symlinked node_modules directory; the root install does not link workspace

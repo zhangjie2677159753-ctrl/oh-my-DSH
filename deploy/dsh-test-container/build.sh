@@ -81,6 +81,21 @@ fs.writeFileSync(file, source)
 console.log('build.sh: headless bundle patched to mount omo preset in setup')
 NODE
 
+# TEST-IMAGE-ONLY: the headless bundle composes no preset roster; add the
+# agent-presets service row (same shape as the web-app bundle's insert block)
+# to the SNAPSHOT's headless bundle patch so the mount above resolves.
+HEADLESS_PATCH="$STAGE/src/packages/bundle/headless/cordis.patch.yml"
+cat >> "$HEADLESS_PATCH" <<'EOF'
+
+# omo-dsh test integration (snapshot only): preset roster service.
+- insert:
+    - id: agent-presets
+      name: '@deepseek-ai/dsh-agent-presets'
+      config:
+        default: omo
+EOF
+echo 'build.sh: headless bundle patch extended with agent-presets insert'
+
 echo "Building image omo-dsh-test (proxy: 127.0.0.1:7890) ..."
 docker build \
   --network=host \

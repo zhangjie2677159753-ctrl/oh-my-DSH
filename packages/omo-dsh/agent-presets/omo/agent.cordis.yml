@@ -42,6 +42,8 @@
 
 - id: tool-fs-search
   name: '@deepseek-ai/dsh-tool-fs-search'
+  config:
+    sampleOverCapGlobResults: true
 
 - id: tool-goal
   name: '@deepseek-ai/dsh-tool-goal'

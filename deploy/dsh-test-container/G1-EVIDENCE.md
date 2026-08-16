@@ -41,13 +41,20 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
 11. [x] 真实模型回合解锁（NVIDIA NIM，owner 授权 `--env-file` 注入，key 零落地）：
     - 容器内 hand-declared `nvidia` 路由（api: openai-completions, baseURL NIM）
       首次真实回合输出 `OK`；
-    - headless bundle 在镜像快照中接入 `agentPresets.mount(agentCtx, 'omo')`
-      （仅测试镜像；上游注释明确部署须在此处 join preset）；
+    - headless bundle 在镜像快照中接入 `agentPresets.mount(agentCtx, 'omo')` +
+      `agent-presets` service insert（仅测试镜像；上游注释明确部署须在此处 join preset）；
     - 会话日志证据：`omo_role_status` 出现在挂载会话的工具目录（kimi run ×4）；
     - 挂载会话内工具管线实跑：`tool/call` + `tool/result` 各 1（llama-3.3-70b）；
     - 模型端仍有缺口：NIM deepseek-v4-flash-0731 工具回合挂起、llama 误把
       omo_role_status 当 skill——需换工具调用更强的模型（openai/gpt-oss-120b）
       或调 prompt，下一轮继续。
+12. [x] **G1 核心里程碑**（openai/gpt-oss-120b）：
+    - 挂载错误链修复：agent-presets service insert + `config.default: omo`、
+      tool-fs-search 必填 config、镜像内插件树 chmod a+rX；
+    - 会话日志权威证据：`tool/call: omo_role_status` + `tool/result`（模型真实调用
+      OMO 工具并执行成功）；
+    - `omo_role` 切换与 prometheus 下 bash guard deny 的实跑在 `g1-guard.sh`
+      （本轮进行中，结果见后续轮次证据）。
 
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
