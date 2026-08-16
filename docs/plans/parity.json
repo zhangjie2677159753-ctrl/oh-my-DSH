@@ -179,9 +179,10 @@
       "sources": "agent source/tests",
       "dshMapping": "child persona/filter",
       "acceptance": "write/delegate denial",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding spec written (DSH-BINDING.md) or pending"
     },
     {
       "id": "PAR-AGENT-002",
@@ -189,9 +190,10 @@
       "sources": "source/tests",
       "dshMapping": "child persona/filter",
       "acceptance": "source citations/no write",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding spec written (DSH-BINDING.md) or pending"
     },
     {
       "id": "PAR-AGENT-003",
@@ -199,9 +201,10 @@
       "sources": "source/tests",
       "dshMapping": "child persona/filter",
       "acceptance": "read-only, route, output",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding spec written (DSH-BINDING.md) or pending"
     },
     {
       "id": "PAR-AGENT-004",
@@ -209,9 +212,10 @@
       "sources": "source/tests/profile policy",
       "dshMapping": "child structured result + profile-specific guard",
       "acceptance": "no write；delegation visibility/execution differential；not primary",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding spec written (DSH-BINDING.md) or pending"
     },
     {
       "id": "PAR-AGENT-005",
@@ -219,9 +223,10 @@
       "sources": "source/tests/profile policy",
       "dshMapping": "saved-plan-path review + profile-specific guard",
       "acceptance": "approve/reject；no write；delegation/profile differential；not primary",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding spec written (DSH-BINDING.md) or pending"
     },
     {
       "id": "PAR-AGENT-006",
@@ -229,9 +234,10 @@
       "sources": "source/tests",
       "dshMapping": "vision child",
       "acceptance": "text-only no silent degrade",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding spec written (DSH-BINDING.md) or pending"
     },
     {
       "id": "PAR-AGENT-007",
@@ -313,9 +319,10 @@
       "sources": "state/storage",
       "dshMapping": "repository",
       "acceptance": "resume/reconcile",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding spec written (DSH-BINDING.md) or pending"
     },
     {
       "id": "PAR-CONT-001",
@@ -375,9 +382,10 @@
       "sources": "Atlas/current tests",
       "dshMapping": "evidence store",
       "acceptance": "stale/failed rejected",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding spec written (DSH-BINDING.md) or pending"
     },
     {
       "id": "PAR-VERIFY-002",
@@ -438,9 +446,10 @@
       "sources": "rules-engine",
       "dshMapping": "context resolver",
       "acceptance": "precedence/path traversal",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding spec written (DSH-BINDING.md) or pending"
     },
     {
       "id": "PAR-AGENTSMD-001",
@@ -448,9 +457,10 @@
       "sources": "agents-md-core",
       "dshMapping": "native-aware adapter",
       "acceptance": "no duplicate injection",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding spec written (DSH-BINDING.md) or pending"
     },
     {
       "id": "PAR-SKILL-001",
@@ -458,9 +468,10 @@
       "sources": "skills-loader-core",
       "dshMapping": "DSH Skill Registry",
       "acceptance": "collision/disabled/agent scope",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding spec written (DSH-BINDING.md) or pending"
     },
     {
       "id": "PAR-HASH-001",
@@ -468,9 +479,10 @@
       "sources": "hashline-core",
       "dshMapping": "tool enhancer/guard",
       "acceptance": "stale/ambiguous fail",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding spec written (DSH-BINDING.md) or pending"
     },
     {
       "id": "PAR-COMMENT-001",
@@ -478,9 +490,10 @@
       "sources": "core/hook tests",
       "dshMapping": "post-execute/final gate",
       "acceptance": "apply patch/lazy init",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding spec written (DSH-BINDING.md) or pending"
     },
     {
       "id": "PAR-MEM-001",
@@ -488,9 +501,10 @@
       "sources": "memory-core",
       "dshMapping": "Host service",
       "acceptance": "scope/delete/privacy",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding spec written (DSH-BINDING.md) or pending"
     },
     {
       "id": "PAR-MEM-002",
@@ -508,9 +522,10 @@
       "sources": "team-core",
       "dshMapping": "Host + child backend",
       "acceptance": "no dual authority",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding spec written (DSH-BINDING.md) or pending"
     },
     {
       "id": "PAR-TEAM-002",
@@ -518,9 +533,10 @@
       "sources": "`hyperplan/SKILL.md`",
       "dshMapping": "actual-roster TeamRun + owned handoff DTO",
       "acceptance": "planner not team member；verbatim output/questions；lead no pre-plan",
-      "status": "verified-contract",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding spec written (DSH-BINDING.md) or pending"
     },
     {
       "id": "PAR-TEAM-003",
@@ -528,9 +544,10 @@
       "sources": "Hyperplan/security-research Skills",
       "dshMapping": "workflow-specific roster policy",
       "acceptance": "5 normal；4 Hyperplan degraded barriers/cleanup；security remains 5",
-      "status": "verified-contract",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding spec written (DSH-BINDING.md) or pending"
     },
     {
       "id": "PAR-OPENCLAW-001",
@@ -538,9 +555,10 @@
       "sources": "openclaw-core/schema",
       "dshMapping": "optional Host integration",
       "acceptance": "credential/outage/malicious input",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding spec written (DSH-BINDING.md) or pending"
     },
     {
       "id": "PAR-MON-001",
@@ -548,9 +566,10 @@
       "sources": "monitor source/tests",
       "dshMapping": "Host observer + projection",
       "acceptance": "no authority mutation",
-      "status": "not-started",
+      "status": "contract-implemented",
       "conformanceProfile": "opencode-compat",
-      "scope": "in-scope"
+      "scope": "in-scope",
+      "implementationNote": "pure logic + node --test; DSH runtime binding spec written (DSH-BINDING.md) or pending"
     },
     {
       "id": "PAR-UI-001",
@@ -1059,19 +1078,20 @@
     "deviations": 5
   },
   "implementationSnapshot": {
-    "updatedAt": "2026-08-15T19:36:17.049Z",
+    "updatedAt": "2026-08-16T07:05:15.029Z",
     "suite": {
-      "tests": 229,
-      "pass": 229,
+      "tests": 264,
+      "pass": 264,
       "fail": 0
     },
     "preflight": "PASSED",
     "statusCounts": {
-      "verified-contract": 12,
-      "not-started": 32,
-      "contract-implemented": 16
+      "verified-contract": 10,
+      "not-started": 15,
+      "contract-implemented": 35
     },
-    "note": "status vocabulary: contract-implemented = pure/integration verified; implemented = DSH runtime binding verified",
-    "gaGap": "docs/plans/GA-GAP-ANALYSIS.md"
+    "note": "contract-implemented = pure/integration verified; implemented = DSH runtime binding verified",
+    "gaGap": "docs/plans/GA-GAP-ANALYSIS.md",
+    "hookClosure": "docs/plans/HOOK-CLOSURE-REPORT.md"
   }
 }
