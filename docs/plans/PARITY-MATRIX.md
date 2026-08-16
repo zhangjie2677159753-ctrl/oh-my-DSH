@@ -1,5 +1,9 @@
 # OMO → DSH 功能对等矩阵
 
+> **状态真源**：本文件的「初始状态」列是生成时的历史快照。**实时状态以
+> `parity.json` 为准**（含逐行 `status`、`implementationNote`、
+> `liveEvidence`），本文件每次状态变更时同步 `parity.json`，不再回改历史列。
+
 ## 1. 使用规则
 
 本矩阵是 release authority，不是说明性 checklist。每行必须处于以下一个状态：
