@@ -125,6 +125,14 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
       shell/PTY 全拒，也是历次 E2E bash 失败根因——本次一并修复）；
     - 证据：/tmp/omo-probe18-out.txt + 会话日志。
 
+20. [x] **主镜像切换**（2026-08-17，`omo-dsh-test:latest` = rc 全部已验证内容）：
+    - consumer drill 全绿（77 文件 digest + discovery + 插件加载）；
+    - 组合冒烟一次通过：`omo_role(prometheus, main-final)` → 角色事件；
+      `terminal_open` → `started terminal session pty-1 (main)`；
+      `terminal_list` → `pty-1 (main) [shell] running pid=17`；
+    - 主 tag 现含：动态段 + P2 双监听器 + 注入段 + pty-family isolate 组 +
+      bubblewrap + 权限预设。
+
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
 - 双 Session + `omo/role` 事件 + flush 的生命周期（当前 preset 尚未挂接 role 事件插件，
