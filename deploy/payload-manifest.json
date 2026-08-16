@@ -46,6 +46,7 @@
     "packages/omo-dsh/src/boulder/plan-checklist.mjs": "59a376e54339e9cabb56918f6fed3106bfd379a2d8b9e8989dbd800fb66d8cf5",
     "packages/omo-dsh/src/boulder/repository.mjs": "ec5069fcc6d2df138dfdf5fb0bd5b106c58a91141224d49fd5756709298cbcd1",
     "packages/omo-dsh/src/boulder/state.mjs": "dadc66a31172787a816b5e8710a4efcf7993ceb28f1abefa2d1122328260e53e",
+    "packages/omo-dsh/src/children/DSH-BINDING.md": "ef213459947bb176514614e541833bcc8f6dcb4de3a1226813f17bac23dfe505",
     "packages/omo-dsh/src/children/dsh-binding.mjs": "b13b064c6e905ba52d976fe6237289ea5aa05101d97a7b1cce2dfbfb367df6f9",
     "packages/omo-dsh/src/children/notification.mjs": "37e0cc4b35697fb2ac8628da2955233eaed1e80e3d97530448793ae9e0a7f1f3",
     "packages/omo-dsh/src/children/registry.mjs": "5306177d2128ca97cdcb62fc696a605ae08ecde841204d20b334e4dddf9c0c9b",
