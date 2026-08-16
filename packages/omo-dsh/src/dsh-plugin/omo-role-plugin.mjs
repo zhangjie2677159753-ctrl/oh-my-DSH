@@ -49,7 +49,7 @@ export const OMO_IDENTITY_SECTION = {
 // DSH runtime.
 const { decideTool } = await import('file:///dsh/omo-plugin/packages-omo-dsh/roles/guard-decision.mjs')
 const { buildDynamicSections } = await import('file:///dsh/omo-plugin/packages-omo-dsh/roles/dynamic-sections.mjs')
-const { settlementToNotification } = await import('file:///dsh/omo-plugin/packages-omo-dsh/children/notification.mjs')
+const { buildNotificationEvent } = await import('file:///dsh/omo-plugin/packages-omo-dsh/children/notification.mjs')
 
 function foldRole(session) {
   let role = 'sisyphus'
@@ -114,17 +114,24 @@ export function apply(ctx) {
   // Settlement -> notification audit event (P2 first half). The next-turn
   // prompt injection of pending notifications is a follow-up step; the event
   // itself is durable and foldable.
-  ctx.on('subagent/end', (event) => {
+  // Source-verified event shape (packages/subagent/subagent/src/types.ts):
+  //   subagent/start -> SubagentRunInfo {runId, provider, id, local}
+  //   subagent/end   -> SubagentRunEndInfo {runId, provider, id, local,
+  //                       stopReason: completed|aborted|error|max-tokens|refusal,
+  //                       lastAssistantMessage?}
+  //   listener args: (info, parent: Agent)
+  ctx.on('subagent/end', (info, parent) => {
     try {
-      const data = event?.data ?? event ?? {}
-      const agent = data.agent
-      const session = agent?.session
+      const session = parent?.session
       if (!session?.append) return
-      const notification = settlementToNotification({
-        childRole: data.role ?? null,
-        childSessionId: data.sessionId ?? null,
-        ok: data.ok !== false,
-        error: data.error ?? null,
+      const stopReason = info?.stopReason ?? 'error'
+      const notification = buildNotificationEvent({
+        childRole: null,
+        childSessionId: typeof info?.id === 'string' ? info.id : null,
+        status: stopReason === 'completed' ? 'completed'
+          : stopReason === 'aborted' ? 'interrupted'
+          : 'failed',
+        summary: stopReason === 'completed' ? '' : `stopReason: ${stopReason}`,
       })
       session.append('omo/notification', notification)
     } catch {
