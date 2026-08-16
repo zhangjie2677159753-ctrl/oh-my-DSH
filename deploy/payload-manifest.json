@@ -86,6 +86,7 @@
     "packages/omo-dsh/src/release/rollback.mjs": "928d54b77da5a5c16d062eff2451ec30cc6255e039a3b285776c92cc2ce2b018",
     "packages/omo-dsh/src/roles/commands.mjs": "f96da8e0affec5bc028980b04c48436970202aecb8e18b1924b6f8ead345cf08",
     "packages/omo-dsh/src/roles/controller.mjs": "2507ac2da914e5cad5f20d0c690ae8c2314d1cfedc0e2e47d6aa5c67a071c220",
+    "packages/omo-dsh/src/roles/dynamic-sections.mjs": "9188516eb403684ea1c662f825e2ad1b5195920b1a2977d69af02a996c730dfc",
     "packages/omo-dsh/src/roles/guard-decision.mjs": "5f7d0dc99898d0662ea0e6f7e1350bbcf0285ce9ffa0252bb0333d7834f42128",
     "packages/omo-dsh/src/roles/lifecycle.mjs": "ff24b44dd2683e43e0e7f5c2a49f46c0d3c94f57721cf3f09e52f61bfe22fbf8",
     "packages/omo-dsh/src/roles/manifests.mjs": "897e3db977e7dc5f3e78c620b0bd3100b0ce826794c3af06b41d45ed77c6e2d2",
