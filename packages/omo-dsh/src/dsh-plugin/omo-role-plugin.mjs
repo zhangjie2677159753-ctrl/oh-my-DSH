@@ -121,12 +121,12 @@ export function apply(ctx) {
   //                       lastAssistantMessage?}
   // Scoped dispatch (subagent/src/lifecycle.ts): listeners receive ONLY info —
   // the parent carrier keys the scope, it is NOT a listener argument. The
-  // parent session is therefore captured from the pre-execute guard below
-  // (every tool call — including the subagent tool itself — passes through).
-  let parentSession = null
+  // owning agent is instead read from ctx.agent (core/agent/src/index.ts:
+  // the association is an own property of Agent.ctx and inherited by derived
+  // contexts, which is exactly where the preset mounts).
   ctx.on('subagent/end', (info) => {
     try {
-      const session = parentSession
+      const session = ctx.agent?.session
       if (!session?.append) return
       const stopReason = info?.stopReason ?? 'error'
       const notification = buildNotificationEvent({
@@ -198,7 +198,6 @@ export function apply(ctx) {
   // fold decides; a deny here cannot be overridden by later listeners.
   ctx.on('tools/pre-execute', (exec, next) => {
     const agent = exec?.agent
-    if (agent?.session) parentSession = agent.session
     if (!agent?.session) return next()
     const { role } = foldRole(agent.session)
     const decision = decideTool({ role, toolName: exec.name, args: exec.arguments ?? {} })
