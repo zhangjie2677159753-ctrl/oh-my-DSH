@@ -20,15 +20,27 @@ export async function runVariantEval({ variant, scenarios, checkers, runScenario
         results.push({ id: assertion.id, pass: false, evidence: null, missing: true, scenario, reason: `no checker for ${assertion.id}` })
         continue
       }
-      const verdict = await checker({ scenario, observation })
-      results.push({
-        id: assertion.id,
-        pass: verdict?.pass === true,
-        evidence: verdict?.evidence ?? null,
-        missing: false,
-        scenario,
-        reason: verdict?.pass === true ? undefined : (verdict?.reason ?? "checker failed"),
-      })
+      try {
+        const verdict = await checker({ scenario, observation })
+        results.push({
+          id: assertion.id,
+          pass: verdict?.pass === true,
+          evidence: verdict?.evidence ?? null,
+          missing: false,
+          scenario,
+          reason: verdict?.pass === true ? undefined : (verdict?.reason ?? "checker failed"),
+        })
+      } catch (error) {
+        // deployment-owned checkers must never kill the whole eval run
+        results.push({
+          id: assertion.id,
+          pass: false,
+          evidence: null,
+          missing: false,
+          scenario,
+          reason: `checker error: ${error instanceof Error ? error.message : String(error)}`,
+        })
+      }
     }
   }
   // aggregate per assertion across scenarios: an assertion passes only when

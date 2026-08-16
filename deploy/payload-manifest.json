@@ -82,7 +82,7 @@
     "packages/omo-dsh/src/planning/pipeline.mjs": "8a02039a579b6cd79e7e5ca91a06049856fa901e67a9e4ff0816117c6e0b6ea4",
     "packages/omo-dsh/src/planning/plan-ir.mjs": "ac8ef7c29b9c935888e4f775d5745ee3df790fe9cb6ad9f7be7b47a41710885e",
     "packages/omo-dsh/src/prompts/eval-plan.mjs": "d8ecf01b35227c171d9ca9e751fd774b9a9b8199864c1e9abde3b64e6fbdbac6",
-    "packages/omo-dsh/src/prompts/eval-runner.mjs": "f86eb492db2a4b07da50d8d4454e6a8db14445323b62d5f4478b610226bb02e1",
+    "packages/omo-dsh/src/prompts/eval-runner.mjs": "238538dc6a7cc039355e351e0fcfc638656afc129f416075527a3019b5e0f607",
     "packages/omo-dsh/src/release/rollback.mjs": "928d54b77da5a5c16d062eff2451ec30cc6255e039a3b285776c92cc2ce2b018",
     "packages/omo-dsh/src/roles/commands.mjs": "f96da8e0affec5bc028980b04c48436970202aecb8e18b1924b6f8ead345cf08",
     "packages/omo-dsh/src/roles/controller.mjs": "2507ac2da914e5cad5f20d0c690ae8c2314d1cfedc0e2e47d6aa5c67a071c220",
