@@ -268,7 +268,16 @@
 
 五项全部满足以下才算 E22 native-equivalent 关闭：
 
-1. 每项 §3 缺口（compat 补丁）有对应纯逻辑模块 + `node --test` 覆盖（merge 到 264 基线之上）；
+1. 每项 §3 缺口（compat 补丁）有对应纯逻辑模块 + `node --test` 覆盖（merge 到 264 基线之上）：
+
+   | 项 | 模块 | 测试 | 状态 |
+   |---|---|---|---|
+   | P1 | `packages/omo-dsh/src/compaction/policy-config.mjs` | `tests/compaction-notification.test.mjs` | [x] 覆盖 |
+   | P2 | `packages/omo-dsh/src/children/notification.mjs` | `tests/compaction-notification.test.mjs` | [x] 覆盖 |
+   | P3 | `packages/omo-dsh/src/guards/non-interactive.mjs` | `tests/non-interactive.test.mjs` | [x] 覆盖 |
+   | P4 | `packages/omo-dsh/src/compat/terminal.mjs` | `tests/slash-command-terminal.test.mjs` | [x] 覆盖 |
+   | P5 | `packages/omo-dsh/src/skills/slash-command.mjs` | `tests/slash-command-terminal.test.mjs` | [x] 覆盖 |
+
 2. 每项 §4 live 检查单在 G1 session 级容器验证中全部勾选，证据回填本文 Live Evidence 块
    （附 evidence 路径/事件 seq 引用）；
 3. `parity.json` 对应五行 `liveEvidence` 落证据引用后，HOOK-CLOSURE-REPORT 的
