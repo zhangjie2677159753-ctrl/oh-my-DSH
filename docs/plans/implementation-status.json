@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-16T12:24:43.811Z",
+  "generatedAt": "2026-08-16T12:44:30.719Z",
   "sourceOfTruth": [
     "docs/plans/task-dag.json",
     "packages/omo-dsh/tests/**",
@@ -102,10 +102,10 @@
       "omo-role-plugin"
     ]
   },
-  "moduleCount": 47,
+  "moduleCount": 60,
   "suite": {
-    "tests": 264,
-    "pass": 264,
+    "tests": 327,
+    "pass": 327,
     "fail": 0,
     "runner": "node --test tests/**/*.test.mjs"
   },
