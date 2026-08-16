@@ -8,6 +8,7 @@ import {
   dedupeBySeq,
   reduceRoleFold,
   initialRoleState,
+  assertNoLegacyHeaderDelta,
 } from "../src/compat/session.mjs"
 
 // --- lossless JSON guard ---
@@ -110,5 +111,30 @@ test("fold: unknown required event refuses reconstruction mid-replay", () => {
   assert.throws(
     () => reduceRoleFold([roleEvent(1, 1), { type: "future/required", seq: 2, time: 2, data: {} }]),
     /unknown required event/,
+  )
+})
+
+// --- CT-12: legacy request/header-delta rejection ---
+
+test("decodeSessionEvent rejects legacy request/header-delta with the DSH-mirrored error", () => {
+  assert.throws(
+    () => decodeSessionEvent({ type: "request/header-delta", seq: 3, time: 1, data: { delta: {} } }),
+    /unsupported legacy request\/header-delta format \(seq 3\)/,
+  )
+})
+
+test("reduceRoleFold refuses reconstruction when the log contains legacy header-delta", () => {
+  assert.throws(
+    () => reduceRoleFold([{ type: "request/header-delta", seq: 1, time: 1, data: {} }]),
+    /unsupported legacy request\/header-delta/,
+  )
+})
+
+test("assertNoLegacyHeaderDelta batch guard fails at the first hit", () => {
+  const clean = [{ type: "user/message", seq: 0, time: 0 }]
+  assert.equal(assertNoLegacyHeaderDelta(clean), clean)
+  assert.throws(
+    () => assertNoLegacyHeaderDelta([clean[0], { type: "request/header-delta", seq: 1, time: 1, data: {} }]),
+    /seq 1/,
   )
 })

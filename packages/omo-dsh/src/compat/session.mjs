@@ -83,6 +83,13 @@ export function decodeSessionEvent(event) {
   if (typeof event.type !== "string" || event.type.length === 0) throw new TypeError("event.type: expected non-empty string")
   if (!Number.isInteger(event.seq) || event.seq < 0) throw new TypeError(`event.seq: expected non-negative integer`)
   if (!Number.isFinite(event.time)) throw new TypeError("event.time: expected finite number")
+  if (event.type === "request/header-delta") {
+    // DSH fixed SHA rejects the legacy format in BOTH seed replay
+    // (core/session/src/index.ts:215) and persistence restore
+    // (session-persistence/coordinator.ts:275). The compat fold mirrors
+    // that fail-loud rejection — never silently accept or emulate.
+    throw new TypeError(`event.type "request/header-delta": unsupported legacy request/header-delta format (seq ${event.seq})`)
+  }
   if (event.type === "omo/role") {
     const errors = validateRoleSnapshot(event.data)
     if (errors.length > 0) throw new TypeError(errors.join("; "))
@@ -90,6 +97,14 @@ export function decodeSessionEvent(event) {
   }
   if (event.ignorable === true) return { skipped: true, kind: "ignorable", type: event.type, seq: event.seq }
   throw new TypeError(`event.type "${event.type}": unknown required event (refusing reconstruction)`)
+}
+
+/** Batch guard mirroring DSH's seed replay rejection (fails at first hit). */
+export function assertNoLegacyHeaderDelta(events) {
+  for (const event of events) {
+    if (event?.type === "request/header-delta") decodeSessionEvent(event) // throws legacy-specific
+  }
+  return events
 }
 
 // --- history/live merge with seq de-dup ---

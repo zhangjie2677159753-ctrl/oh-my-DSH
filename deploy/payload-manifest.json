@@ -59,7 +59,7 @@
     "packages/omo-dsh/src/compat/projection.mjs": "ad9645ff1d9abc00439fd486b93c7d392e9d195cd1f1e587d304c293f72ba028",
     "packages/omo-dsh/src/compat/prompt.mjs": "abe3ce3ce2484db2c314455ac3172159c306d90dff19abab94f884266cc3131c",
     "packages/omo-dsh/src/compat/routing.mjs": "aa96c2093df589fe506f5f56a9116e3b48c7ac43ba6cc210b419093823698e33",
-    "packages/omo-dsh/src/compat/session.mjs": "826da6abcea9ce58434439641fe580b525e44c163d9e4347a39ad17eb59c4e08",
+    "packages/omo-dsh/src/compat/session.mjs": "cf8e8c4eeb329d2049623e8a39db6490224259ccdeb9653d9606bade9048cd5c",
     "packages/omo-dsh/src/compat/subagents.mjs": "fe2e41540afe56583b3ef9e0ca7d032bce4b41fe82df5b6351bb299acba5b5cb",
     "packages/omo-dsh/src/compat/terminal.mjs": "5fcff739df65b27558125570433226792de9d650ec0974018dc5219eefdbea5c",
     "packages/omo-dsh/src/compat/tools.mjs": "504cd67c8e2c0d4ded42fa398058ea3bdd051be1c52979761380857d5a42fd11",

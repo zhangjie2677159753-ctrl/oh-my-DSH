@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "sourceDocument": "docs/plans/ACCEPTANCE-AND-EVALUATION.md section 4",
   "generatedBy": "local-node-extractor",
-  "generatedAt": "2026-08-16T12:39:33.457Z",
+  "generatedAt": "2026-08-16T13:46:47.585Z",
   "total": 35,
   "items": [
     {
@@ -86,8 +86,8 @@
       "id": "CT-12",
       "text": "removed header-delta/fallback semantics 拒绝。",
       "tests": [],
-      "status": "not-started",
-      "evidence": "needs explicit fail-loud guard rejecting removed header-delta/fallback config keys"
+      "status": "contract-implemented",
+      "evidence": "compat/session.mjs decodeSessionEvent + assertNoLegacyHeaderDelta (DSH-mirrored legacy rejection); tests/session.test.mjs 3 tests"
     },
     {
       "id": "CT-13",
