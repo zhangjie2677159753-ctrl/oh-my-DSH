@@ -98,6 +98,7 @@
     "packages/omo-dsh/src/tasks/DSH-BINDING.md": "106a3827acf1a6665a0f8c9932b69935deff045e7fe5ef5348fd736136cd134f",
     "packages/omo-dsh/src/tasks/concurrency.mjs": "209e3fad00aa7e7c592967464c8d9cf801ae4b2f63f15468f676501bb8e84d73",
     "packages/omo-dsh/src/tasks/control.mjs": "51a39fb36824fe47499ba68151cfff7b708b299fc6267a21f9404b0e3441da17",
+    "packages/omo-dsh/src/tasks/orchestration.mjs": "26ccc21b87fe7cc32433592f214ac962ec32d0171281f230be78a93be1d8f3bd",
     "packages/omo-dsh/src/tasks/reconciler.mjs": "3a205540aed191020cf51467b2479b475fb0fbaaa05aa082e931f3435de839ce",
     "packages/omo-dsh/src/tasks/spawn-request.mjs": "63f275dd5cd2e2b91712503cc67cd6a232d9c280057b717f86401bbd7822078f",
     "packages/omo-dsh/src/tasks/task.mjs": "58b6d91e6aa26889170edf07558e301b38d1cd4bfa21049feb7c341c184959e4",
