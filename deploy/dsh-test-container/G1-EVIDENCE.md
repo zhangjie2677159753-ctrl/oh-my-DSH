@@ -114,6 +114,17 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
     - 子侧审计通知同现（child id 完整）；
     - 证据：/tmp/omo-probe11-out.txt + 父/子双日志（turn/end 事件可见）。
 
+19. [x] **P4 终端族 live 闭环**（2026-08-17，rc10 镜像 + opencode-go/deepseek-v4-flash）：
+    - preset 增 pty-family isolate 组（terminal-service 插件包装器 +
+      terminal-bash + tool-terminal，entry shim 解析）；
+    - `terminal_open {type:shell,name:main}` → `started terminal session
+      pty-1 (main) [type: shell]`（PTY 真实启动）；`terminal_list` →
+      `pty-1 (main) [shell] running pid=18`（owner-scoped 注册表真实列出）；
+    - 前置修复：prepare-home 增 `permission.defaultPreset:
+      danger-full-access`（镜像宿主部署行为；此前容器无 sandbox 后端导致
+      shell/PTY 全拒，也是历次 E2E bash 失败根因——本次一并修复）；
+    - 证据：/tmp/omo-probe18-out.txt + 会话日志。
+
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
 - 双 Session + `omo/role` 事件 + flush 的生命周期（当前 preset 尚未挂接 role 事件插件，

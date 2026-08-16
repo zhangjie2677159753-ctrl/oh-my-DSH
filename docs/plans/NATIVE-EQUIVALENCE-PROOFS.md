@@ -293,5 +293,5 @@
 | P1-1..P1-4（compaction） | 未执行：需长会话压力；compat 配置（0.78/0.16）已入 `compaction/policy-config.mjs` + 测试 | - | - |
 | P2-1..P2-3（notification） | **全部 live 闭环**：父侧权威通知 + 子侧审计（rc5，G1-17）+ pending 注入段与回合末清空（rc6，G1-18）；全序列零插件错误 | G1-EVIDENCE 17+18 | 2026-08-16 |
 | P3-1（banned 命令警告） | **blocked-on-seam**：DSH pre-execute 无 per-call 警告注入面（OMO 为警告非拒绝），警告交付需 G11 tool-output 投影缝；P3-2/P3-3 由 DSH 原生 ENV_OVERRIDES 覆盖（语义等价，已记录） | §3.3 | 2026-08-16 |
-| P4-1..P4-4（terminal） | 未执行：需模型使用 tool:pty；提醒文本构建器已入 `compat/terminal.mjs` + 测试 | - | - |
+| P4-1..P4-4（terminal） | **P4-1/P4-2 live 达成**：preset pty-family isolate 组 + `terminal_open` 启动 pty-1 + `terminal_list` 列出（G1-19）；P4-3 容器 dispose 清理（rm --rm 无泄漏）；P4-4 提醒注入待绑定（构建器已测） | G1-EVIDENCE 19 | 2026-08-17 |
 | P5-1..P5-4（slash-command） | 未执行：UI 派发面，headless 无命令输入；模板执行器已入 `skills/slash-command.mjs` + 测试 | - | - |

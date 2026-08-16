@@ -22,6 +22,11 @@ HOST_SETTINGS="${DSH_SETTINGS_SOURCE:-$HOME/.dsh/settings.yaml}"
   echo "  model: ${DSH_TEST_MODEL:-deepseek-v4-flash}"
   echo 'agent-presets:'
   echo '  default: omo'
+  # mirror the host deployment's permission preset (the host runs
+  # danger-full-access; without it shell/PTY execution requires a sandbox
+  # backend the test container does not run)
+  echo 'permission:'
+  echo '  defaultPreset: danger-full-access'
   echo 'llm-pi-ai:'
   echo '  providers:'
   echo '    opencode-go:'

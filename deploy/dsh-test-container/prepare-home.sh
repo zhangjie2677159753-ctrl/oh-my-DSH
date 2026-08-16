@@ -21,6 +21,11 @@ cp "$ROOT"/packages/omo-dsh/agent-presets/omo/preset.yml \
   echo "  model: ${DSH_TEST_MODEL:-deepseek-ai/deepseek-v4-flash-0731}"
   echo 'agent-presets:'
   echo '  default: omo'
+  # mirror the host deployment's permission preset (the host runs
+  # danger-full-access; without it shell/PTY execution requires a sandbox
+  # backend the test container does not run)
+  echo 'permission:'
+  echo '  defaultPreset: danger-full-access'
   echo 'llm-pi-ai:'
   echo '  providers:'
   echo '    nvidia:'
