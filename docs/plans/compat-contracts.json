@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "sourceDocument": "docs/plans/ACCEPTANCE-AND-EVALUATION.md section 4",
   "generatedBy": "local-node-extractor",
-  "generatedAt": "2026-08-16T12:31:14.725Z",
+  "generatedAt": "2026-08-16T12:39:33.457Z",
   "total": 35,
   "items": [
     {
@@ -114,8 +114,8 @@
       "id": "CT-16",
       "text": "cancel keepInbox。",
       "tests": [],
-      "status": "not-started",
-      "evidence": "task() facade lacks cancel-with-keepInbox binding (E09/E10 runtime)"
+      "status": "contract-implemented",
+      "evidence": "tests/task-control.test.mjs + src/tasks/control.mjs: interrupt/send DTOs with keepInbox contract embedded (live DSH probe pending)"
     },
     {
       "id": "CT-17",
