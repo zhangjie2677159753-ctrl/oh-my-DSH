@@ -77,6 +77,16 @@ check("hook inventory lock present with 56/58/4", () => {
   if (lock.exceptions.length !== 4) throw new Error(`exceptions=${lock.exceptions.length}`)
 })
 
+check("omo config keys lock present with 46 top-level keys (E30 schema freshness)", () => {
+  const keys = JSON.parse(readFileSync(join(root, "docs/upstream/omo-config-keys.json"), "utf8"))
+  if (keys.counts?.topLevelKeys !== 46) throw new Error(`topLevelKeys=${keys.counts?.topLevelKeys}`)
+  if (typeof keys.source !== "string" || !keys.source.includes("038ed0cbbefe2b40677b63867aeea0d16bc303e0")) {
+    // pinned SHA missing from the lock source = upstream SHA moved;
+    // locks must be regenerated + reviewed (fail closed, never auto-fix)
+    throw new Error(`config-keys lock source drifted: ${keys.source}`)
+  }
+})
+
 check("no secrets in production source", () => {
   // Test fixtures deliberately embed synthetic secret-shaped strings to
   // exercise the validator's fail-closed sniff; production code must be clean.
