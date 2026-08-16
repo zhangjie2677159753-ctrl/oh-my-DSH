@@ -90,3 +90,12 @@ deploy/dsh-test-container/run-web.sh   # 容器内启动 web profile，宿主机
   bash-45）；E2E-01 于 2 分钟内完成——与 NIM gpt-oss-120b（每场景 25 分钟
   且多超时）形成第二个模型族数据点（modelEvalMatrix 用途）。
 - 与 NIM 评测（bash-36，/tmp/omo-eval）并行，互不干扰。
+
+## OpenCode GO 首场景对比（2026-08-16 23:07）
+
+- E2E-01（单文件 bug 修复）opencode-go/deepseek-v4-flash：**107s、18 次工具
+  调用、19 回合、2990 字符完整转录**（read/glob/bash/str_replace_editor/grep/
+  ask_user_question 全链路，模型完成修复讨论）。
+- 同场景 NIM gpt-oss-120b：1500s 超时、4 次调用、无完成。
+- 行为证据质量发生质变：17 场景预期 30-60 分钟全部完成（vs NIM 6+ 小时且
+  多数超时）。
