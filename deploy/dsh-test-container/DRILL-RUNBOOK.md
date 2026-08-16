@@ -46,3 +46,22 @@
   `G1-EVIDENCE.md` 第 14/15 条并更新 parity.json G12 行 `liveEvidence`；
 - drill 使用合成 fixture，不触碰真实用户 home 与运行中的宿主 DSH（3080）；
 - 完成后 `docker ps` 无 drill 残留实例。
+
+## 评测结算后的镜像重建与 E22 live 验证（round 37 预制）
+
+前置：`run-eval.sh`（bash-36）完全结算；先应用 `run-eval.sh.fix.patch`。
+
+1. **重建镜像**（含新插件：动态段 + 结算审计）：
+   ```bash
+   deploy/dsh-test-container/build.sh          # 重烤 omo-plugin 树（roles/dynamic-sections + children/notification）
+   ```
+2. **构建自检**（无模型）：`drill-consumer.sh` 全绿（discovery + 插件加载）。
+3. **G6' 动态段 live**：模型探针 "Call omo_role role=prometheus reason=g6. Then call omo_role_status. Then stop."
+   → 会话日志出现 omo/role 事件且无插件错误；段注册经容器内 exec 探针
+   （`ctx.systemPrompt` 段清单含 omo:current-role/omo:guard-status/omo:work）。
+4. **P2 结算绑定**：若 bash-40 探针给出 subagent/end 形状 → 按形状修正插件
+   handler → 子代理探针复跑 → 父会话出现 `omo/notification` 事件。
+5. **E22 Live Evidence 表回填**：每项勾选 + 证据路径/seq 引用；
+   parity 行 liveEvidence 同步。
+6. **收尾**：`finish-eval.sh /tmp/omo-eval --commit`（重建 summary → 状态视图 →
+   MODEL-EVAL-REPORT.md 含硬门块）。
