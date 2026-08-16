@@ -16,7 +16,7 @@
 | 治理 | License L0（内部/私有）、上游锁、基线 tag、默认分支 main | — |
 | 机器文件 | parity(60)/DAG(122)/分类/Hook 56-58-4/compat 35(逐项证据)/评测语料 | 各 JSON 文件 |
 | 纯逻辑 | **60 模块、331 测试全绿** | `cd packages/omo-dsh && node --test 'tests/**/*.test.mjs'` |
-| 门 | preflight 9 项一键门（含 E30 载荷 digest 门、E29/E31 演练） | `node tools/g1-preflight.mjs` |
+| 门 | preflight 10 项一键门（含 E30 载荷 digest 门、E29/E31 演练） | `node tools/g1-preflight.mjs` |
 | DSH 集成 | OMO preset + `omo_role`/`omo_role_status` + 守卫瀑布 + 身份段 + 动态段构建器（内容层） | `deploy/dsh-test-container/` |
 | 容器证据 | boot 200、discovery healthy、session 级 mount、**真实模型角色切换 + prometheus bash-deny 拒执**、零残留 | `G1-EVIDENCE.md` 1-13 条 |
 | 评测工程 | 17 场景执行中（NIM gpt-oss-120b）；机器证据解析（含 session-log 转录回退、重复调用计量）；summary 确定性重建；评分报告 + 机器硬门（6/9） | `run-eval.sh` / `rebuild-summary.mjs` / `score-eval.mjs` / `tools/check-hard-gates.mjs` |
