@@ -30,6 +30,11 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
    - `guard-decision.mjs` + policy 树烘焙进镜像，容器内实测：
      `prometheusBash:false`、`prometheusSrcWrite:false`；
    - 同一纯函数在仓库内 241 项测试覆盖（`guard-decision.test.mjs`）。
+9. [x] E04 prompt 身份段接入（第四轮）：
+   - 插件 `inject: ['tools','systemPrompt']`（persona 行同款模式）；
+   - `omo:identity`（order -50，persona 之前）经 `ctx.effect(() => ctx.systemPrompt.section(...))` 注册；
+   - 容器加载验证：`inject:["tools","systemPrompt"]`、`hasIdentitySection:true`；
+   - 动态 per-role section 待 scope→agent 映射核实后接入（`src/continuation/DSH-BINDING.md`）。
 
 ## 仍未执行（需要真实模型会话，属后续部署门）
 

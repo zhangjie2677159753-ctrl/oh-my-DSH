@@ -16,10 +16,26 @@ import { defineTool } from '@deepseek-ai/dsh-tools'
 import z from '@deepseek-ai/schemastery'
 
 export const name = 'omo-role'
-export const inject = ['tools']
+export const inject = ['tools', 'systemPrompt']
 export const Config = z.object({})
 
 const ROLES = ['sisyphus', 'hephaestus', 'prometheus', 'atlas']
+
+// Static OMO identity section, ordered before the persona slot (0) so every
+// joined session starts with the OMO authority contract. Per-role dynamic
+// sections stay pending until the scope→agent mapping is verified at the
+// fixed SHA (see src/continuation/DSH-BINDING.md).
+export const OMO_IDENTITY_SECTION = {
+  name: 'omo:identity',
+  order: -50,
+  text: [
+    'OMO (Oh My OpenAgent) operating contract on DeepSeek Harness.',
+    'Primary roles: sisyphus | hephaestus | prometheus | atlas — ONE session, switched via the',
+    'authoritative `omo/role` session-log event; prompt text can never change the role.',
+    'Hard rules are enforced by code (tool guard waterfall), not by this prompt.',
+    'Completion requires machine evidence plus the mandatory Final Verification Wave.',
+  ].join('\n'),
+}
 
 // Guard decision + policy live in the baked omo-plugin tree so the same pure
 // function is unit-tested in the repo and executed by the DSH waterfall.
@@ -50,6 +66,9 @@ const statusOutput = {
 }
 
 export function apply(ctx) {
+  // Static identity section in the agent scope; disposer-owned via ctx.effect.
+  ctx.effect(() => ctx.systemPrompt.section(OMO_IDENTITY_SECTION), 'omo-role.identity-section')
+
   ctx.tools.register(defineTool({
     name: 'omo_role',
     description:
