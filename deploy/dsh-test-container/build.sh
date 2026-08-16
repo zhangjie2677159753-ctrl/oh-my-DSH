@@ -68,6 +68,9 @@ SHIM
 cat > "$STAGE/omo-plugin/tool-terminal-row.mjs" <<'SHIM'
 export * from '@deepseek-ai/dsh-tool-terminal'
 SHIM
+cat > "$STAGE/omo-plugin/terminal-service-row.mjs" <<'SHIM'
+export * from '@deepseek-ai/dsh-terminal'
+SHIM
 
 # TEST-IMAGE-ONLY integration (documented in G1-EVIDENCE.md): the stock
 # headless bundle composes no preset roster; its own comment says a deployment

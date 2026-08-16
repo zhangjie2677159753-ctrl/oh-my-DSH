@@ -29,7 +29,8 @@ RUN mkdir -p /dsh/omo-plugin/node_modules/@deepseek-ai \
     && ln -s /dsh/packages/core/tools /dsh/omo-plugin/node_modules/@deepseek-ai/dsh-tools \
     && ln -s /dsh/vendor/schemastery /dsh/omo-plugin/node_modules/@deepseek-ai/schemastery \
     && ln -s /dsh/packages/terminal/terminal-bash /dsh/omo-plugin/node_modules/@deepseek-ai/dsh-terminal-bash \
-    && ln -s /dsh/packages/terminal/tool-terminal /dsh/omo-plugin/node_modules/@deepseek-ai/dsh-tool-terminal
+    && ln -s /dsh/packages/terminal/tool-terminal /dsh/omo-plugin/node_modules/@deepseek-ai/dsh-tool-terminal \
+    && ln -s /dsh/packages/terminal/terminal /dsh/omo-plugin/node_modules/@deepseek-ai/dsh-terminal
 
 # lefthook's postinstall requires a git repository (rev-parse); init one so
 # lifecycle scripts succeed without touching any real repo.
