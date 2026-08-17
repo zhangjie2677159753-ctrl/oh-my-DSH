@@ -31,7 +31,7 @@ if (!key) {
 const prompts = JSON.parse(readFileSync(join(root, 'docs/plans/eval-prompts.json'), 'utf8')).prompts
 const ids = Object.keys(prompts).filter((id) => /^E2E-\d+$/.test(id)).sort().slice(0, Number(maxScenarios))
 const workdir = process.env.OMO_REPLAY_CWD ?? '/tmp/omo-g4'
-const dbPath = `${process.env.HOME}/.local/share/opencode/opencode.db`
+const dbPath = process.env.OMO_OPENCODE_DB ?? `${process.env.HOME}/.local/share/opencode/opencode.db`
 
 const map = []
 for (const id of ids) {
@@ -45,7 +45,7 @@ for (const id of ids) {
       encoding: 'utf8',
       timeout: 900_000,
       maxBuffer: 4 * 1024 * 1024,
-      env: { ...process.env, OPENCODE_GO_API_KEY: key },
+      env: { ...process.env, OPENCODE_GO_API_KEY: key, PWD: workdir, OPENCODE_DB: `${workdir}/replay.db` },
     })
   } catch (error) {
     output = `(run error: ${error.message}) ${String(error.stdout ?? '').slice(0, 300)}`

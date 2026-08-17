@@ -46,7 +46,7 @@ const OMO_DSH_TOOL_EQUIVALENCE = {
   interactive_bash: 'terminal_open',
   terminal_open: 'terminal_open',
 }
-const dbPath = `${process.env.HOME}/.local/share/opencode/opencode.db`
+const dbPath = process.env.OMO_OPENCODE_DB ?? `${process.env.HOME}/.local/share/opencode/opencode.db`
 const db = new DatabaseSync(dbPath, { readOnly: true })
 
 const rows = []
