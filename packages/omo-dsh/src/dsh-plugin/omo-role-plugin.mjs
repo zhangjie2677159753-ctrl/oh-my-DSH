@@ -279,6 +279,25 @@ export function apply(ctx) {
   }))
 
   ctx.tools.register(defineTool({
+    name: 'omo_memory_read',
+    description: 'Read the OMO session memory entries written this session (session scope only; folded from omo/memory-write events).',
+    parameters: {},
+    output: {
+      schema: { type: 'object', additionalProperties: false, properties: { count: { type: 'integer', required: true }, entries: { type: 'array', items: { type: 'object' } } } },
+      render: (_a, v) => [{ type: 'text', text: v.count === 0 ? 'session memory: empty' : v.entries.map((e) => `- ${e.content}`).join('\n') }],
+    },
+    execute(_args, exec) {
+      if (!exec.agent) throw new Error('omo_memory_read requires an owning agent session')
+      const entries = []
+      for (const event of exec.agent.session.events) {
+        if (event.type === 'omo/memory-write') entries.push({ content: event.data.content, at: event.data.at })
+      }
+      return { count: entries.length, entries }
+    },
+    presentCall: () => ({ card: 'generic', title: 'Read OMO memory', kind: 'other', rawInput: null }),
+  }))
+
+  ctx.tools.register(defineTool({
     name: 'omo_boulder_role',
     description: 'Read the OMO role mirror from the Boulder workspace file (cross-restart authority per ADR-R16).',
     parameters: {},
