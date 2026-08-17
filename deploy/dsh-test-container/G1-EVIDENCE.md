@@ -198,6 +198,14 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
       达成（agent 侧可测部分）；
     - 证据：/tmp/soak2-21..50.txt（追加）+ /tmp/soak-1..20.txt。
 
+29. [x] **G10 门控启用路径 live**（2026-08-17，主镜像 + opencode-go/flash）：
+    - `OMO_OPENCLAW_ENABLED=1`：`omo_openclaw_status` → "openclaw enabled;
+      redacted: hey, key is [REDACTED]"——启用路径 + 密钥脱敏 live；
+    - `OMO_TEAM_ENABLED=1`：`omo_team_status(workflow=hyperplan, 5 名成员)`
+      → "roster valid"（hyperplan cardinality 规则全链）；
+      首探发现 roster 字符串→{name} 归一缺陷，修复后主镜像重建验证；
+    - 证据：/tmp/omo-probe24/25-out.txt。
+
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
 - 双 Session + `omo/role` 事件 + flush 的生命周期（当前 preset 尚未挂接 role 事件插件，
