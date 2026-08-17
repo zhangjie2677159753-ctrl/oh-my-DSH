@@ -51,6 +51,14 @@
 - 演示台持久化：用户级 systemd 单元 `omo-demo.service`（on-failure 重启），
   LAN/Tailscale 3200 不再依赖会话内后台作业。
 
+## 宿主 DSH 部署（2026-08-17）
+
+- `deploy/host-install.sh` 把 omo preset 装入宿主 DSH 用户根
+  `~/.dsh/.agent-presets/omo/`（纯新增，不动现有配置）；容器路径改写为
+  仓库 src 树，@deepseek-ai/* 经 entry symlink 解析（容器同款模式）；
+- discovery 无缓存（每次 list() 重扫）→ UI 的 preset 选择器立即出现
+  "omo"，无需重启；用户在真实 DSH 会话中选择 omo 即真正使用。
+
 ## C1 证据检查点 #2（2026-08-17 13:40）
 
 - 40 会话合成批量完成（10 类场景循环）；演示台累计 **51 会话、17 角色
