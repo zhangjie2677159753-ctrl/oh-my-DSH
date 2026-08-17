@@ -25,6 +25,9 @@
 
 - 监控：`omo_monitor_status` 工具 + InvariantRegistry（宿主接入后）+ usage 报告；
   每次角色切换/守卫拒执/续跑决策落 Session Log 审计；
+  **C1 演示台仪器已上线**（2026-08-17）：每对话会话记录机器事实
+  （工具调用/角色事件/回合，/tmp/omo-demo-sessions.jsonl），`GET /stats`
+  输出累计指标与 false-success 候选（声称完成但零工具调用）；
 - kill-switch：R-rollback 演练（`drill-rollback.sh`）+ preset 停止 + 载荷 digest
   回退；任一阶段指标不达标即回退至上一阶段；
 - 数据纪律：行为分由人审（10 维度权重表 `eval-corpus.json` behavioralScore），
