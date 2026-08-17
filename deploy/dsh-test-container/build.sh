@@ -70,6 +70,11 @@ cp "$ROOT/packages/omo-dsh/src/memory/policy.mjs" \
 mkdir -p "$STAGE/omo-plugin/packages-omo-dsh/monitor"
 cp "$ROOT/packages/omo-dsh/src/monitor/policy.mjs" \
    "$STAGE/omo-plugin/packages-omo-dsh/monitor/"
+mkdir -p "$STAGE/omo-plugin/packages-omo-dsh/team" "$STAGE/omo-plugin/packages-omo-dsh/openclaw"
+cp "$ROOT/packages/omo-dsh/src/team/policy.mjs" \
+   "$STAGE/omo-plugin/packages-omo-dsh/team/"
+cp "$ROOT/packages/omo-dsh/src/openclaw/policy.mjs" \
+   "$STAGE/omo-plugin/packages-omo-dsh/openclaw/"
 
 # P4: terminal-family entry shims + real-entry symlinks so the preset's
 # absolute file-backed rows resolve bare @deepseek-ai/* specifiers through

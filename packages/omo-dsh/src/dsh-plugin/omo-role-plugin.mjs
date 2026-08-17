@@ -54,6 +54,8 @@ const { buildNotificationEvent } = await import('file:///dsh/omo-plugin/packages
 const { buildRoleMirror, parseRoleMirror } = await import('file:///dsh/omo-plugin/packages-omo-dsh/boulder/role-mirror.mjs')
 const { assertMemoryWriteAllowed, applyRedaction } = await import('file:///dsh/omo-plugin/packages-omo-dsh/memory/policy.mjs')
 const { createMonitorRegistry } = await import('file:///dsh/omo-plugin/packages-omo-dsh/monitor/policy.mjs')
+const { validateTeamRoster, createTeamRun } = await import('file:///dsh/omo-plugin/packages-omo-dsh/team/policy.mjs')
+const { redact, createOpenClawPolicy } = await import('file:///dsh/omo-plugin/packages-omo-dsh/openclaw/policy.mjs')
 
 function boulderDir() {
   return process.env.OMO_BOULDER_DIR
@@ -327,6 +329,48 @@ export function apply(ctx) {
       }
     },
     presentCall: () => ({ card: 'generic', title: 'Read Boulder role mirror', kind: 'other', rawInput: null }),
+  }))
+
+  // Team mode: gated by the mapped OMO config (integrations.team); the DSH
+  // surface for team messaging is the subagent mechanism — the policy layer
+  // owns roster validation + run semantics, exposed as an on-demand tool.
+  const teamEnabled = process.env.OMO_TEAM_ENABLED === '1'
+  ctx.tools.register(defineTool({
+    name: 'omo_team_status',
+    description: 'Read the OMO team mode gate and validate a proposed roster (member names).',
+    parameters: {
+      workflow: { type: 'string' },
+      members: { type: 'array', items: { type: 'string' } },
+    },
+    output: {
+      schema: { type: 'object', additionalProperties: false, properties: { enabled: { type: 'boolean', required: true }, rosterOk: { type: 'boolean' }, reason: { type: 'string' } } },
+      render: (_a, v) => [{ type: 'text', text: v.enabled ? `team mode enabled; roster ${v.rosterOk ? 'valid' : `invalid: ${v.reason}`}` : 'team mode disabled (set OMO_TEAM_ENABLED=1 to enable)' }],
+    },
+    execute(args) {
+      if (!teamEnabled) return { enabled: false, rosterOk: false, reason: 'team_mode.enabled is false' }
+      const errors = validateTeamRoster({ workflow: args.workflow ?? 'default', members: args.members ?? [] })
+      return { enabled: true, rosterOk: errors.length === 0, reason: errors.join('; ') }
+    },
+    presentCall: () => ({ card: 'generic', title: 'Read OMO team gate', kind: 'other', rawInput: null }),
+  }))
+
+  // OpenClaw policy: disabled by default (no gateway tooling in Batch A);
+  // the policy instance owns redaction + retry semantics for future binding.
+  const openClawPolicy = createOpenClawPolicy({ enabled: process.env.OMO_OPENCLAW_ENABLED === '1' })
+  ctx.tools.register(defineTool({
+    name: 'omo_openclaw_status',
+    description: 'Read the OMO OpenClaw policy gate and redact a candidate outbound message.',
+    parameters: {
+      message: { type: 'string' },
+    },
+    output: {
+      schema: { type: 'object', additionalProperties: false, properties: { enabled: { type: 'boolean', required: true }, redacted: { type: 'string' } } },
+      render: (_a, v) => [{ type: 'text', text: v.enabled ? `openclaw enabled; redacted: ${v.redacted}` : 'openclaw disabled (no gateway binding in Batch A)' }],
+    },
+    execute(args) {
+      return { enabled: openClawPolicy.state().enabled, redacted: redact(args.message ?? '') }
+    },
+    presentCall: () => ({ card: 'generic', title: 'Read OMO OpenClaw gate', kind: 'other', rawInput: null }),
   }))
 
   // Monitor registry (per preset instance) + status tool: the monitor-status
