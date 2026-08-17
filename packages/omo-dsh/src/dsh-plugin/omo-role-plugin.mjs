@@ -23,6 +23,7 @@
 //     still executes) — recorded in NATIVE-EQUIVALENCE-PROOFS.md §3.3.
 import { defineTool } from '@deepseek-ai/dsh-tools'
 import z from '@deepseek-ai/schemastery'
+import { mkdir, writeFile, rename, readFile } from 'node:fs/promises'
 
 export const name = 'omo-role'
 export const inject = ['tools', 'systemPrompt']
@@ -50,6 +51,26 @@ export const OMO_IDENTITY_SECTION = {
 const { decideTool } = await import('file:///dsh/omo-plugin/packages-omo-dsh/roles/guard-decision.mjs')
 const { buildDynamicSections } = await import('file:///dsh/omo-plugin/packages-omo-dsh/roles/dynamic-sections.mjs')
 const { buildNotificationEvent } = await import('file:///dsh/omo-plugin/packages-omo-dsh/children/notification.mjs')
+const { buildRoleMirror, parseRoleMirror } = await import('file:///dsh/omo-plugin/packages-omo-dsh/boulder/role-mirror.mjs')
+
+function boulderDir() {
+  return process.env.OMO_BOULDER_DIR
+    ?? (process.env.DSH_HOME ? `${process.env.DSH_HOME}/workspace` : null)
+}
+
+async function writeRoleMirror(roleState) {
+  const dir = boulderDir()
+  if (!dir) return
+  const target = `${dir}/.omo/role.json`
+  try {
+    await mkdir(`${dir}/.omo`, { recursive: true })
+    const tmp = `${target}.tmp`
+    await writeFile(tmp, JSON.stringify(buildRoleMirror(roleState), null, 2))
+    await rename(tmp, target)
+  } catch {
+    // mirror write is best-effort; the session log stays the live authority
+  }
+}
 
 function foldRole(session) {
   let role = 'sisyphus'
@@ -190,6 +211,7 @@ export function apply(ctx) {
         changedAt: new Date().toISOString(),
       })
       refreshDynamicSections(session)
+      void writeRoleMirror({ role: args.role, revision, changedBy: 'user', reason: args.reason, changedAt: new Date().toISOString() })
       return { role: args.role, revision }
     },
     presentCall: args => ({ card: 'generic', title: 'Switch OMO role', kind: 'other', rawInput: args.role }),
@@ -220,6 +242,37 @@ export function apply(ctx) {
     }
     return next()
   })
+
+  ctx.tools.register(defineTool({
+    name: 'omo_boulder_role',
+    description: 'Read the OMO role mirror from the Boulder workspace file (cross-restart authority per ADR-R16).',
+    parameters: {},
+    output: {
+      schema: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          status: { type: 'string', required: true, enum: ['ok', 'missing', 'corrupt', 'unsupported-version', 'invalid'] },
+          role: { type: 'string' },
+          revision: { type: 'integer' },
+          authority: { type: 'string', required: true },
+        },
+      },
+      render: (_a, v) => [{ type: 'text', text: v.status === 'ok' ? `Boulder role mirror: ${v.role} (revision ${v.revision})` : `Boulder role mirror: ${v.status}` }],
+    },
+    async execute() {
+      try {
+        const dir = boulderDir()
+        if (!dir) return { status: 'missing', authority: 'none' }
+        const parsed = parseRoleMirror(await readFile(`${dir}/.omo/role.json`, 'utf8'))
+        if (parsed.status !== 'ok') return { status: parsed.status, authority: 'none' }
+        return { status: 'ok', role: parsed.mirror.role, revision: parsed.mirror.revision, authority: 'boulder-mirror' }
+      } catch {
+        return { status: 'missing', authority: 'none' }
+      }
+    },
+    presentCall: () => ({ card: 'generic', title: 'Read Boulder role mirror', kind: 'other', rawInput: null }),
+  }))
 
   // Inject-once semantics: pending notifications ride the next turn's prompt,
   // then clear at its end (upstream chat.message injection analogue).

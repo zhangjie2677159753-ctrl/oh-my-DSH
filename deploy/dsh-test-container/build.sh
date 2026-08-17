@@ -47,7 +47,8 @@ cp "$ROOT/deploy/dsh-test-container/Dockerfile" "$STAGE/Dockerfile"
 mkdir -p "$STAGE/omo-plugin" \
          "$STAGE/omo-plugin/packages-omo-dsh/roles" \
          "$STAGE/omo-plugin/packages-omo-dsh/compat" \
-         "$STAGE/omo-plugin/packages-omo-dsh/children"
+         "$STAGE/omo-plugin/packages-omo-dsh/children" \
+         "$STAGE/omo-plugin/packages-omo-dsh/boulder"
 cp "$ROOT/packages/omo-dsh/src/dsh-plugin/omo-role-plugin.mjs" "$STAGE/omo-plugin/"
 cp "$ROOT/packages/omo-dsh/src/roles/guard-decision.mjs" \
    "$ROOT/packages/omo-dsh/src/roles/policy-registry.mjs" \
@@ -58,6 +59,8 @@ cp "$ROOT/packages/omo-dsh/src/compat/tools.mjs" \
    "$STAGE/omo-plugin/packages-omo-dsh/compat/"
 cp "$ROOT/packages/omo-dsh/src/children/notification.mjs" \
    "$STAGE/omo-plugin/packages-omo-dsh/children/"
+cp "$ROOT/packages/omo-dsh/src/boulder/role-mirror.mjs" \
+   "$STAGE/omo-plugin/packages-omo-dsh/boulder/"
 
 # P4: terminal-family entry shims + real-entry symlinks so the preset's
 # absolute file-backed rows resolve bare @deepseek-ai/* specifiers through

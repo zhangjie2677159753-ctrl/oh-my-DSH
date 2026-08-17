@@ -103,3 +103,26 @@ test("task sessions normalize ids and enforce origin enum", () => {
   assert.equal(normalizeSessionId("dsh:abc"), "dsh:abc")
   assert.equal(normalizeSessionId("abc"), "dsh:abc")
 })
+
+// --- G8 role mirror (ADR-R16) ---
+
+test("role mirror round-trips and fails closed on corrupt/unsupported input", async () => {
+  const { buildRoleMirror, parseRoleMirror, reconcileRoleMirror } = await import("../src/boulder/role-mirror.mjs")
+  const mirror = buildRoleMirror({ role: "prometheus", revision: 3, reason: "r", changedAt: "t" })
+  const parsed = parseRoleMirror(JSON.stringify(mirror))
+  assert.equal(parsed.status, "ok")
+  assert.equal(parsed.mirror.role, "prometheus")
+  assert.equal(parseRoleMirror("not json").status, "corrupt")
+  assert.equal(parseRoleMirror(JSON.stringify({ schemaVersion: 99 })).status, "unsupported-version")
+  assert.equal(parseRoleMirror(JSON.stringify({ schemaVersion: 1, role: "", revision: 0 })).status, "invalid")
+  assert.equal(parseRoleMirror("").status, "missing")
+})
+
+test("reconcileRoleMirror: session log wins; mirror only when the log cannot be restored", async () => {
+  const { reconcileRoleMirror } = await import("../src/boulder/role-mirror.mjs")
+  const log = { role: "prometheus", revision: 2 }
+  const mirror = { role: "prometheus", revision: 1, changedAt: "t", changedBy: "user", reason: "" }
+  assert.deepEqual(reconcileRoleMirror({ logRole: log, mirror }), { authority: "session-log", role: log, mirrorStale: true })
+  assert.deepEqual(reconcileRoleMirror({ logRole: null, mirror }), { authority: "boulder-mirror", role: { role: "prometheus", revision: 1 }, mirrorStale: false })
+  assert.deepEqual(reconcileRoleMirror({ logRole: null, mirror: null }), { authority: "none", role: null, mirrorStale: false })
+})
