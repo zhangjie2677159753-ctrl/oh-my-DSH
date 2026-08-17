@@ -50,3 +50,11 @@
 - agent 已备：web 启动脚本、主镜像全绑定、行为评分工作单、/stats 仪器。
 - 演示台持久化：用户级 systemd 单元 `omo-demo.service`（on-failure 重启），
   LAN/Tailscale 3200 不再依赖会话内后台作业。
+
+## C1 证据检查点（2026-08-17 13:15）
+
+- 演示台累计会话 11+：四角色全覆盖（sisyphus/prometheus/hephaestus/atlas）、
+  boulder 镜像读写环、memory 写读环、monitor/team/openclaw 门控、
+  角色切换后镜像一致（hephaestus revision 1 → mirror 读回一致）；
+- false-success 候选 0（采样器持续在线）；
+- 双轮评测第二轮运行中（/tmp/omo-eval-ocg2，完成即出双轮一致性）。
