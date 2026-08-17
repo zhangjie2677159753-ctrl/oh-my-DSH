@@ -51,7 +51,7 @@
 
 | # | 差距 | 需要什么 |
 |---|---|---|
-| G10' | Memory/Team/OpenClaw/Monitor 绑定规格已备 | Host 服务绑定实现 + 容器验收 |
+| G10' | memory 写绑定 live（G1-25）；read/tombstone 与 team/openclaw/monitor 待续 | 按四份 `DSH-BINDING.md` |
 | G11 | UI 投影未注册 Slot | 实现时 Inspect 实时 Slot 合同 |
 | G12'' | 迁移/回滚纯态 + 干净消费者 drill 均通过 | 真机残余：容器资源检查 R5 实况、active-child M5 实况 |
 | G13'' | 载荷门/干净消费者/schema freshness 全部上线 | CI 强制（本仓库无 CI 平台，preflight 手动门） |

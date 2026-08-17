@@ -168,6 +168,14 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
       即止，无空转）；
     - 证据：/tmp/omo-probe20-out.txt + 会话日志。
 
+25. [x] **G10 memory 写绑定 live**（2026-08-17，rc14 + opencode-go/flash）：
+    - 良性内容：`omo_memory_write(scope=session, consent=true)` →
+      `omo/memory-write` 审计事件（scope/sessionId/content/at）→
+      "memory written"；
+    - 密钥内容：模型层自预判拒写（"I won't persist a credential-shaped
+      string"）+ 工具层代码闸（policy secret-sniff，纯测试覆盖）双保险；
+    - 证据：/tmp/omo-probe21/22-out.txt + 会话日志。
+
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
 - 双 Session + `omo/role` 事件 + flush 的生命周期（当前 preset 尚未挂接 role 事件插件，
