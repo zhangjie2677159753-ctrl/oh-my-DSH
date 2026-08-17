@@ -324,3 +324,18 @@ Atlas bypass、data leak、false success、retry storm、orphan、migration loss
 10) 预计提交序列。
 经审查通过后，再从 OMO-0101 开始编码。不要修改 DSH shipped preset，不要复制 OMO Prompt/Core，不要使用聊天中出现过的 token。
 ```
+
+## 9. 当前状态快照（2026-08-17，round 65）
+
+- 目标：`goal-e2ac5cd6`（72 轮上限，active）；owner 已授权全部剩余项，
+  GitHub 私有仓库推送已授权；
+- **Agent 侧全部关闭**：G1-EVIDENCE 28 项、双模型族评测（opencode-go 全完成）、
+  G4 黑盒回放（零合同破坏）、G8 双层镜像、G9 续跑、G10 全门控、G11 实证、
+  soak 50/50、canary 基础设施（演示台 systemd + /stats 仪器 + 采样器）；
+- **剩余=团队活动**：人审行为分（工作单已备）、真实使用数据（演示台自动
+  采集）、提名报告 5 待填项（`GA-NOMINATION-REPORT.md`）；
+- 快速验证通道：opencode-go 路由（`prepare-home-opencode.sh` +
+  `/tmp/omo-ocg-env` 0600）+ 容器主镜像 `omo-dsh-test:latest`；
+- 背景任务：第二轮评测（bash-99，/tmp/omo-eval-ocg2）运行中；
+  完成后 `compare-rounds.mjs` 做双轮一致性；
+- 用户本地提交 `.gitignore`（agent-review/ 等）——尊重勿动。
