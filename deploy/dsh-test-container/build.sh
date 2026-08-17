@@ -61,6 +61,9 @@ cp "$ROOT/packages/omo-dsh/src/children/notification.mjs" \
    "$STAGE/omo-plugin/packages-omo-dsh/children/"
 cp "$ROOT/packages/omo-dsh/src/boulder/role-mirror.mjs" \
    "$STAGE/omo-plugin/packages-omo-dsh/boulder/"
+mkdir -p "$STAGE/omo-plugin/packages-omo-dsh/continuation"
+cp "$ROOT/packages/omo-dsh/src/continuation/driver.mjs" \
+   "$STAGE/omo-plugin/packages-omo-dsh/continuation/"
 
 # P4: terminal-family entry shims + real-entry symlinks so the preset's
 # absolute file-backed rows resolve bare @deepseek-ai/* specifiers through
@@ -106,6 +109,65 @@ source = source.replace(
 )
 fs.writeFileSync(file, source)
 console.log('build.sh: headless bundle patched to mount omo preset in setup')
+NODE
+
+# TEST-IMAGE-ONLY: G9 continuation loop. The stock headless run() makes ONE
+# followup; patch the SNAPSHOT to loop up to 5 turns, deciding each boundary
+# with the baked continuation driver and appending an audit decision event.
+node - "$STAGE/src/packages/bundle/headless/src/index.ts" <<'NODE'
+const fs = require('fs')
+const file = process.argv[2]
+let source = fs.readFileSync(file, 'utf8')
+const anchor = `  agent.followup(createUserMessage({
+    content: [{ type: 'text', text: task }],
+    source: { kind: 'user' },
+  }))
+  await agent.whenIdle()`
+if (!source.includes(anchor)) {
+  console.error('build.sh: headless followup anchor missing; SHA drift?')
+  process.exit(1)
+}
+source = source.replace(
+  anchor,
+  `  const { decideContinuation } = await import('file:///dsh/omo-plugin/packages-omo-dsh/continuation/driver.mjs')
+  agent.followup(createUserMessage({
+    content: [{ type: 'text', text: task }],
+    source: { kind: 'user' },
+  }))
+  await agent.whenIdle()
+  // G9 test-image continuation loop (bounded, decision audited per turn).
+  const todosFrom = (session) => {
+    let todos = []
+    for (const ev of session.events) {
+      if (ev.type === 'todo/write' && Array.isArray(ev.data?.todos)) todos = ev.data.todos
+    }
+    return todos
+  }
+  for (let turn = 0; turn < 5; turn++) {
+    const decision = decideContinuation({
+      role: 'sisyphus',
+      todos: todosFrom(agent.session),
+      stopRequested: false,
+      userInterrupted: false,
+      pendingQuestion: false,
+      childrenRunning: false,
+      externalBlocker: null,
+      tokenLimitUnrecoverable: false,
+      consecutiveFailures: 0,
+      stagnationCount: 0,
+      latch: { allTodosCompletedAt: null },
+    })
+    try { agent.session.append('omo/continuation', { schemaVersion: 1, decision: decision.action, reason: decision.reason, turn }) } catch { /* audit best-effort */ }
+    if (decision.action !== 'continue') break
+    agent.followup(createUserMessage({
+      content: [{ type: 'text', text: 'Continue working on the task.' }],
+      source: { kind: 'user' },
+    }))
+    await agent.whenIdle()
+  }`,
+)
+fs.writeFileSync(file, source)
+console.log('build.sh: headless bundle patched with G9 continuation loop')
 NODE
 
 # TEST-IMAGE-ONLY: the headless bundle composes no preset roster; add the
