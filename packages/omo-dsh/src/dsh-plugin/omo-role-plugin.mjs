@@ -286,7 +286,7 @@ export function apply(ctx) {
     description: 'Read the OMO session memory entries written this session (session scope only; folded from omo/memory-write events).',
     parameters: {},
     output: {
-      schema: { type: 'object', additionalProperties: false, properties: { count: { type: 'integer', required: true }, entries: { type: 'array', items: { type: 'object' } } } },
+      schema: { type: 'object', additionalProperties: false, properties: { count: { type: 'integer', required: true }, entries: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { content: { type: 'string' }, at: { type: 'string' } } } } } },
       render: (_a, v) => [{ type: 'text', text: v.count === 0 ? 'session memory: empty' : v.entries.map((e) => `- ${e.content}`).join('\n') }],
     },
     execute(_args, exec) {
@@ -382,7 +382,7 @@ export function apply(ctx) {
     description: 'Read the OMO monitor registry snapshot (running monitors + interventions).',
     parameters: {},
     output: {
-      schema: { type: 'object', additionalProperties: false, properties: { monitors: { type: 'array', items: { type: 'object' } }, interventions: { type: 'array', items: { type: 'object' } } } },
+      schema: { type: 'object', additionalProperties: false, properties: { monitors: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { id: { type: 'string' }, kind: { type: 'string' } } } }, interventions: { type: 'array', items: { type: 'object', additionalProperties: false, properties: {} } } } },
       render: (_a, v) => [{ type: 'text', text: `monitors: ${v.monitors.length}, interventions: ${v.interventions.length}` }],
     },
     execute() {
