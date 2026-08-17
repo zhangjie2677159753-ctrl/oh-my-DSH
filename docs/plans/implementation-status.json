@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-16T14:05:27.570Z",
+  "generatedAt": "2026-08-17T00:00:00Z",
   "sourceOfTruth": [
     "docs/plans/task-dag.json",
     "packages/omo-dsh/tests/**",
@@ -145,9 +145,7 @@
     "liveGuardDeny": true
   },
   "openBlockers": [
-    "R16: DSH persistence restore refuses unknown non-ignorable session events (upstream registration surface P1; Boulder mirror reconciliation mitigation implemented)",
-    "G4: OMO-side differential replay needs a runnable fixed-SHA OpenCode environment",
-    "Eval throughput: gpt-oss-120b on NIM ~5-8 min/turn; scenarios time out at 1500s with 2-4 tool calls (recorded in deploy README)"
+    "G4: OMO-side differential replay needs a runnable fixed-SHA OpenCode environment (owner authorized build; construction pending)"
   ],
   "nextByDag": [
     "E28 model eval completion + summary rebuild + score report (running, ~5h)",

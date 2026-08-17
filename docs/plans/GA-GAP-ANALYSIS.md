@@ -33,7 +33,7 @@
 | # | 差距 | 需要什么 |
 |---|---|---|
 | G1'' | Session 级 mount/lifecycle 核心路径已达成 | 剩余矩阵项：双 Session 交互、flush 生命周期细节、child spawn/stop/resume 资源计数（headless 单会话内已大量覆盖） |
-| G2 | R16：DSH persistence restore 拒绝未知非 ignorable 事件 | 上游 event-type 注册面未开放；Boulder 镜像 reconciliation 兜底已实现并测试；需 owner 签字或上游解除 |
+| G2 | ✅ R16 已按 ADR 接受：Boulder 镜像 reconciliation 兜底（owner 签字 2026-08-17，`ADR-R16-BOULDER-FALLBACK.md`）；上游注册面开放后迁移并复审 | 已接受-缓解；P1 跟踪上游 |
 | G3 | ✅ 双模型族评测完成（opencode-go 全完成 + NIM 收尾） | 行为分人工判定（评分维度 10 项权重表已备） |
 | G4 | 与上游的 differential 回放：证据层/比较引擎就绪，DSH 端就绪 | 需 OMO 侧可运行 OpenCode fixed-SHA 环境才能执行黑盒回放 |
 
@@ -59,7 +59,7 @@
 
 ## 下一步行动（owner 决策优先）
 
-1. R16：跟踪 DSH 上游注册面或签字接受 Boulder 镜像兜底；
+1. ✅ R16 已签字接受（ADR）；继续 P1 跟踪上游注册面；
 2. G4：提供/批准 OMO 侧 OpenCode 环境后执行黑盒回放；
 3. G8/G9/G10：按规格继续宿主绑定实现（规格齐备，纯逻辑已就绪）；
 4. 人审：E2E 行为分（10 维度权重表）+ 3 项 n/a hard gate 专用探针；
