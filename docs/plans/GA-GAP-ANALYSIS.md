@@ -35,7 +35,7 @@
 | G1'' | Session 级 mount/lifecycle 核心路径已达成 | 剩余矩阵项：双 Session 交互、flush 生命周期细节、child spawn/stop/resume 资源计数（headless 单会话内已大量覆盖） |
 | G2 | ✅ R16 已按 ADR 接受：Boulder 镜像 reconciliation 兜底（owner 签字 2026-08-17，`ADR-R16-BOULDER-FALLBACK.md`）；上游注册面开放后迁移并复审 | 已接受-缓解；P1 跟踪上游 |
 | G3 | ✅ 双模型族评测完成（opencode-go 全完成 + NIM 收尾） | 行为分人工判定（评分维度 10 项权重表已备） |
-| G4 | 与上游的 differential 回放：证据层/比较引擎就绪，DSH 端就绪 | 需 OMO 侧可运行 OpenCode fixed-SHA 环境才能执行黑盒回放 |
+| G4 | ✅ 黑盒回放执行完成（环境构建 + 17 场景双端 + 比较 + 漂移分类，`DIFFERENTIAL-REPLAY-REPORT.md`）；无适配器合同破坏；machine-exact 对等不适用于跨产品比较（如实结论） | 已执行；等价表随上游收紧可复跑 |
 
 ### P1 — 行为闭包（纯逻辑已闭，live 大部达成）
 

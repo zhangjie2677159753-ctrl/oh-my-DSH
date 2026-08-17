@@ -118,13 +118,32 @@ export function normalizeOmoEvidence(events) {
  * machine-exact rows are compared exactly; tool CALL COUNTS are
  * semantic-tolerant (compared with tolerance), args never compared.
  */
-export function compareEvidence(omo, dsh, { documentedDeviations = [], callCountTolerance = 2 } = {}) {
+/**
+ * Tool-name equivalence table: the migration maps OMO OpenCode tool names
+ * onto the DSH surface (the target harness has a different tool vocabulary).
+ * Names not present on the OMO side break loudly (never silently dropped).
+ */
+export function applyToolEquivalence(sequence, equivalence) {
+  const unknown = []
+  const mapped = sequence.map((t) => {
+    const target = equivalence[t.name]
+    if (target === undefined) unknown.push(t.name)
+    return target ?? `?${t.name}`
+  })
+  return { mapped, unknown }
+}
+
+export function compareEvidence(omo, dsh, { documentedDeviations = [], callCountTolerance = 2, toolEquivalence = {} } = {}) {
   const findings = []
   const matchedDeviations = new Set()
   const push = (kind, detail) => findings.push({ kind, detail })
 
-  // machine-exact: tool name sequence
-  const omoSeq = omo.toolSequence.map((t) => t.name)
+  // machine-exact: tool name sequence, AFTER the documented equivalence
+  // mapping; unmapped OMO tools surface as ?<name> and break loudly
+  const omoRaw = omo.toolSequence.map((t) => t.name)
+  const { mapped: omoMapped, unknown } = applyToolEquivalence(omo.toolSequence, toolEquivalence)
+  for (const name of unknown) push('parity-break', `unmapped OMO tool "${name}" (add it to the equivalence table)`)
+  const omoSeq = omoMapped
   const dshSeq = dsh.toolSequence.map((t) => t.name)
   if (JSON.stringify(omoSeq) !== JSON.stringify(dshSeq)) {
     const dev = documentedDeviations.find((d) => d.kind === "tool-sequence" && d.omo === JSON.stringify(omoSeq) && d.dsh === JSON.stringify(dshSeq))
@@ -132,10 +151,12 @@ export function compareEvidence(omo, dsh, { documentedDeviations = [], callCount
     else push("parity-break", `tool sequence mismatch: omo=${omoSeq.join(",") || "—"} dsh=${dshSeq.join(",") || "—"}`)
   }
 
-  // machine-exact: role switch order
+  // machine-exact: role switch order — compared ONLY when both sides record
+  // role events (the OMO part stream carries no role events; an empty side
+  // is "not compared", never a mismatch)
   const omoRoles = omo.roleEvents.map((r) => r.role)
   const dshRoles = dsh.roleEvents.map((r) => r.role)
-  if (JSON.stringify(omoRoles) !== JSON.stringify(dshRoles)) {
+  if (omoRoles.length > 0 && dshRoles.length > 0 && JSON.stringify(omoRoles) !== JSON.stringify(dshRoles)) {
     const dev = documentedDeviations.find((d) => d.kind === "role-sequence" && d.omo === JSON.stringify(omoRoles) && d.dsh === JSON.stringify(dshRoles))
     if (dev) matchedDeviations.add(dev.id)
     else push("parity-break", `role sequence mismatch: omo=${JSON.stringify(omoRoles)} dsh=${JSON.stringify(dshRoles)}`)
@@ -185,12 +206,16 @@ export function normalizeOmoParts(messages) {
   const errors = []
   if (!Array.isArray(messages) || messages.length === 0) return { ok: false, errors: ['messages: expected non-empty array'] }
   const toolCalls = []
+  const todoWriteCounts = []
   let assistantTurns = 0
   for (const message of messages) {
     if (message?.role === 'assistant') assistantTurns += 1
     for (const part of message?.parts ?? []) {
       if (part?.type === 'tool' && typeof part.tool === 'string') {
         toolCalls.push({ toolName: part.tool, argsDigest: null, callId: null })
+        if (part.tool === 'todowrite' || part.tool === 'todo_write' || part.tool === 'todoread') {
+          todoWriteCounts.push({ items: 1 })
+        }
       }
     }
   }
@@ -203,7 +228,7 @@ export function normalizeOmoParts(messages) {
       toolCalls,
       toolSequence: normalizeToolSequence(toolCalls),
       roleEvents: [],
-      todoWrites: [],
+      todoWrites: todoWriteCounts,
       continuationDecisions: [],
       boulderWrites: [],
       assistantTurnCount: assistantTurns,

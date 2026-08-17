@@ -69,7 +69,7 @@ function omoEvidence() {
 }
 
 test("compareEvidence passes on machine-exact parity", () => {
-  const result = compareEvidence(omoEvidence(), dshEvidence())
+  const result = compareEvidence(omoEvidence(), dshEvidence(), { toolEquivalence: { read: 'read', bash: 'bash' } })
   assert.equal(result.pass, true)
   assert.equal(result.parityBreaks, 0)
 })
@@ -88,6 +88,7 @@ test("compareEvidence honors registered documented deviations", () => {
   const omo = omoEvidence()
   dsh.toolSequence = [{ name: "glob", order: 1, argsDigest: null }, { name: "bash", order: 2, argsDigest: null }]
   const result = compareEvidence(omo, dsh, {
+    toolEquivalence: { read: 'read', bash: 'bash', glob: 'glob' },
     documentedDeviations: [{
       id: "DEV-1",
       kind: "tool-sequence",
@@ -101,12 +102,13 @@ test("compareEvidence honors registered documented deviations", () => {
 })
 
 test("compareEvidence treats call counts as semantic-tolerant within tolerance", () => {
+  const eq = { read: 'read', bash: 'bash' }
   const dsh = dshEvidence()
   dsh.toolCalls.push({ toolName: "glob", argsDigest: null, callId: "3" })
-  const within = compareEvidence(omoEvidence(), dsh, { callCountTolerance: 2 })
+  const within = compareEvidence(omoEvidence(), dsh, { callCountTolerance: 2, toolEquivalence: eq })
   assert.equal(within.semanticDivergences, 0)
   dsh.toolCalls.push({ toolName: "glob", argsDigest: null, callId: "4" }, { toolName: "glob", argsDigest: null, callId: "5" })
-  const outside = compareEvidence(omoEvidence(), dsh, { callCountTolerance: 2 })
+  const outside = compareEvidence(omoEvidence(), dsh, { callCountTolerance: 2, toolEquivalence: eq })
   assert.equal(outside.semanticDivergences, 1)
 })
 

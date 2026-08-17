@@ -12,6 +12,40 @@ const [mapFile = '/tmp/omo-replay/map.json', dshDir = '/tmp/omo-eval-ocg', outFi
 const { normalizeDshEvidence, normalizeOmoParts, compareEvidence } = await import(join(here, 'evidence.mjs'))
 
 const map = JSON.parse(readFileSync(mapFile, 'utf8'))
+
+// Documented OMO OpenCode -> DSH tool-name equivalence (the migration's
+// vocabulary mapping; the target harness's names are canonical).
+const OMO_DSH_TOOL_EQUIVALENCE = {
+  read: 'read',
+  glob: 'glob',
+  grep: 'grep',
+  bash: 'bash',
+  shell: 'bash',
+  write: 'write',
+  edit: 'edit',
+  patch: 'edit',
+  str_replace_editor: 'str_replace_editor',
+  todowrite: 'todo_write',
+  todoread: 'todo_write',
+  todo_write: 'todo_write',
+  question: 'ask_user_question',
+  ask_user_question: 'ask_user_question',
+  webfetch: 'web_fetch',
+  webfetch_clean: 'web_fetch',
+  web_search: 'web_search',
+  task: 'subagent',
+  call_omo_agent: 'subagent',
+  plan: 'create_goal',
+  create_plan: 'create_goal',
+  update_plan: 'update_goal',
+  get_goal: 'get_goal',
+  update_goal: 'update_goal',
+  create_goal: 'create_goal',
+  omo_role: 'omo_role',
+  omo_role_status: 'omo_role_status',
+  interactive_bash: 'terminal_open',
+  terminal_open: 'terminal_open',
+}
 const dbPath = `${process.env.HOME}/.local/share/opencode/opencode.db`
 const db = new DatabaseSync(dbPath, { readOnly: true })
 
@@ -46,7 +80,7 @@ for (const entry of map) {
   }
 
   if (omo.ok && dsh?.ok) {
-    const result = compareEvidence(omo.evidence, dsh.evidence)
+    const result = compareEvidence(omo.evidence, dsh.evidence, { toolEquivalence: OMO_DSH_TOOL_EQUIVALENCE })
     rows.push({
       scenario: id,
       omoTools: omo.evidence.toolSequence.map((t) => t.name),
