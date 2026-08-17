@@ -176,6 +176,15 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
       string"）+ 工具层代码闸（policy secret-sniff，纯测试覆盖）双保险；
     - 证据：/tmp/omo-probe21/22-out.txt + 会话日志。
 
+26. [x] **G10 全门控绑定 live**（2026-08-17，主镜像 + opencode-go/flash）：
+    - 组合冒烟一次通过：`omo_team_status`（disabled 门控）+
+      `omo_openclaw_status`（disabled 门控 + 脱敏就绪）+
+      `omo_monitor_status`（monitors: 1）+ `omo_boulder_role`（missing——
+      无角色切换故镜像正确缺失）；
+    - mount 校验闸抓出 schema 缺陷（items object 缺 additionalProperties），
+      修复后主镜像重建验证——DSH 运行时验证层工作如设计。
+    - 证据：/tmp/omo-final3.txt + 会话日志。
+
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
 - 双 Session + `omo/role` 事件 + flush 的生命周期（当前 preset 尚未挂接 role 事件插件，
