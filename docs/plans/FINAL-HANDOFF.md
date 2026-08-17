@@ -1,4 +1,4 @@
-# 终验收口报告（goal round 48/48，2026-08-17）
+# 终验收口报告（goal round 55/64 更新，2026-08-17）
 
 日期：2026-08-17
 仓库：`zhangjie2677159753-ctrl/oh-my-DSH`（PRIVATE，`main`，凭据零泄漏）
@@ -6,9 +6,10 @@
 
 ## 一句话状态
 
-**Batch A 已关闭；合同级核心（62 模块 / 350 测试）+ 容器级集成证据 + 双模型族
-完整评测 + 核心工作流与 E22 等价面多数 live 闭环；GA 发布门未达且本报告
-不宣称其达成。**
+**Batch A 已关闭；合同级核心（62 模块 / 352 测试）+ 容器级集成证据（G1 26 项）
++ 双模型族完整评测 + 黑盒回放执行 + 授权项全部 agent 侧关闭（R16 签字、
+G4 回放、G8/G9/G10 绑定、G11 实证、硬门探针、soak、canary 计划书）；
+GA 提名待 canary 数据（团队活动）——本报告不宣称 GA。**
 
 ## 已交付（可复现）
 
@@ -19,7 +20,7 @@
 | 纯逻辑 | 62 模块、350 测试全绿 | `cd packages/omo-dsh && node --test 'tests/**/*.test.mjs'` |
 | 门 | preflight 13 项（载荷 digest/ schema 漂移/ DAG/ 演练/ G4 证据层） | `node tools/g1-preflight.mjs` |
 | 评测 | **双模型族 17 场景**：opencode-go/deepseek-v4-flash 全完成（273 调用/211 回合/3 角色切换/6 硬门 PASS）；NIM gpt-oss-120b 收尾（低吞吐如实） | `MODEL-EVAL-REPORT-OPENCODE-GO.md` / `-NIM.md` |
-| live 工作流 | E2E-04 prometheus 规划 → /start-work → hephaestus 实现（revision 1→2）；E2E-03 goal/todo 全链；E2E-08 子代理委派完成 | `/tmp/omo-eval-ocg/*/session.jsonl` |
+| live 工作流 | E2E-04 prometheus 规划 → /start-work → hephaestus 实现（revision 1→2）；E2E-03 goal/todo 全链；E2E-08 子代理委派完成；G9 续跑判定；G8 角色镜像 | `/tmp/omo-eval-ocg/*/session.jsonl` + G1-EVIDENCE 1-26 |
 | E22 live | P2 结算通知父/子双落地 + 注入段；P4 终端族 isolate 组（pty-1 启/列）；G6 动态段 RC 零错误；P3-1 blocked-on-seam（DSH 无 per-call 警告面）；P1/P5 如实标注 | `G1-EVIDENCE.md` 1-20 条 |
 | 发布工程 | 载荷 digest 门、干净消费者 drill、schema 漂移 fail-closed、E29/E31 演练、run-eval 竞态修复 | `deploy/dsh-test-container/` |
 | 主镜像 | `omo-dsh-test:latest` = 全部已验证内容（组合冒烟通过） | `build.sh` + `drill-consumer.sh` |
@@ -36,19 +37,17 @@
   `hook-closure-status.json`
 - 回放：`DIFFERENTIAL-REPLAY-PLAN.md`；状态：`implementation-status.json`
 
-## 剩余工作（按序，全部有具体 owner/条件）
+## 剩余工作（团队活动，全部有具体条件与手册）
 
-1. **R16**：DSH 上游 event-type 注册面（P1 跟踪）；Boulder 镜像 reconciliation
-   兜底已实现并测试，待 owner 签字或上游解除；
-2. **G4 黑盒回放**：证据层/比较引擎/DSH 端就绪，需 OMO 侧可运行 OpenCode
-   fixed-SHA 环境；
-3. **G8/G9/G10 宿主绑定**：Boulder 工作目录、continuation turn-stopping、
-   Memory/Team/OpenClaw/Monitor 服务绑定——规格齐备（各 `DSH-BINDING.md`），
-   纯逻辑就绪，接入按"前置条件缺一不接入"守护；
-4. **G11 UI 投影**：实现时 Inspect 实时 Slot 合同；
-5. **人审**：E2E 行为分（10 维度权重表）+ 3 项 n/a hard gate 专用探针
-   （跨会话隔离/最终证据/取消处置）；
-6. **soak/canary**：canary 为内部团队试用（L0 私有分发），非公开发布。
+1. **canary 执行**：`CANARY-PLAN.md` 三阶段（C1 试点 → C2 小组 → C3 全团队），
+   监控用 `omo_monitor_status` + 审计事件，kill-switch 用回滚演练；
+2. **人审**：E2E 行为分（10 维度权重表 + `MODEL-EVAL-REPORT-OPENCODE-GO.md`
+   行为支持附录）+ 最终证据门人审项（机器事实已记录：prompt 级）；
+3. **R16 上游跟踪**：ADR 复审条款（上游注册面开放后 90 天内迁移，否则复审）；
+4. **G11 部署级集成**：client 徽章插件成品 + 实证结论已备，待 DSH 侧
+   client 包位或宿主插件机制承载；
+5. **GA 提名**：canary C3 指标达标后按 CANARY-PLAN §4 提交提名报告，
+   由 owner 决策——不自动晋升。
 
 ## 继续方式
 
