@@ -51,6 +51,12 @@
 - 演示台持久化：用户级 systemd 单元 `omo-demo.service`（on-failure 重启），
   LAN/Tailscale 3200 不再依赖会话内后台作业。
 
+## C1 证据检查点 #2（2026-08-17 13:40）
+
+- 40 会话合成批量完成（10 类场景循环）；演示台累计 **51 会话、17 角色
+  事件、false-success 候选 0**——合成 canary 样本量达标；
+- 双轮评测完成（定性行为可复现）。
+
 ## C1 证据检查点（2026-08-17 13:15）
 
 - 演示台累计会话 11+：四角色全覆盖（sisyphus/prometheus/hephaestus/atlas）、
