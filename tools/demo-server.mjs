@@ -7,7 +7,7 @@
 // 端口：PORT 环境变量，默认 3200；仅绑定 127.0.0.1。
 // 密钥经 /tmp/omo-ocg-env（0600）注入 docker --env-file，绝不进入响应/日志。
 import { createServer } from 'node:http'
-import { readFileSync } from 'node:fs'
+import { readFileSync, appendFileSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -42,12 +42,43 @@ const queue = []
 let running = false
 const history = [] // rolling pseudo-continuity (headless is one-shot per message)
 
+const SESSION_LOG_FILE = process.env.OMO_DEMO_SESSION_LOG ?? '/tmp/omo-demo-sessions.jsonl'
+
+function machineFacts(home) {
+  // read the session log before cleanup: tool calls, role events, turns
+  try {
+    const ses = execFileSync('bash', ['-c', `find "${home}/sessions" -name '*.zstd' | head -1`], { encoding: 'utf8' }).trim()
+    if (!ses) return { toolCalls: 0, toolNames: [], roleEvents: 0, assistantTurns: 0 }
+    const lines = execFileSync('zstd', ['-dc', ses], { encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 }).split('\n').filter(Boolean)
+    const facts = { toolCalls: 0, toolNames: new Set(), roleEvents: 0, assistantTurns: 0 }
+    for (const line of lines) {
+      let ev
+      try { ev = JSON.parse(line) } catch { continue }
+      if (ev.type === 'tool/call') { facts.toolCalls += 1; if (ev.data?.name) facts.toolNames.add(ev.data.name) }
+      if (ev.type === 'omo/role') facts.roleEvents += 1
+      if (ev.type === 'assistant/message') facts.assistantTurns += 1
+    }
+    return { ...facts, toolNames: [...facts.toolNames] }
+  } catch {
+    return { toolCalls: 0, toolNames: [], roleEvents: 0, assistantTurns: 0 }
+  }
+}
+
+function recordSession(entry) {
+  try {
+    appendFileSync(SESSION_LOG_FILE, JSON.stringify(entry) + '\n')
+  } catch { /* recording best-effort */ }
+}
+
 function runSession(message) {
   const home = execFileSync('bash', ['deploy/dsh-test-container/prepare-home-opencode.sh'], {
     cwd: root,
     encoding: 'utf8',
     env: { ...process.env, DSH_TEST_MODEL: MODEL },
   }).trim()
+  let text = ''
+  let ok = false
+  let facts = { toolCalls: 0, toolNames: [], roleEvents: 0, assistantTurns: 0 }
   try {
     const out = execFileSync('docker', [
       'run', '--rm', '--network=host', '--user', `${process.getuid()}:${process.getgid()}`,
@@ -56,14 +87,27 @@ function runSession(message) {
       '-v', `${home}:/tmp/dsh-home`,
       IMAGE, '--profile', 'headless', message,
     ], { cwd: root, encoding: 'utf8', timeout: 600_000, maxBuffer: 4 * 1024 * 1024 })
-    return { ok: true, text: out.trim() }
+    text = out.trim()
+    ok = true
   } catch (error) {
     const stderr = String(error.stderr ?? '').trim()
     const stdout = String(error.stdout ?? '').trim()
-    return { ok: false, text: (stderr || stdout || error.message).slice(-4000) }
+    text = (stderr || stdout || error.message).slice(-4000)
   } finally {
+    facts = machineFacts(home)
     execFileSync('bash', ['-c', `rm -rf "${home}"`], { encoding: 'utf8' }).toString()
   }
+  const claimedDone = /done|complete|stopping here|task complete/i.test(text)
+  recordSession({
+    at: new Date().toISOString(),
+    promptHead: message.slice(0, 80),
+    ok,
+    seconds: 0,
+    ...facts,
+    claimedDone,
+    falseSuccessCandidate: claimedDone && facts.toolCalls === 0,
+  })
+  return { ok, text, ...facts, claimedDone }
 }
 
 function buildPrompt(message) {
@@ -242,6 +286,23 @@ const server = createServer((req, res) => {
     res.end(JSON.stringify({ ok: true, busy: running, queue: queue.length }))
     return
   }
+  if (req.method === 'GET' && url.pathname === '/stats') {
+    // C1 canary metrics: cumulative sessions + false-success candidates
+    let rows = []
+    try {
+      rows = readFileSync(SESSION_LOG_FILE, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))
+    } catch { /* no sessions yet */ }
+    const candidates = rows.filter((r) => r.falseSuccessCandidate)
+    res.writeHead(200, { 'content-type': 'application/json' })
+    res.end(JSON.stringify({
+      sessions: rows.length,
+      avgToolCalls: rows.length > 0 ? Math.round(rows.reduce((a, r) => a + r.toolCalls, 0) / rows.length * 10) / 10 : 0,
+      roleEvents: rows.reduce((a, r) => a + r.roleEvents, 0),
+      falseSuccessCandidates: candidates.length,
+      recent: rows.slice(-5).map((r) => ({ at: r.at, calls: r.toolCalls, claimedDone: r.claimedDone })),
+    }))
+    return
+  }
   if (req.method === 'GET' && url.pathname === '/') {
     res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' })
     res.end(html)
@@ -268,7 +329,7 @@ const server = createServer((req, res) => {
         message: message.trim(),
         resolve: (result) => {
           res.writeHead(200, { 'content-type': 'application/json' })
-          res.end(JSON.stringify(result))
+          res.end(JSON.stringify({ ...result, toolCalls: result.toolCalls, claimedDone: result.claimedDone }))
         },
       })
       pump()
