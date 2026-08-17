@@ -150,6 +150,14 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
       模式误判（输出文本为 "OMO primary role"），复核为 **20/20 通过**；
     - 证据：/tmp/soak-1..20.txt。
 
+23. [x] **G8 Boulder 角色镜像 live 闭环**（2026-08-17，rc12 + opencode-go/flash）：
+    - `omo_role(prometheus, g8-mirror)` → 会话日志事件 + 镜像文件原子写入
+      `<DSH_HOME>/workspace/.omo/role.json`（schemaVersion 1, prometheus
+      revision 1, reason g8-mirror——temp+rename 原子写）；
+    - `omo_boulder_role` 工具读回 → `Boulder role mirror: prometheus
+      (revision 1)`——与会话 fold 一致；ADR-R16 跨重启权威面 live 工作；
+    - 证据：/tmp/omo-probe19-out.txt + 镜像文件内容（上述）。
+
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
 - 双 Session + `omo/role` 事件 + flush 的生命周期（当前 preset 尚未挂接 role 事件插件，
