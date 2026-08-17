@@ -39,3 +39,12 @@
 2. 硬门全部关闭（含人审项）；false-success < 1%（采样审计）；
 3. R16 上游状态复核（ADR 复审条款）；
 4. 提交 GA 提名报告（本仓库新文件），由 owner 决策——本计划不自动晋升 GA。
+
+## C2 通道验证（2026-08-17）
+
+- 容器 web profile 携带 omo preset 启动验证通过（boot 200、settings
+  default: omo、discovery healthy——历轮 G1 证据）；会话创建走浏览器 UI
+  （Typert RPC，用户驱动），属 C2 成员操作步骤；
+- C2 成员用法：`prepare-home-opencode.sh` 生成 home → 容器 web 启动 →
+  浏览器访问 3091 新建会话（preset 自动挂载）→ 真实小任务；
+- agent 已备：web 启动脚本、主镜像全绑定、行为评分工作单、/stats 仪器。
