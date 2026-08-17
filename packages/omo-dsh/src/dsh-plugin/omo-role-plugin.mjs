@@ -52,6 +52,7 @@ const { decideTool } = await import('file:///dsh/omo-plugin/packages-omo-dsh/rol
 const { buildDynamicSections } = await import('file:///dsh/omo-plugin/packages-omo-dsh/roles/dynamic-sections.mjs')
 const { buildNotificationEvent } = await import('file:///dsh/omo-plugin/packages-omo-dsh/children/notification.mjs')
 const { buildRoleMirror, parseRoleMirror } = await import('file:///dsh/omo-plugin/packages-omo-dsh/boulder/role-mirror.mjs')
+const { assertMemoryWriteAllowed, applyRedaction } = await import('file:///dsh/omo-plugin/packages-omo-dsh/memory/policy.mjs')
 
 function boulderDir() {
   return process.env.OMO_BOULDER_DIR
@@ -242,6 +243,40 @@ export function apply(ctx) {
     }
     return next()
   })
+
+  ctx.tools.register(defineTool({
+    name: 'omo_memory_write',
+    description: 'Write one memory entry (scope: session). Consent-gated, secret-sniffed, redacted; audited as an omo/memory-write event plus a workspace mirror.',
+    parameters: {
+      scope: { type: 'string', required: true, enum: ['session'] },
+      content: { type: 'string', required: true },
+      consent: { type: 'boolean' },
+    },
+    output: {
+      schema: { type: 'object', additionalProperties: false, properties: { status: { type: 'string', required: true }, reason: { type: 'string' } } },
+      render: (_a, v) => [{ type: 'text', text: v.status === 'ok' ? 'memory written' : `memory refused: ${v.reason}` }],
+    },
+    execute(args, exec) {
+      if (!exec.agent) throw new Error('omo_memory_write requires an owning agent session')
+      const gate = assertMemoryWriteAllowed({
+        scope: args.scope,
+        consent: args.consent === true,
+        content: args.content,
+        sessionScopes: new Set(['session']),
+      })
+      if (!gate.allowed) return { status: 'refused', reason: gate.reason }
+      const content = applyRedaction(args.content)
+      exec.agent.session.append('omo/memory-write', {
+        schemaVersion: 1,
+        scope: args.scope,
+        sessionId: exec.agent.session.id ?? null,
+        content,
+        at: new Date().toISOString(),
+      })
+      return { status: 'ok' }
+    },
+    presentCall: args => ({ card: 'generic', title: 'Write OMO memory', kind: 'other', rawInput: args.scope }),
+  }))
 
   ctx.tools.register(defineTool({
     name: 'omo_boulder_role',
