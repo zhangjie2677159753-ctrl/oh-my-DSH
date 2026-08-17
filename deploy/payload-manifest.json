@@ -11,7 +11,8 @@
     "agent.cordis.yml",
     "omo-role-plugin.mjs",
     "README.md",
-    "G1-DEPLOYMENT-CHECKLIST.md"
+    "G1-DEPLOYMENT-CHECKLIST.md",
+    "client/omo-client-role-badge.mjs"
   ],
   "requiredEntryPoints": [
     "packages/omo-dsh/src/index.ts",
