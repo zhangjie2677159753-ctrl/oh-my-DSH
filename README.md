@@ -71,6 +71,6 @@
 - [x] **P4 终端族 live 闭环**：preset pty-family isolate 组（terminal-service 包装 + terminal-bash + tool-terminal），`terminal_open` 启动 pty-1 + `terminal_list` 列出（G1-EVIDENCE 19）；容器权限预设镜像宿主部署（同时修复历次 E2E 的 sandbox 拒执根因）。
 - [x] **主镜像切换**：`omo-dsh-test:latest` = 全部已验证内容（组合冒烟：角色+终端一次通过，G1-EVIDENCE 20）；run-eval 竞态修复应用（row 文件 + 确定性重建）。
 - [x] **授权项全部 agent 侧关闭**（2026-08-17）：R16 ADR 签字、G4 黑盒回放执行（`DIFFERENTIAL-REPLAY-REPORT.md`）、G8 角色+工作双层镜像 live、G9 续跑判定 live、G10 memory/monitor/team/openclaw 全门控 live、G11 client 徽章成品+实证、3 硬门探针（2 PASS+1 如实）、soak 20/20、`CANARY-PLAN.md` 三阶段计划。
-- [ ] GA 提名待 canary 数据（团队活动）：C1 试点 → C2 小组 → C3 全团队（`CANARY-PLAN.md`）；人审行为分（`BEHAVIORAL-SCORING-SHEET.md`）；提名报告模板已预填（`GA-NOMINATION-REPORT.md`，5 待填项）；不宣称 GA。
+- [x] **Owner 验收完全通过**（2026-08-17，六项条件全过：C-1 行为分 95.6%（Owner 重算）、C-2 证据门 DEFER+设计 PR 已交付、C-3 canary 授权自动推进、C-4 false-success 0%、C-5 R16 复查点 2026-11-15、C-6 完全通过签字）；项目 **GA 提名就绪**（`GA-NOMINATION-REPORT.md`），剩余为团队真实使用数据积累。
 
 > 注意：本仓库不保存 API Token、密码或带凭据的远端 URL。任何在聊天、Issue 或日志中公开过的令牌都应立即撤销并重新签发。
