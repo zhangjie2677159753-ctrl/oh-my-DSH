@@ -1,4 +1,4 @@
-# 终验收口报告（goal round 55/64 更新，2026-08-17）
+# 终验收口报告（goal round 63/64 终版，2026-08-17）
 
 日期：2026-08-17
 仓库：`zhangjie2677159753-ctrl/oh-my-DSH`（PRIVATE，`main`，凭据零泄漏）
@@ -6,10 +6,11 @@
 
 ## 一句话状态
 
-**Batch A 已关闭；合同级核心（62 模块 / 352 测试）+ 容器级集成证据（G1 26 项）
-+ 双模型族完整评测 + 黑盒回放执行 + 授权项全部 agent 侧关闭（R16 签字、
-G4 回放、G8/G9/G10 绑定、G11 实证、硬门探针、soak、canary 计划书）；
-GA 提名待 canary 数据（团队活动）——本报告不宣称 GA。**
+**Batch A 已关闭；合同级核心（62 模块 / 352 测试）+ 容器级集成证据（G1 28 项）
++ 双模型族完整评测 + 黑盒回放执行 + 授权项全部 agent 侧关闭 + canary
+基础设施上线（演示台 systemd 持久化 + /stats 仪器 + false-success 采样 +
+soak 50/50 + 提名报告模板）；GA 提名仅剩人审与真实使用数据（团队活动）
+——本报告不宣称 GA。**
 
 ## 已交付（可复现）
 
@@ -37,7 +38,10 @@ GA 提名待 canary 数据（团队活动）——本报告不宣称 GA。**
   `hook-closure-status.json`
 - 回放：`DIFFERENTIAL-REPLAY-PLAN.md`；状态：`implementation-status.json`
 
-## 剩余工作（团队活动，全部有具体条件与手册）
+## 剩余工作（团队活动，全部有具体条件与手册；提名报告模板已预填）
+
+0. **GA 提名报告**：`GA-NOMINATION-REPORT.md`（五条件 agent 侧状态已预填，
+   团队补 5 个待填项后提交 owner 决策）；
 
 1. **canary 执行**：`CANARY-PLAN.md` 三阶段（C1 试点 → C2 小组 → C3 全团队），
    监控用 `omo_monitor_status` + 审计事件，kill-switch 用回滚演练；
