@@ -348,7 +348,8 @@ export function apply(ctx) {
     },
     execute(args) {
       if (!teamEnabled) return { enabled: false, rosterOk: false, reason: 'team_mode.enabled is false' }
-      const errors = validateTeamRoster({ workflow: args.workflow ?? 'default', members: args.members ?? [] })
+      const members = (args.members ?? []).map((m) => (typeof m === 'string' ? { name: m } : m))
+      const errors = validateTeamRoster({ workflow: args.workflow ?? 'default', members })
       return { enabled: true, rosterOk: errors.length === 0, reason: errors.join('; ') }
     },
     presentCall: () => ({ card: 'generic', title: 'Read OMO team gate', kind: 'other', rawInput: null }),

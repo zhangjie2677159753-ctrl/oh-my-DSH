@@ -73,7 +73,7 @@
     "packages/omo-dsh/src/context/rules.mjs": "acdafc6dcdaf7cc18fcb4bd590229caca1ca76e738a1ff33f2234ed6551967d9",
     "packages/omo-dsh/src/continuation/DSH-BINDING.md": "0527c3b04a9cfcee40911c0b8dcc325f104133539f89557f7e7f026bb6f19d78",
     "packages/omo-dsh/src/continuation/driver.mjs": "1b0e841a70ed11612abf2d552e70e42e4fff8386ec520ff8167482a14ad29d2b",
-    "packages/omo-dsh/src/dsh-plugin/omo-role-plugin.mjs": "fbc6deb607f75520766c05a66ae7bce12f604d9a5a705f05c7e756649a4cce9f",
+    "packages/omo-dsh/src/dsh-plugin/omo-role-plugin.mjs": "cf7567a33110887bde27e64f881450c81353ed219e3256340e4a66e4aa08d77a",
     "packages/omo-dsh/src/guards/adapters.mjs": "e8eca1d834977cad2bc01295b468aed5b625021b6cb19a58b9d514fc06bc0f1e",
     "packages/omo-dsh/src/guards/comment-checker.mjs": "78d37183922cf5b74eaa46368a124c7d373592f355e2e8d40c9d4e4f94fe24f2",
     "packages/omo-dsh/src/guards/files.mjs": "305ad5fe4794dd184db9fbe590e6942d19140ab75d1820a062f7041f439d4a2d",
