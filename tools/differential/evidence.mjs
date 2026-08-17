@@ -173,3 +173,41 @@ export function compareEvidence(omo, dsh, { documentedDeviations = [], callCount
     findings,
   }
 }
+
+/**
+ * Normalize OMO-side OpenCode DB parts (the REAL persisted format at CLI
+ * 1.15.13): messages [{role, parts:[{type, tool, status, input, text}]}].
+ * Tool parts become the tool sequence; assistant messages count as turns;
+ * role events are absent from the part stream (recorded empty — the compare
+ * engine flags any role-sequence mismatch honestly).
+ */
+export function normalizeOmoParts(messages) {
+  const errors = []
+  if (!Array.isArray(messages) || messages.length === 0) return { ok: false, errors: ['messages: expected non-empty array'] }
+  const toolCalls = []
+  let assistantTurns = 0
+  for (const message of messages) {
+    if (message?.role === 'assistant') assistantTurns += 1
+    for (const part of message?.parts ?? []) {
+      if (part?.type === 'tool' && typeof part.tool === 'string') {
+        toolCalls.push({ toolName: part.tool, argsDigest: null, callId: null })
+      }
+    }
+  }
+  if (toolCalls.length === 0) return { ok: false, errors: ['no tool calls in OMO parts'], evidence: null }
+  return {
+    ok: true,
+    errors,
+    evidence: {
+      schemaVersion: EVIDENCE_SCHEMA_VERSION,
+      toolCalls,
+      toolSequence: normalizeToolSequence(toolCalls),
+      roleEvents: [],
+      todoWrites: [],
+      continuationDecisions: [],
+      boulderWrites: [],
+      assistantTurnCount: assistantTurns,
+      finalWorkState: 'unknown',
+    },
+  }
+}
