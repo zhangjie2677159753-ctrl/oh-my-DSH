@@ -68,3 +68,14 @@
   判定的权威面；本回放证明"不同产品面下行为可达"而非逐调用一致。
 - 后续：DSH 上游工具面稳定后可收紧等价表并复跑；本报告不宣称
   machine-exact parity。
+
+## 附：G11 client 集成实证（2026-08-17）
+
+- client 角色徽章插件（`agent-presets/omo/client/omo-client-role-badge.mjs`，
+  Slot 合同 live 验证：conversation.composer.dock）已入库；
+- 测试镜像 file-backed dsh.client 行实证：host 树加载成功（web boot 无错误），
+  但 `client-modules` 只为**包条目**（exports["./client"]）构图并服务
+  `/plugins/<id>/client.js`——file 行 404、不进浏览器 roster；
+- 结论：正确集成需在 DSH workspace 增加 client 包 + 进 client 构建图，
+  超出测试镜像快照范围（不改 DSH checkout 的约束）；插件成品与合同已就绪，
+  部署级集成待 DSH 侧提供 client 包位或由宿主部署的插件机制承载。
