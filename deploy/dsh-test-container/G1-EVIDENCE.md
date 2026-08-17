@@ -192,6 +192,12 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
     - 崩溃安全由原子写模式承载（boulder-crash.test.mjs 单元覆盖
       "rename 前崩溃保留旧文件"）；ADR-R16 跨重启权威现覆盖角色+工作两层。
 
+28. [x] **Soak 扩展至 50 轮**（2026-08-17，主镜像 + opencode-go/flash）：
+    - 追加 30 轮顺序 `omo_role_status` 会话全部返回角色状态，
+      累计 **50/50 零失败**——CANARY-PLAN C3 稳定性门槛（连续 50+ 会话）
+      达成（agent 侧可测部分）；
+    - 证据：/tmp/soak2-21..50.txt（追加）+ /tmp/soak-1..20.txt。
+
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
 - 双 Session + `omo/role` 事件 + flush 的生命周期（当前 preset 尚未挂接 role 事件插件，
