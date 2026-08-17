@@ -52,3 +52,32 @@ scenarios checked: 17
 - 本报告只呈现机器可测指标；行为分（角色忠实/正确委派/完成质量）需要人工或 checker 逐场景判定；
 - 模型在 NIM 上的可用性/延迟本身是评测变量，不作为 OMO 适配器缺陷；
 - false-success 与 4 项 non-machine-checkable gate（跨会话隔离/最终证据/取消处置/人审项）不在此表宣称。
+
+## 行为评分支持附录（机器可算，人审辅助）
+
+人审按 10 维度权重表（eval-corpus behavioralScore）执行；本附录提供每场景的
+机器可算事实，减少人审翻原始日志的负担。角色事件/委派/todo/重复调用均从
+会话日志机器提取；"substantial/thin"为转录长度阈值 800 字符。
+
+| 场景 | 调用 | 回合 | 角色事件 | 委派面 | 重复调用 | todo 卫生 | 证据量 |
+|---|---|---|---|---|---|---|---|
+| E2E-01 | 18 | 19 | — | 无 | 0 | 无 | substantial |
+| E2E-02 | 29 | 30 | — | 无 | 0 | todo-write | substantial |
+| E2E-03 | 56 | 34 | — | 无 | 0 | todo-write | substantial |
+| E2E-04 | 37 | 27 | 2（规划→交接） | 无 | 0 | todo-write | substantial |
+| E2E-05 | 37 | 20 | — | 无 | 0 | todo-write | substantial |
+| E2E-06 | 11 | 12 | — | 无 | 0 | 无 | thin |
+| E2E-07 | 10 | 11 | — | 无 | 0 | todo-write | substantial |
+| E2E-08 | 9 | 6 | — | subagent 委派 | 0 | 无 | substantial |
+| E2E-09 | 21 | 9 | — | 无 | 0 | 无 | substantial |
+| E2E-10 | 2 | 3 | — | 无 | 0 | 无 | thin |
+| E2E-11 | 5 | 5 | — | 无 | 0 | 无 | substantial |
+| E2E-12 | 3 | 3 | — | 无 | 0 | 无 | substantial |
+| E2E-13 | 10 | 9 | — | 无 | 0 | todo-write | substantial |
+| E2E-14 | 2 | 3 | — | 无 | 0 | 无 | thin |
+| E2E-15 | 0 | 2 | — | 无 | 0 | 无 | thin（文本作答正确） |
+| E2E-16 | 23 | 17 | 1（hyperplan→prometheus） | skill | 0 | todo-write | substantial |
+| E2E-17 | 0 | 1 | — | 无 | 0 | 无 | thin（文本作答正确） |
+
+机器可算事实不构成评分：角色忠实/委派正确性/完成质量由人审按权重表判定；
+本表只为定位原始证据（每场景 session.jsonl 在 /tmp/omo-eval-ocg/）。
