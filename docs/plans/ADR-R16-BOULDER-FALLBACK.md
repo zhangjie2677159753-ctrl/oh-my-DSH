@@ -29,3 +29,5 @@ unsupported event type。
 - 兜底路径的每次使用必须记录 `parity.json` deviation 计数；
 - 镜像与日志冲突时日志胜（append-only 权威），偏差计入；
 - 上游注册面开放后 90 天内完成迁移，否则本 ADR 自动复审。
+- 跟踪记录：2026-08-17 检查 deepseek-ai/deepseek-harness 上游 HEAD =
+  `47f9438…`（与固定基线一致，注册面未出现）——状态不变。

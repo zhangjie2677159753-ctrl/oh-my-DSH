@@ -48,3 +48,5 @@
 - C2 成员用法：`prepare-home-opencode.sh` 生成 home → 容器 web 启动 →
   浏览器访问 3091 新建会话（preset 自动挂载）→ 真实小任务；
 - agent 已备：web 启动脚本、主镜像全绑定、行为评分工作单、/stats 仪器。
+- 演示台持久化：用户级 systemd 单元 `omo-demo.service`（on-failure 重启），
+  LAN/Tailscale 3200 不再依赖会话内后台作业。
