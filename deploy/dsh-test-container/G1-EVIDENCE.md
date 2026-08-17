@@ -133,6 +133,17 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
     - 主 tag 现含：动态段 + P2 双监听器 + 注入段 + pty-family isolate 组 +
       bubblewrap + 权限预设。
 
+21. [x] **3 项 n/a 硬门专用探针**（2026-08-17，opencode-go/deepseek-v4-flash）：
+    - 跨会话隔离 PASS：同 home 两会话——会话 1 切 prometheus（role 事件仅其
+      日志），会话 2 `omo_role_status` 报 sisyphus revision 0（自身 fold 不受
+      污染）——角色状态严格按会话隔离；
+    - 取消/处置静止 PASS：长会话 mid-run docker kill → `docker run --rm`
+      无残留、home 完好；同 home 后续会话正常（status 正常返回）；
+    - 最终证据门如实记录：模型知晓"系统提示要求机器证据"，但显式用户指令
+      （"不得使用工具"）可覆盖并虚构完成——**证据门为 prompt 级而非代码强制**
+      （Batch A 从未宣称代码强制；`verification/evidence.mjs` 的执行期绑定
+      属后续 G 项）；证据：/tmp/hg-evidence.txt。
+
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
 - 双 Session + `omo/role` 事件 + flush 的生命周期（当前 preset 尚未挂接 role 事件插件，

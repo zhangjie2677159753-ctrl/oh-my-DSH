@@ -55,7 +55,7 @@
 | G11 | UI 投影未注册 Slot | 实现时 Inspect 实时 Slot 合同 |
 | G12'' | 迁移/回滚纯态 + 干净消费者 drill 均通过 | 真机残余：容器资源检查 R5 实况、active-child M5 实况 |
 | G13'' | 载荷门/干净消费者/schema freshness 全部上线 | CI 强制（本仓库无 CI 平台，preflight 手动门） |
-| G14 | canary/GA 门 | hard gates 机器子集 6/9 全 PASS（双族 17 场景）；3 项 n/a 需人审/专用探针；模型族行为分 ≥90% 待人审；false-success <1% 未自动化；soak 未做 |
+| G14 | canary/GA 门 | hard gates **8/9 关闭**（6 机器全 PASS + 跨会话隔离/取消处置探针 PASS）；最终证据门如实记录为 prompt 级（代码强制属 G 项）；模型族行为分待人审；false-success 未自动化；soak 进行中 |
 
 ## 下一步行动（owner 决策优先）
 
