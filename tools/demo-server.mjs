@@ -15,7 +15,7 @@ import { fileURLToPath } from 'node:url'
 const here = dirname(fileURLToPath(import.meta.url))
 const root = join(here, '..')
 const PORT = Number(process.env.PORT ?? 3200)
-const HOST = '127.0.0.1'
+const HOST = process.env.OMO_HOST ?? '0.0.0.0'
 const ENV_FILE = process.env.OMO_ENV_FILE ?? '/tmp/omo-ocg-env'
 const IMAGE = process.env.OMO_IMAGE ?? 'omo-dsh-test'
 const MODEL = process.env.OMO_MODEL ?? 'deepseek-v4-flash'
@@ -128,7 +128,7 @@ const html = `<!DOCTYPE html>
 <body>
 <header>
   <h1>OMO <span>for DSH</span> — 成果演示台</h1>
-  <div class="sub">固定基线 OMO 038ed0cb / DSH 47f9438 · 私有仓库 · 演示服务 127.0.0.1:${PORT}</div>
+  <div class="sub">固定基线 OMO 038ed0cb / DSH 47f9438 · 私有仓库 · 监听 0.0.0.0:${PORT}（局域网 + Tailscale）</div>
 </header>
 <main>
 
