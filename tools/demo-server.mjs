@@ -161,7 +161,7 @@ const html = `<!DOCTYPE html>
 </section>
 
 <section class="wide">
-  <h2>Live 证据（G1-EVIDENCE 1-20 条摘要）</h2>
+  <h2>Live 证据（G1-EVIDENCE 1-27 条摘要）</h2>
   <ul>
     <li><span class="ok">✓</span> 角色切换：<code>omo_role</code> → <code>omo/role</code> 事件（prometheus revision 1）</li>
     <li><span class="ok">✓</span> 权限拒执：prometheus 下 <code>bash echo hi</code> → <code>Error: omo role prometheus denies bash</code></li>
@@ -170,8 +170,13 @@ const html = `<!DOCTYPE html>
     <li><span class="ok">✓</span> P2 结算通知：父会话权威 + 子会话审计双落地 + 下一回合注入段（rc6）</li>
     <li><span class="ok">✓</span> P4 终端族：<code>terminal_open</code> → pty-1 启动，<code>terminal_list</code> → running（isolate 组）</li>
     <li><span class="ok">✓</span> G6 动态角色段：RC 镜像零插件错误；主镜像组合冒烟一次通过</li>
+    <li><span class="ok">✓</span> G8 双层镜像：角色（.omo/role.json）+ 工作（.omo/work.json，续跑边界原子快照）——ADR-R16 跨重启权威</li>
+    <li><span class="ok">✓</span> G9 续跑判定：turn 边界 driver 判定 + 审计事件（Final Verification Wave 语义）</li>
+    <li><span class="ok">✓</span> G10 全门控：memory 写/读（密钥双层拒写）+ monitor + team/openclaw（默认 disabled 门控）</li>
+    <li><span class="ok">✓</span> G4 黑盒回放：OMO fixed-SHA + OpenCode CLI + opencode-go，17 场景双端，零合同破坏（<a href="docs/plans/DIFFERENTIAL-REPLAY-REPORT.md">报告</a>）</li>
+    <li><span class="ok">✓</span> Soak 20/20 + 3 硬门探针（隔离/处置 PASS，证据门如实 prompt 级）</li>
     <li><span class="warn">△</span> P3 banned 命令警告：DSH pre-execute 无 per-call 警告面（blocked-on-seam，如实登记）</li>
-    <li><span class="warn">△</span> R16：out-of-repo 事件 restore 拒绝（上游注册面待开放；Boulder 镜像兜底已实现）</li>
+    <li><span class="warn">△</span> GA 提名待 canary 数据（<a href="docs/plans/CANARY-PLAN.md">三阶段计划</a>，团队活动）</li>
   </ul>
 </section>
 
