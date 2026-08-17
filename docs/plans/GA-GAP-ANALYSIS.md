@@ -51,11 +51,11 @@
 
 | # | 差距 | 需要什么 |
 |---|---|---|
-| G10' | memory 写绑定 live（G1-25）；read/tombstone 与 team/openclaw/monitor 待续 | 按四份 `DSH-BINDING.md` |
+| G10'' | memory 写/读 + monitor + team/openclaw 门控绑定全部落地（策略闸 + 状态工具）；live 探针随镜像重建补测 | 按四份 `DSH-BINDING.md` |
 | G11 | UI 投影未注册 Slot | 实现时 Inspect 实时 Slot 合同 |
 | G12'' | 迁移/回滚纯态 + 干净消费者 drill 均通过 | 真机残余：容器资源检查 R5 实况、active-child M5 实况 |
 | G13'' | 载荷门/干净消费者/schema freshness 全部上线 | CI 强制（本仓库无 CI 平台，preflight 手动门） |
-| G14 | canary/GA 门 | hard gates **8/9 关闭**（6 机器全 PASS + 跨会话隔离/取消处置探针 PASS）；最终证据门如实记录为 prompt 级（代码强制属 G 项）；模型族行为分待人审；false-success 未自动化；soak 进行中 |
+| G14 | canary/GA 门 | 硬门 8/9（人审项如实）；soak 20/20；**`CANARY-PLAN.md` 已备**（三阶段 + kill-switch + GA 提名条件）——canary 是团队活动，agent 侧前置工程全部关闭 |
 
 ## 下一步行动（owner 决策优先）
 
