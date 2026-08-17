@@ -62,6 +62,6 @@
       "roleSwitch": "passed (revision 0->1->2, omo/role events appended)",
       "modelRoute": "opencode-go/deepseek-v4-flash (TTFT ~3-9s)"
     },
-    "note": "remaining: G11 client badge bundle integration; team-mode env toggle; real-usage team activity data for GA nomination"
+    "note": "done 2026-08-17: click-to-switch role commands in the Commands UI (no model round-trip, verified live). remaining: G11 client badge bundle integration; team-mode env toggle; real-usage team activity data for GA nomination"
   }
 }

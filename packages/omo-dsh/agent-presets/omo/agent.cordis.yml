@@ -83,3 +83,10 @@
 # omo_role_status tools that append/fold `omo/role` session events.
 - id: omo-role
   name: ./omo-role-plugin.mjs
+
+# ── OMO role commands for the Commands UI (click-to-switch) ────────────────
+# Registers four agent-scoped commands (role-sisyphus|hephaestus|prometheus|
+# atlas) so the composer "Commands" menu can switch roles without a chat
+# message or a model round-trip.
+- id: omo-commands
+  name: ./omo-role-commands-plugin.mjs

@@ -26,6 +26,9 @@ sed 's|file:///dsh/omo-plugin/packages-omo-dsh/|file://'"$REPO_ROOT"'/packages/o
   "$REPO_ROOT/packages/omo-dsh/src/dsh-plugin/omo-role-plugin.mjs" \
   > "$HOST_PRESET_DIR/omo-role-plugin.mjs"
 
+# role-command plugin (no /dsh paths; copied verbatim)
+cp "$REPO_ROOT/packages/omo-dsh/src/dsh-plugin/omo-role-commands-plugin.mjs" "$HOST_PRESET_DIR/"
+
 # terminal family shims (the preset's cordis.yml references container paths;
 # the host variant points them at local shims resolved via the symlinks below)
 cat > "$HOST_PRESET_DIR/terminal-service-row.mjs" <<'SHIM'
