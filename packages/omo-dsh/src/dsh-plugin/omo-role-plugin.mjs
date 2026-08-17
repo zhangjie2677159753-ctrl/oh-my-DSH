@@ -53,6 +53,7 @@ const { buildDynamicSections } = await import('file:///dsh/omo-plugin/packages-o
 const { buildNotificationEvent } = await import('file:///dsh/omo-plugin/packages-omo-dsh/children/notification.mjs')
 const { buildRoleMirror, parseRoleMirror } = await import('file:///dsh/omo-plugin/packages-omo-dsh/boulder/role-mirror.mjs')
 const { assertMemoryWriteAllowed, applyRedaction } = await import('file:///dsh/omo-plugin/packages-omo-dsh/memory/policy.mjs')
+const { createMonitorRegistry } = await import('file:///dsh/omo-plugin/packages-omo-dsh/monitor/policy.mjs')
 
 function boulderDir() {
   return process.env.OMO_BOULDER_DIR
@@ -326,6 +327,24 @@ export function apply(ctx) {
       }
     },
     presentCall: () => ({ card: 'generic', title: 'Read Boulder role mirror', kind: 'other', rawInput: null }),
+  }))
+
+  // Monitor registry (per preset instance) + status tool: the monitor-status
+  // surface OMO exposes as a prompt injection is here an on-demand tool read.
+  const monitorRegistry = createMonitorRegistry()
+  monitorRegistry.start({ id: 'session-watchdog', sessionId: 'current' })
+  ctx.tools.register(defineTool({
+    name: 'omo_monitor_status',
+    description: 'Read the OMO monitor registry snapshot (running monitors + interventions).',
+    parameters: {},
+    output: {
+      schema: { type: 'object', additionalProperties: false, properties: { monitors: { type: 'array', items: { type: 'object' } }, interventions: { type: 'array', items: { type: 'object' } } } },
+      render: (_a, v) => [{ type: 'text', text: `monitors: ${v.monitors.length}, interventions: ${v.interventions.length}` }],
+    },
+    execute() {
+      return { monitors: monitorRegistry.list().map((m) => ({ id: m.id, kind: m.kind })), interventions: [] }
+    },
+    presentCall: () => ({ card: 'generic', title: 'Read OMO monitor', kind: 'other', rawInput: null }),
   }))
 
   // Inject-once semantics: pending notifications ride the next turn's prompt,

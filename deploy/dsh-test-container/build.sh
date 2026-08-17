@@ -67,6 +67,9 @@ cp "$ROOT/packages/omo-dsh/src/continuation/driver.mjs" \
 mkdir -p "$STAGE/omo-plugin/packages-omo-dsh/memory"
 cp "$ROOT/packages/omo-dsh/src/memory/policy.mjs" \
    "$STAGE/omo-plugin/packages-omo-dsh/memory/"
+mkdir -p "$STAGE/omo-plugin/packages-omo-dsh/monitor"
+cp "$ROOT/packages/omo-dsh/src/monitor/policy.mjs" \
+   "$STAGE/omo-plugin/packages-omo-dsh/monitor/"
 
 # P4: terminal-family entry shims + real-entry symlinks so the preset's
 # absolute file-backed rows resolve bare @deepseek-ai/* specifiers through
