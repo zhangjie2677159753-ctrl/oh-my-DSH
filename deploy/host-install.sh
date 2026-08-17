@@ -26,10 +26,30 @@ sed 's|file:///dsh/omo-plugin/packages-omo-dsh/|file://'"$REPO_ROOT"'/packages/o
   "$REPO_ROOT/packages/omo-dsh/src/dsh-plugin/omo-role-plugin.mjs" \
   > "$HOST_PRESET_DIR/omo-role-plugin.mjs"
 
+# terminal family shims (the preset's cordis.yml references container paths;
+# the host variant points them at local shims resolved via the symlinks below)
+cat > "$HOST_PRESET_DIR/terminal-service-row.mjs" <<'SHIM'
+import { TerminalSessionService } from '@deepseek-ai/dsh-terminal'
+export const name = 'omo-terminal-service'
+export function apply(ctx) {
+  new TerminalSessionService(ctx)
+}
+SHIM
+echo "export * from '@deepseek-ai/dsh-terminal-bash'" > "$HOST_PRESET_DIR/terminal-bash-row.mjs"
+echo "export * from '@deepseek-ai/dsh-tool-terminal'" > "$HOST_PRESET_DIR/tool-terminal-row.mjs"
+
+# rewrite the composition's container paths to the local shims
+sed -i 's|name: /dsh/omo-plugin/terminal-service-row.mjs|name: ./terminal-service-row.mjs|' "$HOST_PRESET_DIR/agent.cordis.yml"
+sed -i 's|name: /dsh/omo-plugin/terminal-bash-row.mjs|name: ./terminal-bash-row.mjs|' "$HOST_PRESET_DIR/agent.cordis.yml"
+sed -i 's|name: /dsh/omo-plugin/tool-terminal-row.mjs|name: ./tool-terminal-row.mjs|' "$HOST_PRESET_DIR/agent.cordis.yml"
+
 # entry symlinks so bare @deepseek-ai/* resolve from the preset dir
 mkdir -p "$HOST_PRESET_DIR/node_modules/@deepseek-ai"
 ln -sfn "$DSH_CHECKOUT/packages/core/tools" "$HOST_PRESET_DIR/node_modules/@deepseek-ai/dsh-tools"
 ln -sfn "$DSH_CHECKOUT/vendor/schemastery" "$HOST_PRESET_DIR/node_modules/@deepseek-ai/schemastery"
+ln -sfn "$DSH_CHECKOUT/packages/terminal/terminal" "$HOST_PRESET_DIR/node_modules/@deepseek-ai/dsh-terminal"
+ln -sfn "$DSH_CHECKOUT/packages/terminal/terminal-bash" "$HOST_PRESET_DIR/node_modules/@deepseek-ai/dsh-terminal-bash"
+ln -sfn "$DSH_CHECKOUT/packages/terminal/tool-terminal" "$HOST_PRESET_DIR/node_modules/@deepseek-ai/dsh-tool-terminal"
 
 echo "installed: $HOST_PRESET_DIR"
 ls -la "$HOST_PRESET_DIR"
