@@ -129,14 +129,17 @@ if (!source.includes(anchor)) {
 }
 source = source.replace(
   anchor,
-  `  const { decideContinuation } = await import('file:///dsh/omo-plugin/packages-omo-dsh/continuation/driver.mjs')
+  `  // Variable specifier: tsc cannot resolve the runtime URL (no TS2307) and
+  // the build does not bundle it; the file exists in the image at runtime.
+  const driverUrl = 'file:///dsh/omo-plugin/packages-omo-dsh/continuation/driver.mjs'
+  const { decideContinuation } = await import(driverUrl)
   agent.followup(createUserMessage({
     content: [{ type: 'text', text: task }],
     source: { kind: 'user' },
   }))
   await agent.whenIdle()
   // G9 test-image continuation loop (bounded, decision audited per turn).
-  const todosFrom = (session) => {
+  const todosFrom = (session: any) => {
     let todos = []
     for (const ev of session.events) {
       if (ev.type === 'todo/write' && Array.isArray(ev.data?.todos)) todos = ev.data.todos
@@ -157,7 +160,7 @@ source = source.replace(
       stagnationCount: 0,
       latch: { allTodosCompletedAt: null },
     })
-    try { agent.session.append('omo/continuation', { schemaVersion: 1, decision: decision.action, reason: decision.reason, turn }) } catch { /* audit best-effort */ }
+    try { (agent.session as any).append('omo/continuation', { schemaVersion: 1, decision: decision.action, reason: decision.reason, turn }) } catch { /* audit best-effort */ }
     if (decision.action !== 'continue') break
     agent.followup(createUserMessage({
       content: [{ type: 'text', text: 'Continue working on the task.' }],

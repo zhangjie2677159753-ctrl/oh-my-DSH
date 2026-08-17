@@ -158,6 +158,16 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
       (revision 1)`——与会话 fold 一致；ADR-R16 跨重启权威面 live 工作；
     - 证据：/tmp/omo-probe19-out.txt + 镜像文件内容（上述）。
 
+24. [x] **G9 续跑 turn-stopping live**（2026-08-17，rc13 + opencode-go/flash）：
+    - 测试镜像 headless 打补丁续跑环（≤5 回合、driver 判定、逐回合
+      `omo/continuation` 审计事件、真实 todo 折叠）；
+    - 探针：模型建 2 项 todo → 2 次 todo/write（in_progress→completed）→
+      回合边界 driver 判定 `{decision:"verifying", reason:"all todos
+      complete — final verification required before done"}`（Final
+      Verification Wave 语义）→ 模型完成收尾；turns=1（判定非 continue
+      即止，无空转）；
+    - 证据：/tmp/omo-probe20-out.txt + 会话日志。
+
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
 - 双 Session + `omo/role` 事件 + flush 的生命周期（当前 preset 尚未挂接 role 事件插件，

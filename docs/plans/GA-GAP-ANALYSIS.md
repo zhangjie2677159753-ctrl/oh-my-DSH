@@ -45,7 +45,7 @@
 | G6'' | 动态角色段 live 达成（RC 零错误）；work 段内容（Boulder 投影）未接 | 镜像重建后 work 投影接入（Boulder 宿主绑定同 G8） |
 | G7'' | task() 纯逻辑 + 子代理委派 live（E2E-08 完整完成、descriptor×3 观察、P2 结算闭环） | Job 后台/continuable 生命周期分支实测未做 |
 | G8 | 角色镜像绑定 live 闭环（G1-23）；work/tasks 全量镜像 + 崩溃注入待续 | 继续按 `boulder/DSH-BINDING.md` |
-| G9 | Continuation 决策器未挂 turn-stopping | E17 DSH 事件绑定（规格已备） |
+| G9 | ✅ turn-stopping live（测试镜像续跑环 + 审计事件，G1-24）；web 侧生产环待接 | 按 `continuation/DSH-BINDING.md` |
 
 ### P2 — 完整能力与发布工程
 
