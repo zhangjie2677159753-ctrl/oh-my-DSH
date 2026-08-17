@@ -144,6 +144,12 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
       （Batch A 从未宣称代码强制；`verification/evidence.mjs` 的执行期绑定
       属后续 G 项）；证据：/tmp/hg-evidence.txt。
 
+22. [x] **Soak（20 轮连续会话稳定性）**（2026-08-17，opencode-go/deepseek-v4-flash）：
+    - 20 轮顺序 `omo_role_status` 会话全部返回角色状态（sisyphus revision 0），
+      零插件错误、零残留（`docker run --rm`）；初判 10/20 "失败" 为 grep
+      模式误判（输出文本为 "OMO primary role"），复核为 **20/20 通过**；
+    - 证据：/tmp/soak-1..20.txt。
+
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
 - 双 Session + `omo/role` 事件 + flush 的生命周期（当前 preset 尚未挂接 role 事件插件，
