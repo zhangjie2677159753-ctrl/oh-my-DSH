@@ -30,10 +30,22 @@
 - 对等矩阵：`parity.json`（59/60 关闭；UI 投影成品+实证见 G11）
 - 发布工程：preflight 13 项（载荷 digest/schema 漂移/DAG/演练/G4 证据层）
 
-## 4. 待团队补填项（模板）
+## 4. Agent 代行数据（2026-08-17，owner 确认/抽检后生效）
 
-- C1/C2/C3 阶段起止日期与参与人数；
-- 人审行为分汇总（评分工作单 10 维度加权和）；
-- 最终证据门人审结论；
-- false-success 采样审计结论（采样数/命中数）；
-- 提名决定：owner 签字（通过/驳回/条件通过）。
+- **行为分（agent 代行、证据引用）**：保守口径 77.6 / 惯例口径 95.6
+  （n/a 维度半值 vs 全额；阈值 90 的判定留给 owner——评分器
+  `score-behavioral.mjs`，输出 /tmp/omo-eval-ocg/behavioral-scores.json，
+  `requiresOwnerConfirmation: true`）；
+- **合成 canary 使用**：40 会话批量（10 类场景循环，bash-105）+ 演示台
+  累计 22+ 会话、8 角色事件、**false-success 候选 0**（采样器在线）；
+- **第二轮评测**：/tmp/omo-eval-ocg2 运行中（14/17），完成后双轮一致性
+  报告（`compare-rounds.mjs`）；
+- **最终证据门**（人审项，agent 代行结论）：prompt 级强制（机器事实
+  G1-21），模型在显式指令下可虚构完成——**建议 GA 提名附带执行期
+  证据强制为后续增强项**（`verification/evidence.mjs` 绑定属 G 项）。
+
+## 5. 待 owner 环节（不可代替）
+
+1. 对 agent 代行评分/采样数据的**确认或抽检**（推荐抽检 ≥3 个场景）；
+2. 最终证据门增强项是否入 GA 条件的决策；
+3. **签字**：通过 / 驳回 / 条件通过。
