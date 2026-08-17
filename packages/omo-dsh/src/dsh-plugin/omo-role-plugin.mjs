@@ -24,6 +24,7 @@
 import { defineTool } from '@deepseek-ai/dsh-tools'
 import z from '@deepseek-ai/schemastery'
 import { mkdir, writeFile, rename, readFile } from 'node:fs/promises'
+import { readFileSync } from 'node:fs'
 
 export const name = 'omo-role'
 export const inject = ['tools', 'systemPrompt']
@@ -73,6 +74,21 @@ async function writeRoleMirror(roleState) {
     await rename(tmp, target)
   } catch {
     // mirror write is best-effort; the session log stays the live authority
+  }
+}
+
+function readWorkSnapshot() {
+  // G6'' binding: the work section content comes from the Boulder work
+  // mirror (written at every continuation boundary by the headless loop).
+  try {
+    const dir = boulderDir()
+    if (!dir) return null
+    const mirror = JSON.parse(readFileSync(`${dir}/.omo/work.json`, 'utf8'))
+    if (mirror?.schemaVersion !== 1 || !Array.isArray(mirror.todos)) return null
+    const next = mirror.todos.find((t) => t?.status !== 'completed')
+    return next ? { id: next.content ?? 'work', agent: 'omo' } : null
+  } catch {
+    return null
   }
 }
 
@@ -130,7 +146,7 @@ export function apply(ctx) {
     const sections = buildDynamicSections({
       roleState: { role, revision, modelFamily: 'deepseek-v4' },
       guardState: { denials: collectDenials(session) },
-      workState: { work: null }, // Boulder projection binding is a follow-up step
+      workState: { work: readWorkSnapshot() }, // Boulder work-mirror projection (G6'')
     })
     if (pendingNotifications.length > 0) {
       sections.push({
