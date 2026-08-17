@@ -1,0 +1,13 @@
+# 敏感/本地配置 —— 绝不提交
+agent-review/
+!.gitignore
+
+# 通用忽略
+node_modules/
+*.log
+*.tmp
+.env
+.env.*
+!.env.example
+.DS_Store
+__pycache__/
