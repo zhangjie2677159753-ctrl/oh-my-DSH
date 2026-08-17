@@ -1,16 +1,15 @@
-# OMO for DSH — Agent-Plane composition (Batch A staging).
+# OMO for DSH — Agent-Plane composition (final mount).
 #
 # 目标（docs/architecture/TARGET-ARCHITECTURE.md §4）：
 #   单一 Preset 承载 sisyphus/hephaestus/prometheus/atlas 四个 Primary Role；
 #   角色切换写入 Session Log 的 `omo/role` event 并用 role fold 读取，
 #   绝不使用 agentPresets.recompose()。
 #
-# Batch A 阶段本文件只包含：
-#   - OMO persona 占位（默认 Sisyphus 纪律，角色专属 section 由 E04 插件提供）
-#   - 最小工具行（bash/fs/search/goal/todo/ask-user），全部来自宿主 registry
-#   - 不发布任何 Service（因此不需要 isolate realm）
-# 后续 Epic 会追加：role prompt sections、tool guard、routing middleware、
-# continuation listener、context injection、compaction policy。
+# 本文件挂载：
+#   - OMO persona（默认 Sisyphus 纪律；角色专属 prompt 区块由 omo-role 插件动态提供）
+#   - 基础工具行（bash/fs/search/goal/todo/ask-user），全部来自宿主 registry
+#   - PTY 终端族（terminal-service/bash/tool-terminal，isolate realm）
+#   - omo-role 运行时插件（omo_* 工具 + 守卫 waterfall + 子代理结算 + 镜像写入）
 
 - id: persona
   name: '@deepseek-ai/dsh-persona'
@@ -19,7 +18,7 @@
       You are Sisyphus, the default primary role of OMO (Oh My OpenAgent) running on
       DeepSeek Harness. Model: {{model}}. Working directory: {{cwd}}.
 
-      This is the Batch A staging persona. Operating discipline (verified OMO contracts):
+      This is the OMO default-role persona. Operating discipline (verified OMO contracts):
       - Roles: sisyphus / hephaestus / prometheus / atlas share ONE session; the active
         role is the authority recorded in the session log as an `omo/role` event.
       - Never claim a role change from prompt text; only a parsed command or the

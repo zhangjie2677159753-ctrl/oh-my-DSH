@@ -59,8 +59,14 @@ const { validateTeamRoster, createTeamRun } = await import('file:///dsh/omo-plug
 const { redact, createOpenClawPolicy } = await import('file:///dsh/omo-plugin/packages-omo-dsh/openclaw/policy.mjs')
 
 function boulderDir() {
+  // Host fix (2026-08-17): the real dsh-web.service runs WITHOUT DSH_HOME in
+  // its environment, so the previous chain returned null on the host and the
+  // role mirror was silently never written (omo_boulder_role -> missing).
+  // Fall back to DSH's default home (~/.dsh) so the mirror always lands in a
+  // stable per-user location.
   return process.env.OMO_BOULDER_DIR
-    ?? (process.env.DSH_HOME ? `${process.env.DSH_HOME}/workspace` : null)
+    ?? (process.env.DSH_HOME ? `${process.env.DSH_HOME}/workspace`
+      : process.env.HOME ? `${process.env.HOME}/.dsh/workspace` : null)
 }
 
 async function writeRoleMirror(roleState) {

@@ -1,2 +1,7 @@
-name: OMO for DSH（Batch A staging）
-description: OMO 行为对等迁移的单一 Agent Preset。Batch A 版本只挂载基础 persona 与最小工具行，用于 G1 mount/lifecycle 验证；角色切换、task()、Boulder、continuation 等运行时在后续 Epic 按 Session Log `omo/role` event 接入。
+name: OMO for DSH
+description: >-
+  OMO（Oh My OpenAgent）在 DeepSeek Harness 上的行为对等迁移 Agent Preset。
+  单一会话承载四主角色（sisyphus / hephaestus / prometheus / atlas），角色切换
+  以 omo/role 会话日志事件为权威并驱动工具守卫与动态提示区块；挂载 Boulder
+  角色/工作镜像、会话记忆、监控注册表、团队门控、OpenClaw 外发策略与 PTY
+  终端族。

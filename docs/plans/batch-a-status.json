@@ -1,7 +1,8 @@
 {
   "schemaVersion": 2,
   "generatedAt": "2026-08-15T23:59:00+08:00",
-  "phase": "batch-a-closed",
+  "phase": "final-ga-nomination-ready",
+  "supersededBy": "docs/plans/GA-NOMINATION-REPORT.md",
   "tasks": {
     "OMO-0001": { "status": "done", "evidence": ["docs/upstream/omo-lock.json", "docs/upstream/dsh-lock.json"] },
     "OMO-0002": { "status": "done", "evidence": ["docs/legal/USAGE-DECISION.md (owner decision: internal team use, private distribution only)"] },
@@ -46,10 +47,21 @@
     "containerBoot": "passed",
     "presetDiscovery": "passed",
     "pluginModuleLoad": "passed",
-    "sessionLevelMountLifecycle": "deployment-gate",
-    "sessionLevelBlocker": "needs a model-credentialed session or UI/API access to create one; Playwright backend cannot reach this host's loopback; documented in G1-DEPLOYMENT-CHECKLIST.md"
+    "sessionLevelMountLifecycle": "passed-host-live",
+    "sessionLevelBlocker": "resolved 2026-08-17: OMO preset mounted in the real host DSH (web 3080); 8 omo_* tools registered and callable; omo_role live switch sisyphus->hephaestus->sisyphus (revision 0->1->2); omo/role events persisted in ~/.dsh/sessions"
   },
   "suite": { "tests": 125, "pass": 125, "fail": 0, "runner": "node --test tests/*.test.mjs" },
   "preflight": "PASSED",
-  "openBlocker": ["R16: DSH persistence restore refuses unknown non-ignorable session events (upstream registration surface tracked)"]
+  "openBlocker": [],
+  "mitigated": "R16 persistence-restore refusal mitigated by Boulder role-mirror reconciliation (ADR-R16 signed; quarterly recheck 2026-11-15)",
+  "finalState": {
+    "ownerAcceptance": "full pass C-1..C-6 (2026-08-16)",
+    "hostLive": {
+      "mount": "passed (web 3080, preset selected, no cordis fallback)",
+      "tools": "8 omo_* tools registered and callable",
+      "roleSwitch": "passed (revision 0->1->2, omo/role events appended)",
+      "modelRoute": "opencode-go/deepseek-v4-flash (TTFT ~3-9s)"
+    },
+    "note": "remaining: G11 client badge bundle integration; team-mode env toggle; real-usage team activity data for GA nomination"
+  }
 }
