@@ -150,6 +150,20 @@ source = source.replace(
   }))
   await agent.whenIdle()
   // G9 test-image continuation loop (bounded, decision audited per turn).
+  // G8 work mirror: the todo snapshot is ALSO mirrored to the Boulder dir at
+  // every boundary (atomic temp+rename) so the ADR-R16 cross-restart authority
+  // covers work state, not just the role.
+  const writeWorkMirror = async (todos: unknown[]) => {
+    const base = process.env.DSH_HOME ? process.env.DSH_HOME + '/workspace' : null
+    if (!base) return
+    try {
+      const fs = await import('node:fs/promises')
+      await fs.mkdir(base + '/.omo', { recursive: true })
+      const tmp = base + '/.omo/work.json.tmp'
+      await fs.writeFile(tmp, JSON.stringify({ schemaVersion: 1, todos, at: new Date().toISOString() }))
+      await fs.rename(tmp, base + '/.omo/work.json')
+    } catch { /* mirror write is best-effort */ }
+  }
   const todosFrom = (session: any) => {
     let todos = []
     for (const ev of session.events) {
@@ -172,6 +186,7 @@ source = source.replace(
       latch: { allTodosCompletedAt: null },
     })
     try { (agent.session as any).append('omo/continuation', { schemaVersion: 1, decision: decision.action, reason: decision.reason, turn }) } catch { /* audit best-effort */ }
+    await writeWorkMirror(todosFrom(agent.session))
     if (decision.action !== 'continue') break
     agent.followup(createUserMessage({
       content: [{ type: 'text', text: 'Continue working on the task.' }],

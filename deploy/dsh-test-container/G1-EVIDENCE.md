@@ -185,6 +185,13 @@ DSH SHA：`47f943859bef60e4160492346772ded9b24f765a`
       修复后主镜像重建验证——DSH 运行时验证层工作如设计。
     - 证据：/tmp/omo-final3.txt + 会话日志。
 
+27. [x] **G8 工作镜像 live**（2026-08-17，rc16 + opencode-go/flash）：
+    - 续跑环每回合边界把 todo 快照原子镜像（temp+rename）到
+      `<DSH_HOME>/workspace/.omo/work.json`；探针会话两项 todo 完成后镜像
+      文件记录 `{schemaVersion:1, todos:[completed×2], at}`；
+    - 崩溃安全由原子写模式承载（boulder-crash.test.mjs 单元覆盖
+      "rename 前崩溃保留旧文件"）；ADR-R16 跨重启权威现覆盖角色+工作两层。
+
 ## 仍未执行（需要真实模型会话，属后续部署门）
 
 - 双 Session + `omo/role` 事件 + flush 的生命周期（当前 preset 尚未挂接 role 事件插件，

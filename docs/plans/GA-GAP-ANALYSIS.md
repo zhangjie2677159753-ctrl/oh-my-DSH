@@ -44,7 +44,7 @@
 | G5'' | E22 live：P2/P4 全闭环、G6 动态段 RC live、P3-1 blocked-on-seam（DSH 无 per-call 警告面） | 剩余：P1 compaction live（需超长会话，不可行则记录不适用）、P5 slash-command live（UI 派发面，headless 无命令输入）、P4-4 提醒注入 |
 | G6'' | 动态角色段 live 达成（RC 零错误）；work 段内容（Boulder 投影）未接 | 镜像重建后 work 投影接入（Boulder 宿主绑定同 G8） |
 | G7'' | task() 纯逻辑 + 子代理委派 live（E2E-08 完整完成、descriptor×3 观察、P2 结算闭环） | Job 后台/continuable 生命周期分支实测未做 |
-| G8 | 角色镜像绑定 live 闭环（G1-23）；work/tasks 全量镜像 + 崩溃注入待续 | 继续按 `boulder/DSH-BINDING.md` |
+| G8 | ✅ 角色镜像（G1-23）+ 工作镜像（G1-27）双层 live 闭环；崩溃安全由原子写 + 单元测试承载 | 已达成 |
 | G9 | ✅ turn-stopping live（测试镜像续跑环 + 审计事件，G1-24）；web 侧生产环待接 | 按 `continuation/DSH-BINDING.md` |
 
 ### P2 — 完整能力与发布工程
